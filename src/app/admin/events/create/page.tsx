@@ -97,7 +97,7 @@ export default function CreateEventPage() {
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '800px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
             <label>Revival Title</label>
             <input type="text" name="title" className="input-glass" value={formData.title} onChange={handleChange} required />
@@ -113,20 +113,15 @@ export default function CreateEventPage() {
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label>Location Name (Powered by Google Maps)</label>
-            <Autocomplete
-              apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-              onPlaceSelected={(place) => {
-                const exactLocation = place.name ? `${place.name}, ${place.formatted_address}` : place.formatted_address || "";
-                setFormData({ ...formData, location: exactLocation });
-              }}
-              onChange={(e: any) => setFormData({ ...formData, location: e.target.value })}
-              options={{
-                types: ["geocode", "establishment"],
-              }}
-              className="input-glass"
-              placeholder="Start typing an address or place name..."
-              required
+            <label>Location Name (Manual Entry)</label>
+            <input 
+              type="text" 
+              name="location" 
+              className="input-glass" 
+              value={formData.location} 
+              onChange={handleChange} 
+              required 
+              placeholder="Full address or location name..." 
             />
           </div>
           

@@ -35,6 +35,7 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
             <th>Date</th>
             <th>Location</th>
             <th>Leader</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -53,6 +54,17 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
                   <td>{event.location}</td>
                   <td>{event.leaderName || "-"}</td>
                   <td>
+                    <span className={`${styles.badge} ${event.status === 'APPROVED' ? styles['badge-success'] : styles['badge-warning']}`}>
+                      {event.status}
+                    </span>
+                  </td>
+                  <td style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => router.push(`/admin/events/${event.id}/edit`)}
+                      className={styles.actionButton}
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => handleDelete(event.id)}
                       className={styles.actionButton}

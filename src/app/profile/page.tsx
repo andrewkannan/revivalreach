@@ -1,13 +1,28 @@
 "use client";
 import { useSession, signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [events, setEvents] = useState<any[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+
+  useEffect(() => {
+    if (session) {
+      fetch("/api/profile/events")
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setEvents(data);
+          setLoadingEvents(false);
+        })
+        .catch(() => setLoadingEvents(false));
+    }
+  }, [session]);
 
   if (status === "loading") {
     return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Loading...</div>;
@@ -52,6 +67,43 @@ export default function ProfilePage() {
           <LogOut size={18} /> Sign Out
         </button>
       </div>
+
+      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Events</h2>
+      {loadingEvents ? (
+        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>Loading your events...</div>
+      ) : events.length === 0 ? (
+        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>You haven't joined any upcoming events yet.</div>
+      ) : (
+        <div className={styles.eventsList}>
+          {events.map(event => {
+            const date = new Date(event.date);
+            return (
+              <div key={event.id} className={`glass-panel ${styles.eventCard}`} onClick={() => router.push(`/events/${event.id}`)}>
+                <div className={styles.eventHeader}>
+                  <div>
+                    <h3 className={styles.eventTitle}>{event.title}</h3>
+                    <span className={styles.eventDate}>
+                      <CalendarIcon size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }} />
+                      {date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                    {event.status === 'PENDING' && (
+                      <span className={`${styles.badge} ${styles['badge-warning']}`} style={{ fontSize: '0.65rem' }}>PENDING</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className={styles.eventDetails}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <MapPin size={14} /> {event.location}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

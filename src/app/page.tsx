@@ -9,12 +9,17 @@ export default async function Home() {
   try {
     const session = await getServerSession(authOptions);
 
+    // Get midnight of today in local time
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     // Fetch upcoming events from DB
     const events = await prisma.event.findMany({
       where: {
         date: {
-          gte: new Date(),
+          gte: today,
         },
+        status: "APPROVED"
       },
       orderBy: {
         date: 'asc',

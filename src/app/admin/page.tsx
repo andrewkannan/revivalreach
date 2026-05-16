@@ -20,22 +20,22 @@ export default async function AdminDashboard() {
     <div className={`glass-panel ${styles.adminContent}`} style={{ padding: '30px' }}>
       <h1 className={styles.pageTitle}>Dashboard Overview</h1>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
-          <h3>Total Users</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>{usersCount}</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+        <div className="glass-panel" style={{ flex: '1 1 200px', padding: '20px', textAlign: 'center' }}>
+          <h3 style={{ margin: 0, opacity: 0.8, fontSize: '1.1rem' }}>Total Users</h3>
+          <p style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary)', margin: '10px 0 0 0' }}>{usersCount}</p>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
-          <h3>Pending Approvals</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--warning, #f59e0b)' }}>{pendingUsersCount}</p>
+        <div className="glass-panel" style={{ flex: '1 1 200px', padding: '20px', textAlign: 'center' }}>
+          <h3 style={{ margin: 0, opacity: 0.8, fontSize: '1.1rem' }}>Pending Approvals</h3>
+          <p style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--warning, #f59e0b)', margin: '10px 0 0 0' }}>{pendingUsersCount}</p>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
-          <h3>Total Events</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--success)' }}>{eventsCount}</p>
+        <div className="glass-panel" style={{ flex: '1 1 200px', padding: '20px', textAlign: 'center' }}>
+          <h3 style={{ margin: 0, opacity: 0.8, fontSize: '1.1rem' }}>Total Events</h3>
+          <p style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--success)', margin: '10px 0 0 0' }}>{eventsCount}</p>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', textAlign: 'center' }}>
-          <h3>Pending Requests</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--secondary)' }}>{requestsCount}</p>
+        <div className="glass-panel" style={{ flex: '1 1 200px', padding: '20px', textAlign: 'center' }}>
+          <h3 style={{ margin: 0, opacity: 0.8, fontSize: '1.1rem' }}>Pending Requests</h3>
+          <p style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--secondary)', margin: '10px 0 0 0' }}>{requestsCount}</p>
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ model User {
 model Event {
   id                String            @id @default(cuid())
   eventCode         String?           @unique
+  status            String            @default("PENDING")
   title             String
   date              DateTime
   location          String

@@ -4,8 +4,11 @@ import { usePathname } from "next/navigation";
 import { Home, Calendar, User, Settings, ShieldCheck } from "lucide-react";
 import styles from "./Nav.module.css";
 
+import { useSession } from "next-auth/react";
+
 export default function TopNav() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <nav className={styles.topNav}>
@@ -20,7 +23,7 @@ export default function TopNav() {
           <span>Souls</span>
         </Link>
         <Link href="/profile" className={`${styles.navLink} ${pathname === '/profile' ? styles.active : ''}`}>
-          <User size={20} />
+          <User size={20} style={session ? { filter: 'drop-shadow(0 0 8px var(--primary))', color: 'var(--primary)' } : {}} />
           <span>Profile</span>
         </Link>
         <Link href="/admin" className={`${styles.navLink} ${pathname?.startsWith('/admin') ? styles.active : ''}`}>
