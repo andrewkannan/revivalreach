@@ -66,19 +66,11 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
             </div>
           </div>
 
-          <div className={styles.evangelismBanner}>
-            <h2>Request Evangelism</h2>
-            <p>Would you like us to come to your area? Let us know and we'll arrange a special event!</p>
-            <button className={styles.bannerButton} onClick={() => router.push('/request')}>
-              Request Now
-            </button>
-          </div>
-
           <h2 className={styles.sectionTitle}>Upcoming Events</h2>
         </>
       )}
 
-      <div className={styles.eventsList}>
+      <div className={styles.eventsList} style={{ marginBottom: hideBanner ? '0' : '30px' }}>
         {filteredEvents.length === 0 ? (
           <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>
             No events found.
@@ -166,6 +158,16 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
           })
         )}
       </div>
+
+      {!hideBanner && (
+        <div className={styles.evangelismBanner} style={{ marginTop: '20px' }}>
+          <h2>Request Evangelism</h2>
+          <p>Would you like us to come to your area? Let us know and we'll arrange a special event!</p>
+          <button className={styles.bannerButton} onClick={() => router.push('/request')}>
+            Request Now
+          </button>
+        </div>
+      )}
     </div>
   );
 }
