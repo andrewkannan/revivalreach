@@ -4,7 +4,7 @@ import styles from "./Dashboard.module.css";
 import { Search, MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function DashboardClient({ initialEvents, user, settings }: { initialEvents: any[], user: any, settings: any }) {
+export default function DashboardClient({ initialEvents, user, settings, hideBanner = false }: { initialEvents: any[], user: any, settings: any, hideBanner?: boolean }) {
   const [events, setEvents] = useState(initialEvents);
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
@@ -51,28 +51,32 @@ export default function DashboardClient({ initialEvents, user, settings }: { ini
 
   return (
     <div className={styles.dashboard}>
-      <div className={styles.searchBar}>
-        <div style={{ position: 'relative', flex: 1 }}>
-          <Search size={20} style={{ position: 'absolute', left: '16px', top: '14px', opacity: 0.5 }} />
-          <input 
-            type="text" 
-            placeholder="Search events, locations..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '48px' }}
-          />
-        </div>
-      </div>
+      {!hideBanner && (
+        <>
+          <div className={styles.searchBar}>
+            <div style={{ position: 'relative', flex: 1 }}>
+              <Search size={20} style={{ position: 'absolute', left: '16px', top: '14px', opacity: 0.5 }} />
+              <input 
+                type="text" 
+                placeholder="Search events, locations..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ paddingLeft: '48px' }}
+              />
+            </div>
+          </div>
 
-      <div className={styles.evangelismBanner}>
-        <h2>Request Evangelism</h2>
-        <p>Would you like us to come to your area? Let us know and we'll arrange a special event!</p>
-        <button className={styles.bannerButton} onClick={() => router.push('/request')}>
-          Request Now
-        </button>
-      </div>
+          <div className={styles.evangelismBanner}>
+            <h2>Request Evangelism</h2>
+            <p>Would you like us to come to your area? Let us know and we'll arrange a special event!</p>
+            <button className={styles.bannerButton} onClick={() => router.push('/request')}>
+              Request Now
+            </button>
+          </div>
 
-      <h2 className={styles.sectionTitle}>Upcoming Events</h2>
+          <h2 className={styles.sectionTitle}>Upcoming Events</h2>
+        </>
+      )}
 
       <div className={styles.eventsList}>
         {filteredEvents.length === 0 ? (
