@@ -96,23 +96,24 @@ export default function CreateEventPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '800px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
-          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label>Revival Title</label>
-            <input type="text" name="title" className="input-glass" value={formData.title} onChange={handleChange} required />
-          </div>
-          
-          <div className={authStyles.inputGroup}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '800px' }}>
+        <div className={authStyles.inputGroup}>
+          <label>Revival Title</label>
+          <input type="text" name="title" className="input-glass" value={formData.title} onChange={handleChange} required />
+        </div>
+        
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+          <div className={authStyles.inputGroup} style={{ flex: '1 1 120px' }}>
             <label>Date</label>
             <input type="date" name="date" className="input-glass" value={formData.date} onChange={handleChange} required />
           </div>
-          <div className={authStyles.inputGroup}>
+          <div className={authStyles.inputGroup} style={{ flex: '1 1 120px' }}>
             <label>Time</label>
             <input type="time" name="time" className="input-glass" value={formData.time} onChange={handleChange} required />
           </div>
+        </div>
 
-          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+          <div className={authStyles.inputGroup}>
             <label>Location Name (Manual Entry)</label>
             <input 
               type="text" 
@@ -125,12 +126,12 @@ export default function CreateEventPage() {
             />
           </div>
           
-          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+          <div className={authStyles.inputGroup}>
             <label>WhatsApp Group Link (Optional)</label>
             <input type="url" name="whatsappGroupLink" className="input-glass" value={formData.whatsappGroupLink} onChange={handleChange} placeholder="https://chat.whatsapp.com/..." />
           </div>
 
-          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+          <div className={authStyles.inputGroup}>
             <label>Revival Leaders (Multi-select)</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
               {availableLeaders.length === 0 ? (
@@ -160,16 +161,15 @@ export default function CreateEventPage() {
             <small style={{ opacity: 0.6, marginTop: '4px', display: 'block' }}>Tap to select or deselect leaders.</small>
           </div>
 
-          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+          <div className={authStyles.inputGroup}>
             <label>Meeting Point Details</label>
             <input type="text" name="meetingPoint" className="input-glass" value={formData.meetingPoint} onChange={handleChange} placeholder="e.g. By the main entrance" />
           </div>
 
-          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+          <div className={authStyles.inputGroup}>
             <label>Special Remarks</label>
             <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleChange} style={{ minHeight: '100px', resize: 'vertical' }} />
           </div>
-        </div>
 
         <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
           <button type="submit" className="btn-primary" disabled={status.type === 'success'}>

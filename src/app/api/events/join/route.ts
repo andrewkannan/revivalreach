@@ -55,3 +55,49 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
+export async function DELETE(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { eventId } = await req.json();
+
+    if (!eventId) {
+      return NextResponse.json({ message: "Missing eventId" }, { status: 400 });
+    }
+
+    const userId = session.user.id;
+
+    // Check if already joined
+    const existingParticipation = await prisma.eventParticipant.findUnique({
+      where: {
+        userId_eventId: {
+          userId,
+          eventId
+        }
+      }
+    });
+
+    if (!existingParticipation) {
+      return NextResponse.json({ message: "You haven't joined this event" }, { status: 400 });
+    }
+
+    // Remove participation
+    await prisma.eventParticipant.delete({
+      where: {
+        userId_eventId: {
+          userId,
+          eventId
+        }
+      }
+    });
+
+    return NextResponse.json({ message: "Successfully unjoined the event" });
+  } catch (error) {
+    console.error("Unjoin event error:", error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  }
+}

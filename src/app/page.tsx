@@ -27,7 +27,11 @@ export default async function Home() {
       include: {
         _count: {
           select: { participants: true }
-        }
+        },
+        participants: session?.user?.id ? {
+          where: { userId: session.user.id },
+          select: { id: true }
+        } : false
       }
     });
 

@@ -156,3 +156,24 @@
 .joinButton {
   width: 100%;
 }
+
+.blinkDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #ff3b30;
+  border-radius: 50%;
+  margin-left: 8px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; box-shadow: 0 0 5px #ff3b30; }
+  50% { opacity: 0.2; box-shadow: none; }
+  100% { opacity: 1; box-shadow: 0 0 5px #ff3b30; }
+}
+
+.eventCardJoined {
+  border-left: 4px solid var(--success);
+  background: rgba(16, 185, 129, 0.05);
+}

@@ -50,6 +50,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   // We serialize the event to pass to the client component
   const serializedEvent = JSON.parse(JSON.stringify(event));
+  const hasJoined = event.participants.some((p: any) => p.userId === session.user.id);
+  const canViewSensitiveInfo = hasJoined || session.user.role === "ADMIN" || session.user.role === "LEADER";
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'white' }}>
@@ -82,18 +84,22 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             </div>
           </div>
 
-          {event.meetingPoint && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-              <Info size={18} color="var(--primary)" style={{ marginTop: '2px' }} />
-              <div>
-                <strong style={{ display: 'block', opacity: 0.7, fontSize: '0.85rem', textTransform: 'uppercase' }}>Meeting Point</strong>
-                <span style={{ fontSize: '1.1rem' }}>{event.meetingPoint}</span>
-              </div>
-            </div>
-          )}
+          {canViewSensitiveInfo ? (
+            <>
+              {event.meetingPoint && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '16px' }}>
+                  <Info size={18} color="var(--primary)" style={{ marginTop: '2px' }} />
+                  <div>
+                    <strong style={{ display: 'block', opacity: 0.7, fontSize: '0.85rem', textTransform: 'uppercase' }}>Meeting Point</strong>
+                    <span style={{ fontSize: '1.1rem' }}>{event.meetingPoint}</span>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : null}
 
           {event.leaderName && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '16px' }}>
               <UserIcon size={18} color="var(--primary)" style={{ marginTop: '2px' }} />
               <div>
                 <strong style={{ display: 'block', opacity: 0.7, fontSize: '0.85rem', textTransform: 'uppercase' }}>Revival Leaders</strong>
@@ -112,30 +118,36 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '10px' }}>
-          <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500 }}>
-            <MapPin size={18} /> Open in Google Maps
-          </a>
-          
-          <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500 }}>
-            <Navigation size={18} /> Open in Waze
-          </a>
-          
-          {event.whatsappGroupLink && (
-            <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', fontWeight: 500, gridColumn: '1 / -1' }}>
-              <MessageCircle size={18} /> Join WhatsApp Group
+        {canViewSensitiveInfo ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '10px' }}>
+            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500 }}>
+              <MapPin size={18} /> Open in Google Maps
             </a>
-          )}
-          
-          {event.whatsappLink && (
-            <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ padding: '12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, gridColumn: '1 / -1' }}>
-              <MessageCircle size={18} /> Contact Leader
+            
+            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500 }}>
+              <Navigation size={18} /> Open in Waze
             </a>
-          )}
-        </div>
+            
+            {event.whatsappGroupLink && (
+              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', fontWeight: 500, gridColumn: '1 / -1' }}>
+                <MessageCircle size={18} /> Join WhatsApp Group
+              </a>
+            )}
+            
+            {event.whatsappLink && (
+              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ padding: '12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, gridColumn: '1 / -1' }}>
+                <MessageCircle size={18} /> Contact Leader
+              </a>
+            )}
+          </div>
+        ) : (
+          <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#f59e0b', padding: '16px', borderRadius: '12px', textAlign: 'center', fontWeight: 500 }}>
+            Join this revival to view the meeting point, map links, and WhatsApp group.
+          </div>
+        )}
 
         <div style={{ marginTop: '20px' }}>
-          <JoinButton event={serializedEvent} />
+          <JoinButton event={serializedEvent} initialHasJoined={hasJoined} />
         </div>
 
         {/* Attendance List */}

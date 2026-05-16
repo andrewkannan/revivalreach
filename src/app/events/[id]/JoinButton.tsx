@@ -2,28 +2,34 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function JoinButton({ event }: { event: any }) {
+export default function JoinButton({ event, initialHasJoined = false }: { event: any, initialHasJoined?: boolean }) {
   const [loading, setLoading] = useState(false);
+  const [hasJoined, setHasJoined] = useState(initialHasJoined);
   const router = useRouter();
 
-  const handleJoin = async () => {
+  const handleJoinToggle = async () => {
     setLoading(true);
     try {
+      const method = hasJoined ? "DELETE" : "POST";
       const res = await fetch(`/api/events/join`, {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ eventId: event.id })
       });
+      
       if (res.ok) {
-        if (event.whatsappGroupLink) {
-          window.open(event.whatsappGroupLink, '_blank');
-        } else {
-          alert("Joined successfully!");
+        if (!hasJoined) {
+          if (event.whatsappGroupLink) {
+            window.open(event.whatsappGroupLink, '_blank');
+          } else {
+            alert("Joined successfully!");
+          }
         }
-        router.refresh(); // Refresh the page to update participant count
+        setHasJoined(!hasJoined);
+        router.refresh(); // Refresh the page to update participant count and sensitive info
       } else {
         const error = await res.json();
-        alert(error.message || "Failed to join event");
+        alert(error.message || `Failed to ${hasJoined ? 'unjoin' : 'join'} event`);
       }
     } catch (err) {
       alert("Server error");
@@ -34,7 +40,7 @@ export default function JoinButton({ event }: { event: any }) {
 
   return (
     <button 
-      onClick={handleJoin}
+      onClick={handleJoinToggle}
       disabled={loading}
       style={{ 
         width: '100%', 
@@ -42,14 +48,14 @@ export default function JoinButton({ event }: { event: any }) {
         fontSize: '1.1rem', 
         fontWeight: 'bold', 
         borderRadius: '12px',
-        background: 'var(--primary)',
-        color: 'white',
-        border: 'none',
+        background: hasJoined ? 'transparent' : 'var(--primary)',
+        color: hasJoined ? 'var(--danger)' : 'white',
+        border: hasJoined ? '2px solid var(--danger)' : 'none',
         cursor: loading ? 'not-allowed' : 'pointer',
         opacity: loading ? 0.7 : 1
       }}
     >
-      {loading ? "Joining..." : "Join Revival"}
+      {loading ? "Processing..." : hasJoined ? "Unjoin Revival" : "Join Revival"}
     </button>
   );
 }

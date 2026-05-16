@@ -35,8 +35,12 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
         body: JSON.stringify({ eventId: eventObj.id })
       });
       if (res.ok) {
-        // Optimistically update participant count
-        setEvents(events.map(e => e.id === eventObj.id ? { ...e, _count: { participants: e._count.participants + 1 } } : e));
+        // Optimistically update participant count and join state
+        setEvents(events.map(e => e.id === eventObj.id ? { 
+          ...e, 
+          _count: { participants: e._count.participants + 1 },
+          participants: [{ id: "temp" }] 
+        } : e));
         
         // Auto redirect to WhatsApp group if it exists
         if (eventObj.whatsappGroupLink) {
@@ -73,7 +77,10 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Upcoming Revivals</h2>
+            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+              Upcoming Revivals
+              <span className={styles.blinkDot}></span>
+            </h2>
             {(user?.role === 'ADMIN' || user?.role === 'LEADER') && (
               <button 
                 className="btn-primary" 
@@ -108,9 +115,10 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
           filteredEvents.map(event => {
             const isExpanded = expandedEventId === event.id;
             const date = new Date(event.date);
+            const hasJoined = event.participants && event.participants.length > 0;
 
             return (
-              <div key={event.id} className={`glass-panel ${styles.eventCard}`} onClick={() => toggleEvent(event.id)}>
+              <div key={event.id} className={`glass-panel ${styles.eventCard} ${hasJoined ? styles.eventCardJoined : ''}`} onClick={() => toggleEvent(event.id)}>
                 <div className={styles.eventHeader}>
                   <div>
                     <h3 className={styles.eventTitle}>{event.title}</h3>
@@ -145,42 +153,54 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                       </div>
                     )}
                     
-                    {event.meetingPoint && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
-                        <Info size={16} color="var(--primary)" /> <strong>Meeting Point:</strong> {event.meetingPoint}
+                    {hasJoined ? (
+                      <>
+                        {event.meetingPoint && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
+                            <Info size={16} color="var(--primary)" /> <strong>Meeting Point:</strong> {event.meetingPoint}
+                          </div>
+                        )}
+
+                        <div className={styles.linksGrid}>
+                          {event.googleMapsLink && (
+                            <a href={event.googleMapsLink} target="_blank" rel="noreferrer" className={styles.linkButton}>
+                              <MapPin size={16} /> Google Maps
+                            </a>
+                          )}
+                          {event.wazeLink && (
+                            <a href={event.wazeLink} target="_blank" rel="noreferrer" className={styles.linkButton}>
+                              <Navigation size={16} /> Waze
+                            </a>
+                          )}
+                          {event.whatsappGroupLink && (
+                            <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ gridColumn: '1 / -1', background: 'var(--card-bg)', color: '#25D366', borderColor: '#25D366' }}>
+                              <MessageCircle size={18} /> Join WhatsApp Group
+                            </a>
+                          )}
+                          {event.whatsappLink && (
+                            <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ gridColumn: '1 / -1', background: '#25D366', color: 'white', borderColor: '#25D366' }}>
+                              <MessageCircle size={18} /> Contact Leader via WhatsApp
+                            </a>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ fontSize: '0.85rem', color: 'var(--warning)', fontStyle: 'italic', opacity: 0.8 }}>
+                        Join this revival to view the meeting point and location links.
                       </div>
                     )}
-
-                    <div className={styles.linksGrid}>
-                      {event.googleMapsLink && (
-                        <a href={event.googleMapsLink} target="_blank" rel="noreferrer" className={styles.linkButton}>
-                          <MapPin size={16} /> Google Maps
-                        </a>
-                      )}
-                      {event.wazeLink && (
-                        <a href={event.wazeLink} target="_blank" rel="noreferrer" className={styles.linkButton}>
-                          <Navigation size={16} /> Waze
-                        </a>
-                      )}
-                      {event.whatsappGroupLink && (
-                        <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ gridColumn: '1 / -1', background: 'var(--card-bg)', color: '#25D366', borderColor: '#25D366' }}>
-                          <MessageCircle size={18} /> Join WhatsApp Group
-                        </a>
-                      )}
-                      {event.whatsappLink && (
-                        <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ gridColumn: '1 / -1', background: '#25D366', color: 'white', borderColor: '#25D366' }}>
-                          <MessageCircle size={18} /> Contact Leader via WhatsApp
-                        </a>
-                      )}
-                    </div>
 
                     <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
                       <button 
                         className={`btn-primary ${styles.joinButton}`} 
-                        style={{ flex: 1 }}
-                        onClick={() => handleJoin(event)}
+                        style={{ flex: 1, opacity: hasJoined ? 0.7 : 1, cursor: hasJoined ? 'default' : 'pointer' }}
+                        onClick={(e) => {
+                          if (!hasJoined) {
+                            handleJoin(event);
+                          }
+                        }}
                       >
-                        Join Revival
+                        {hasJoined ? "Joined" : "Join Revival"}
                       </button>
                       <button 
                         className="btn-secondary" 
