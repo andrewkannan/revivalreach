@@ -4,6 +4,7 @@ import styles from "../../Admin.module.css";
 import authStyles from "../../../login/Auth.module.css";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Autocomplete from "react-google-autocomplete";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -15,24 +16,39 @@ export default function CreateEventPage() {
     date: "",
     time: "",
     location: "",
-    googleMapsLink: "",
-    wazeLink: "",
-    whatsappLink: "",
     whatsappGroupLink: "",
     meetingPoint: "",
-    remarks: "",
-    leaderName: ""
+    remarks: ""
   });
+
+  const [leaders, setLeaders] = useState<string[]>([]);
+  const [leaderInput, setLeaderInput] = useState("");
 
   // Pre-fill leader name when session loads
   useEffect(() => {
-    if (session?.user?.name && !formData.leaderName) {
-      setFormData(prev => ({ ...prev, leaderName: session.user.name as string }));
+    if (session?.user?.name && leaders.length === 0) {
+      setLeaders([session.user.name as string]);
     }
   }, [session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleLeaderKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      if (leaderInput.trim()) {
+        if (!leaders.includes(leaderInput.trim())) {
+          setLeaders([...leaders, leaderInput.trim()]);
+        }
+        setLeaderInput("");
+      }
+    }
+  };
+
+  const removeLeader = (index: number) => {
+    setLeaders(leaders.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,11 +58,12 @@ export default function CreateEventPage() {
     try {
       // Combine date and time
       const dateTime = new Date(`${formData.date}T${formData.time}`).toISOString();
+      const finalLeaderName = leaders.join(", ");
       
       const res = await fetch(`/api/admin/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, date: dateTime }),
+        body: JSON.stringify({ ...formData, date: dateTime, leaderName: finalLeaderName }),
       });
 
       if (res.ok) {
@@ -88,28 +105,52 @@ export default function CreateEventPage() {
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label>Location Name</label>
-            <input type="text" name="location" className="input-glass" value={formData.location} onChange={handleChange} required placeholder="e.g., Central Park, New York" />
-          </div>
-
-          <div className={authStyles.inputGroup}>
-            <label>Leader WhatsApp Link (Optional)</label>
-            <input type="url" name="whatsappLink" className="input-glass" value={formData.whatsappLink} onChange={handleChange} placeholder="https://wa.me/..." />
+            <label>Location Name (Powered by Google Maps)</label>
+            <Autocomplete
+              apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+              onPlaceSelected={(place) => {
+                const exactLocation = place.name ? `${place.name}, ${place.formatted_address}` : place.formatted_address || "";
+                setFormData({ ...formData, location: exactLocation });
+              }}
+              onChange={(e: any) => setFormData({ ...formData, location: e.target.value })}
+              options={{
+                types: ["geocode", "establishment"],
+              }}
+              className="input-glass"
+              placeholder="Start typing an address or place name..."
+              required
+            />
           </div>
           
-          <div className={authStyles.inputGroup}>
+          <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
             <label>WhatsApp Group Link (Optional)</label>
             <input type="url" name="whatsappGroupLink" className="input-glass" value={formData.whatsappGroupLink} onChange={handleChange} placeholder="https://chat.whatsapp.com/..." />
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
             <label>Revival Leaders</label>
-            <input type="text" name="leaderName" className="input-glass" value={formData.leaderName} onChange={handleChange} placeholder="e.g. John Doe, Jane Smith" />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              {leaders.map((leader, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '16px', fontSize: '0.9rem' }}>
+                  {leader}
+                  <button type="button" onClick={() => removeLeader(idx)} style={{ background: 'transparent', border: 'none', color: 'white', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>×</button>
+                </div>
+              ))}
+              <input 
+                type="text" 
+                value={leaderInput} 
+                onChange={(e) => setLeaderInput(e.target.value)}
+                onKeyDown={handleLeaderKeyDown}
+                placeholder={leaders.length === 0 ? "Type a name and press Enter..." : "Add another leader..."}
+                style={{ flex: 1, background: 'transparent', border: 'none', color: 'white', outline: 'none', minWidth: '200px', padding: '6px' }}
+              />
+            </div>
+            <small style={{ opacity: 0.6, marginTop: '4px', display: 'block' }}>Type a name and press Enter or comma to add.</small>
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
             <label>Meeting Point Details</label>
-            <input type="text" name="meetingPoint" className="input-glass" value={formData.meetingPoint} onChange={handleChange} />
+            <input type="text" name="meetingPoint" className="input-glass" value={formData.meetingPoint} onChange={handleChange} placeholder="e.g. By the main entrance" />
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
