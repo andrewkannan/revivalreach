@@ -19,7 +19,7 @@ export default async function AdminUsersPage() {
   return (
     <div className={`glass-panel ${styles.adminContent}`} style={{ padding: '30px' }}>
       <h1 className={styles.pageTitle}>User Management</h1>
-      <UsersTable initialUsers={users} />
+      <UsersTable initialUsers={JSON.parse(JSON.stringify(users))} />
     </div>
   );
 }

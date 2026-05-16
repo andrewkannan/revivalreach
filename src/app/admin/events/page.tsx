@@ -27,7 +27,7 @@ export default async function AdminEventsPage() {
           + Create Event
         </Link>
       </div>
-      <EventsTable initialEvents={events} />
+      <EventsTable initialEvents={JSON.parse(JSON.stringify(events))} />
     </div>
   );
 }

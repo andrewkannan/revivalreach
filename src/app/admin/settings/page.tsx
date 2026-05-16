@@ -25,7 +25,7 @@ export default async function AdminSettingsPage() {
   return (
     <div className={`glass-panel ${styles.adminContent}`} style={{ padding: '30px' }}>
       <h1 className={styles.pageTitle}>System Settings</h1>
-      <SettingsForm initialSettings={settings} />
+      <SettingsForm initialSettings={JSON.parse(JSON.stringify(settings))} />
     </div>
   );
 }

@@ -29,5 +29,9 @@ export default async function Home() {
     where: { id: "singleton" }
   });
 
-  return <DashboardClient initialEvents={events} user={session?.user} settings={settings} />;
+  // Next.js cannot pass Date objects from Server to Client components.
+  const serializedEvents = JSON.parse(JSON.stringify(events));
+  const serializedSettings = JSON.parse(JSON.stringify(settings));
+
+  return <DashboardClient initialEvents={serializedEvents} user={session?.user} settings={serializedSettings} />;
 }
