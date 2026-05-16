@@ -15,6 +15,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ token }) => !!token,
     },
+    secret: process.env.NEXTAUTH_SECRET || "fallback_secret_key_for_revival_reach_12345",
   }
 );
 
