@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    NEXTAUTH_URL: "https://reach.thisiscccbilingual.com",
+  },
 };
 
 export default nextConfig;
