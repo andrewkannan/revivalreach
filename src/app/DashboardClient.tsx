@@ -29,8 +29,7 @@ export default function DashboardClient({ initialEvents, user, settings }: { ini
       return;
     }
     try {
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/events/join`, {
+      const res = await fetch(`/api/events/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ eventId })

@@ -16,8 +16,7 @@ export default function RequestEvangelismPage() {
     setStatus({ type: "", message: "" });
 
     try {
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/request`, {
+      const res = await fetch(`/api/request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, contactInfo, area, details }),

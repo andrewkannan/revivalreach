@@ -14,8 +14,7 @@ export default function SettingsForm({ initialSettings }: { initialSettings: any
     setStatus({ type: "", message: "" });
 
     try {
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/admin/settings`, {
+      const res = await fetch(`/api/admin/settings`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settings),

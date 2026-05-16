@@ -9,8 +9,7 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
 
   const handleUpdateUser = async (userId: string, action: string, value: any) => {
     try {
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/admin/users`, {
+      const res = await fetch(`/api/admin/users`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, action, value }),

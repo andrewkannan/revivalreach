@@ -11,8 +11,7 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
     if (!confirm("Are you sure you want to delete this event?")) return;
     
     try {
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/admin/events?id=${id}`, {
+      const res = await fetch(`/api/admin/events?id=${id}`, {
         method: "DELETE",
       });
 

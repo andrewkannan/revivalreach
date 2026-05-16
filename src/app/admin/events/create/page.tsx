@@ -34,8 +34,7 @@ export default function CreateEventPage() {
       // Combine date and time
       const dateTime = new Date(`${formData.date}T${formData.time}`).toISOString();
       
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/admin/events`, {
+      const res = await fetch(`/api/admin/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, date: dateTime }),

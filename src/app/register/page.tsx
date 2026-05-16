@@ -19,9 +19,7 @@ export default function RegisterPage() {
     setSuccess(false);
 
     try {
-      // Using absolute path with basePath handled correctly for fetch
-      const basePath = window.location.pathname.startsWith('/reach') ? '/reach' : '';
-      const res = await fetch(`${basePath}/api/auth/register`, {
+      const res = await fetch(`/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, phone }),
