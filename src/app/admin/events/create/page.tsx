@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../../Admin.module.css";
 import authStyles from "../../../login/Auth.module.css";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function CreateEventPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [status, setStatus] = useState({ type: "", message: "" });
   
   const [formData, setFormData] = useState({
@@ -21,6 +23,13 @@ export default function CreateEventPage() {
     remarks: "",
     leaderName: ""
   });
+
+  // Pre-fill leader name when session loads
+  useEffect(() => {
+    if (session?.user?.name && !formData.leaderName) {
+      setFormData(prev => ({ ...prev, leaderName: session.user.name as string }));
+    }
+  }, [session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -80,16 +89,7 @@ export default function CreateEventPage() {
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
             <label>Location Name</label>
-            <input type="text" name="location" className="input-glass" value={formData.location} onChange={handleChange} required />
-          </div>
-
-          <div className={authStyles.inputGroup}>
-            <label>Google Maps Link (Optional)</label>
-            <input type="url" name="googleMapsLink" className="input-glass" value={formData.googleMapsLink} onChange={handleChange} />
-          </div>
-          <div className={authStyles.inputGroup}>
-            <label>Waze Link (Optional)</label>
-            <input type="url" name="wazeLink" className="input-glass" value={formData.wazeLink} onChange={handleChange} />
+            <input type="text" name="location" className="input-glass" value={formData.location} onChange={handleChange} required placeholder="e.g., Central Park, New York" />
           </div>
 
           <div className={authStyles.inputGroup}>
@@ -103,8 +103,8 @@ export default function CreateEventPage() {
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label>Leader Name</label>
-            <input type="text" name="leaderName" className="input-glass" value={formData.leaderName} onChange={handleChange} />
+            <label>Revival Leaders</label>
+            <input type="text" name="leaderName" className="input-glass" value={formData.leaderName} onChange={handleChange} placeholder="e.g. John Doe, Jane Smith" />
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>

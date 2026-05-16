@@ -13,13 +13,17 @@ export async function POST(req: Request) {
 
     const data = await req.json();
 
+    const encodedLocation = encodeURIComponent(data.location);
+    const autoGoogleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
+    const autoWazeLink = `https://waze.com/ul?q=${encodedLocation}`;
+
     const event = await prisma.event.create({
       data: {
         title: data.title,
         date: new Date(data.date),
         location: data.location,
-        googleMapsLink: data.googleMapsLink || null,
-        wazeLink: data.wazeLink || null,
+        googleMapsLink: data.googleMapsLink || autoGoogleMapsLink,
+        wazeLink: data.wazeLink || autoWazeLink,
         whatsappLink: data.whatsappLink || null,
         whatsappGroupLink: data.whatsappGroupLink || null,
         meetingPoint: data.meetingPoint || null,

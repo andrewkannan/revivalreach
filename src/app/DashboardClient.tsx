@@ -23,7 +23,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
     }
   };
 
-  const handleJoin = async (eventId: string) => {
+  const handleJoin = async (eventObj: any) => {
     if (!user) {
       router.push("/login");
       return;
@@ -32,12 +32,18 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
       const res = await fetch(`/api/events/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ eventId })
+        body: JSON.stringify({ eventId: eventObj.id })
       });
       if (res.ok) {
         // Optimistically update participant count
-        setEvents(events.map(e => e.id === eventId ? { ...e, _count: { participants: e._count.participants + 1 } } : e));
-        alert("Joined successfully!");
+        setEvents(events.map(e => e.id === eventObj.id ? { ...e, _count: { participants: e._count.participants + 1 } } : e));
+        
+        // Auto redirect to WhatsApp group if it exists
+        if (eventObj.whatsappGroupLink) {
+          window.open(eventObj.whatsappGroupLink, '_blank');
+        } else {
+          alert("Joined successfully!");
+        }
       } else {
         const error = await res.json();
         alert(error.message || "Failed to join event");
@@ -103,7 +109,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                   </div>
                   {event.leaderName && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <UserIcon size={14} /> Leader: {event.leaderName}
+                      <UserIcon size={14} /> Leaders: {event.leaderName}
                     </div>
                   )}
                 </div>
@@ -145,12 +151,22 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                       )}
                     </div>
 
-                    <button 
-                      className={`btn-primary ${styles.joinButton}`} 
-                      onClick={() => handleJoin(event.id)}
-                    >
-                      Join Event
-                    </button>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                      <button 
+                        className={`btn-primary ${styles.joinButton}`} 
+                        style={{ flex: 1 }}
+                        onClick={() => handleJoin(event)}
+                      >
+                        Join Revival
+                      </button>
+                      <button 
+                        className="btn-secondary" 
+                        style={{ flex: 1, padding: '12px', borderRadius: '8px', fontWeight: 600, fontSize: '0.95rem' }}
+                        onClick={() => router.push(`/events/${event.id}`)}
+                      >
+                        View Full Detail
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
