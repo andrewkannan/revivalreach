@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String            @id @default(cuid())
+  name           String?
+  email          String?           @unique
+  phone          String?
+  passwordHash   String?
+  role           String            @default("MEMBER") // ADMIN, LEADER, MEMBER
+  isApproved     Boolean           @default(false)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  participations EventParticipant[]
+}
+
+model Event {
+  id              String            @id @default(cuid())
+  title           String
+  date            DateTime
+  location        String
+  googleMapsLink  String?
+  wazeLink        String?
+  whatsappLink    String?
+  meetingPoint    String?
+  remarks         String?
+  leaderName      String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  participants    EventParticipant[]
+}
+
+model EventParticipant {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+}
+
+model EvangelismRequest {
+  id          String   @id @default(cuid())
+  name        String
+  contactInfo String
+  area        String
+  details     String?
+  status      String   @default("PENDING") // PENDING, CONTACTED, RESOLVED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SystemSettings {
+  id               String   @id @default("singleton")
+  smtpHost         String?
+  smtpPort         Int?
+  smtpUser         String?
+  smtpPass         String?
+  whatsappTemplate String?  @default("Hi, I'm interested in the event...")
+  updatedAt        DateTime @updatedAt
+}

@@ -1,0 +1,33 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Calendar, User, Settings, ShieldCheck } from "lucide-react";
+import styles from "./Nav.module.css";
+
+export default function TopNav() {
+  const pathname = usePathname();
+
+  return (
+    <nav className={styles.topNav}>
+      <Link href="/" className={styles.logo}>Revival Reach</Link>
+      <div className={styles.topNavLinks}>
+        <Link href="/" className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}>
+          <Home size={20} />
+          <span>Home</span>
+        </Link>
+        <Link href="/events" className={`${styles.navLink} ${pathname === '/events' ? styles.active : ''}`}>
+          <Calendar size={20} />
+          <span>Events</span>
+        </Link>
+        <Link href="/profile" className={`${styles.navLink} ${pathname === '/profile' ? styles.active : ''}`}>
+          <User size={20} />
+          <span>Profile</span>
+        </Link>
+        <Link href="/admin" className={`${styles.navLink} ${pathname?.startsWith('/admin') ? styles.active : ''}`}>
+          <ShieldCheck size={20} />
+          <span>Admin</span>
+        </Link>
+      </div>
+    </nav>
+  );
+}
