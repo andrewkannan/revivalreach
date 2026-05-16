@@ -21,19 +21,20 @@ model User {
 }
 
 model Event {
-  id              String            @id @default(cuid())
-  title           String
-  date            DateTime
-  location        String
-  googleMapsLink  String?
-  wazeLink        String?
-  whatsappLink    String?
-  meetingPoint    String?
-  remarks         String?
-  leaderName      String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  participants    EventParticipant[]
+  id                String            @id @default(cuid())
+  title             String
+  date              DateTime
+  location          String
+  googleMapsLink    String?
+  wazeLink          String?
+  whatsappLink      String?
+  whatsappGroupLink String?
+  meetingPoint      String?
+  remarks           String?
+  leaderName        String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  participants      EventParticipant[]
 }
 
 model EventParticipant {
