@@ -167,15 +167,13 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
           <input type="text" name="title" className="input-glass" value={formData.title} onChange={handleChange} required />
         </div>
         
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-          <div className={authStyles.inputGroup} style={{ flex: '1 1 120px' }}>
-            <label>Date</label>
-            <input type="date" name="date" className="input-glass" value={formData.date} onChange={handleChange} required />
-          </div>
-          <div className={authStyles.inputGroup} style={{ flex: '1 1 120px' }}>
-            <label>Time</label>
-            <input type="time" name="time" className="input-glass" value={formData.time} onChange={handleChange} required />
-          </div>
+        <div className={authStyles.inputGroup}>
+          <label>Date</label>
+          <input type="date" name="date" className="input-glass" value={formData.date} onChange={handleChange} required />
+        </div>
+        <div className={authStyles.inputGroup}>
+          <label>Time</label>
+          <input type="time" name="time" className="input-glass" value={formData.time} onChange={handleChange} required />
         </div>
 
         <div className={authStyles.inputGroup}>
