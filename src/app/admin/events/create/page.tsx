@@ -22,33 +22,41 @@ export default function CreateEventPage() {
   });
 
   const [leaders, setLeaders] = useState<string[]>([]);
-  const [leaderInput, setLeaderInput] = useState("");
+  const [availableLeaders, setAvailableLeaders] = useState<any[]>([]);
 
-  // Pre-fill leader name when session loads
+  // Fetch leaders on mount
   useEffect(() => {
-    if (session?.user?.name && leaders.length === 0) {
-      setLeaders([session.user.name as string]);
+    fetch("/api/admin/users/leaders")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setAvailableLeaders(data);
+        }
+      })
+      .catch(err => console.error("Failed to load leaders", err));
+  }, []);
+
+  // Pre-fill leader name when session loads and leaders are fetched
+  useEffect(() => {
+    if (session?.user?.name && leaders.length === 0 && availableLeaders.length > 0) {
+      // Check if logged in user is in the available leaders list
+      const isLeader = availableLeaders.some(l => l.name === session.user.name || l.email === session.user.email);
+      if (isLeader) {
+        setLeaders([session.user.name as string]);
+      }
     }
-  }, [session]);
+  }, [session, availableLeaders]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLeaderKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      if (leaderInput.trim()) {
-        if (!leaders.includes(leaderInput.trim())) {
-          setLeaders([...leaders, leaderInput.trim()]);
-        }
-        setLeaderInput("");
-      }
+  const toggleLeader = (name: string) => {
+    if (leaders.includes(name)) {
+      setLeaders(leaders.filter(l => l !== name));
+    } else {
+      setLeaders([...leaders, name]);
     }
-  };
-
-  const removeLeader = (index: number) => {
-    setLeaders(leaders.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +88,7 @@ export default function CreateEventPage() {
 
   return (
     <div className={`glass-panel ${styles.adminContent}`} style={{ padding: '30px' }}>
-      <h1 className={styles.pageTitle}>Create New Event</h1>
+      <h1 className={styles.pageTitle}>Create New Revival</h1>
       
       {status.message && (
         <div className={status.type === 'error' ? authStyles.error : authStyles.success} style={{ maxWidth: '800px' }}>
@@ -89,9 +97,9 @@ export default function CreateEventPage() {
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '800px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label>Event Title</label>
+            <label>Revival Title</label>
             <input type="text" name="title" className="input-glass" value={formData.title} onChange={handleChange} required />
           </div>
           
@@ -128,24 +136,33 @@ export default function CreateEventPage() {
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
-            <label>Revival Leaders</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              {leaders.map((leader, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '16px', fontSize: '0.9rem' }}>
-                  {leader}
-                  <button type="button" onClick={() => removeLeader(idx)} style={{ background: 'transparent', border: 'none', color: 'white', marginLeft: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>×</button>
-                </div>
-              ))}
-              <input 
-                type="text" 
-                value={leaderInput} 
-                onChange={(e) => setLeaderInput(e.target.value)}
-                onKeyDown={handleLeaderKeyDown}
-                placeholder={leaders.length === 0 ? "Type a name and press Enter..." : "Add another leader..."}
-                style={{ flex: 1, background: 'transparent', border: 'none', color: 'white', outline: 'none', minWidth: '200px', padding: '6px' }}
-              />
+            <label>Revival Leaders (Multi-select)</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              {availableLeaders.length === 0 ? (
+                <span style={{ opacity: 0.5 }}>Loading leaders...</span>
+              ) : (
+                availableLeaders.map(l => {
+                  const displayName = l.name || l.email;
+                  const isSelected = leaders.includes(displayName);
+                  return (
+                    <div 
+                      key={l.id} 
+                      onClick={() => toggleLeader(displayName)}
+                      style={{ 
+                        display: 'flex', alignItems: 'center', padding: '6px 14px', borderRadius: '20px', fontSize: '0.9rem', cursor: 'pointer',
+                        background: isSelected ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+                        color: isSelected ? 'white' : 'rgba(255,255,255,0.8)',
+                        border: isSelected ? '1px solid transparent' : '1px solid rgba(255,255,255,0.2)',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      {displayName}
+                    </div>
+                  );
+                })
+              )}
             </div>
-            <small style={{ opacity: 0.6, marginTop: '4px', display: 'block' }}>Type a name and press Enter or comma to add.</small>
+            <small style={{ opacity: 0.6, marginTop: '4px', display: 'block' }}>Tap to select or deselect leaders.</small>
           </div>
 
           <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
@@ -161,7 +178,7 @@ export default function CreateEventPage() {
 
         <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
           <button type="submit" className="btn-primary" disabled={status.type === 'success'}>
-            Create Event
+            Create Revival
           </button>
           <button type="button" className="btn-secondary" onClick={() => router.push('/admin/events')}>
             Cancel

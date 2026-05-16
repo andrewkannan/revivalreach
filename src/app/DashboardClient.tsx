@@ -73,14 +73,14 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Upcoming Events</h2>
+            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Upcoming Revivals</h2>
             {(user?.role === 'ADMIN' || user?.role === 'LEADER') && (
               <button 
                 className="btn-primary" 
                 onClick={() => router.push('/admin/events/create')}
                 style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '8px' }}
               >
-                + Create Event
+                + Create Revival
               </button>
             )}
           </div>
@@ -93,7 +93,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
               onClick={() => router.push('/admin/events/create')}
               style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '8px' }}
             >
-              + Create Event
+              + Create Revival
             </button>
           )}
         </div>

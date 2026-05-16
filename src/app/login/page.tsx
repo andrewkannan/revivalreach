@@ -10,6 +10,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
@@ -17,17 +18,24 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
 
-    if (res?.error) {
-      setError(res.error);
-    } else {
-      router.push(callbackUrl);
+      if (res?.error) {
+        setError(res.error);
+        setIsLoading(false);
+      } else {
+        router.push(callbackUrl);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+      setIsLoading(false);
     }
   };
 
@@ -49,6 +57,7 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           <div className={styles.inputGroup}>
@@ -60,10 +69,11 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
-          <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-            Sign In
+          <button type="submit" className="btn-primary" disabled={isLoading} style={{ width: '100%', marginTop: '1rem', opacity: isLoading ? 0.7 : 1 }}>
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 

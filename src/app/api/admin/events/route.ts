@@ -17,8 +17,23 @@ export async function POST(req: Request) {
     const autoGoogleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
     const autoWazeLink = `https://waze.com/ul?q=${encodedLocation}`;
 
+    // Generate unique R0001 code
+    const lastEvent = await prisma.event.findFirst({
+      where: { eventCode: { not: null } },
+      orderBy: { eventCode: 'desc' }
+    });
+
+    let newCode = "R0001";
+    if (lastEvent?.eventCode && lastEvent.eventCode.startsWith("R")) {
+      const lastNumber = parseInt(lastEvent.eventCode.substring(1), 10);
+      if (!isNaN(lastNumber)) {
+        newCode = `R${String(lastNumber + 1).padStart(4, '0')}`;
+      }
+    }
+
     const event = await prisma.event.create({
       data: {
+        eventCode: newCode,
         title: data.title,
         date: new Date(data.date),
         location: data.location,

@@ -13,9 +13,9 @@ export default function BottomNav() {
         <Home size={24} />
         <span>Home</span>
       </Link>
-      <Link href="/events" className={`${styles.navLink} ${pathname === '/events' ? styles.active : ''}`}>
+      <Link href="/souls" className={`${styles.navLink} ${pathname === '/souls' ? styles.active : ''}`}>
         <Calendar size={24} />
-        <span>Events</span>
+        <span>Souls</span>
       </Link>
       <Link href="/profile" className={`${styles.navLink} ${pathname === '/profile' ? styles.active : ''}`}>
         <User size={24} />
