@@ -8,7 +8,8 @@ import JoinButton from "./JoinButton"; // We will extract the join logic to a cl
 
 export const dynamic = 'force-dynamic';
 
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
+export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -16,7 +17,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
   }
 
   const event = await prisma.event.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       _count: {
         select: { participants: true }
