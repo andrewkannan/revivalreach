@@ -21,9 +21,14 @@ export default async function EventsPage() {
 
   const joinedEventIds = participations.map(p => p.eventId);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  today.setDate(today.getDate() - 1);
+
   const events = await prisma.event.findMany({
     where: {
-      id: { in: joinedEventIds }
+      id: { in: joinedEventIds },
+      date: { gte: today }
     },
     orderBy: {
       date: 'asc',

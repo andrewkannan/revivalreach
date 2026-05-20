@@ -9,9 +9,11 @@ export default async function Home() {
   try {
     const session = await getServerSession(authOptions);
 
-    // Get midnight of today in local time
+    // Get midnight of today in local time, and subtract a day to account for UTC timezone differences
+    // on the server, ensuring we don't accidentally hide today's early morning events.
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() - 1);
 
     // Fetch upcoming events from DB
     const events = await prisma.event.findMany({
