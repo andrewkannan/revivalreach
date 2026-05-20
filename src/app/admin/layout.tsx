@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Admin.module.css";
-import { Users, Settings, CalendarRange } from "lucide-react";
+import { Users, Settings, CalendarRange, Heart } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,6 +17,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
           <Link href="/admin/events" className={`${styles.sidebarLink} ${pathname === '/admin/events' ? styles.active : ''}`}>
             <CalendarRange size={20} /> Events
+          </Link>
+          <Link href="/admin/souls" className={`${styles.sidebarLink} ${pathname === '/admin/souls' ? styles.active : ''}`}>
+            <Heart size={20} /> Souls
           </Link>
           <Link href="/admin/settings" className={`${styles.sidebarLink} ${pathname === '/admin/settings' ? styles.active : ''}`}>
             <Settings size={20} /> Settings
