@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
@@ -11,6 +11,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+  const [stats, setStats] = useState({ totalSouls: 0, revivalsJoined: 0, prayedFor: 0, healed: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     if (session) {
@@ -21,6 +23,14 @@ export default function ProfilePage() {
           setLoadingEvents(false);
         })
         .catch(() => setLoadingEvents(false));
+        
+      fetch("/api/profile/stats")
+        .then(res => res.json())
+        .then(data => {
+          setStats(data);
+          setLoadingStats(false);
+        })
+        .catch(() => setLoadingStats(false));
     }
   }, [session]);
 
@@ -67,6 +77,45 @@ export default function ProfilePage() {
           <LogOut size={18} /> Sign Out
         </button>
       </div>
+
+      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Impact</h2>
+      {loadingStats ? (
+        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>Loading your impact...</div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
+            <div style={{ background: 'rgba(99, 102, 241, 0.2)', padding: '12px', borderRadius: '50%', color: 'var(--primary)' }}>
+              <Users size={24} />
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.totalSouls}</div>
+            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Souls Reached</div>
+          </div>
+          
+          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
+            <div style={{ background: 'rgba(236, 72, 153, 0.2)', padding: '12px', borderRadius: '50%', color: 'var(--secondary)' }}>
+              <CalendarIcon size={24} />
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.revivalsJoined}</div>
+            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Revivals Joined</div>
+          </div>
+          
+          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
+            <div style={{ background: 'rgba(245, 158, 11, 0.2)', padding: '12px', borderRadius: '50%', color: '#f59e0b' }}>
+              <Heart size={24} />
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.prayedFor}</div>
+            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Prayers Offered</div>
+          </div>
+          
+          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
+            <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '12px', borderRadius: '50%', color: 'var(--success)' }}>
+              <Activity size={24} />
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.healed}</div>
+            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Healings Witnessed</div>
+          </div>
+        </div>
+      )}
 
       <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Events</h2>
       {loadingEvents ? (
