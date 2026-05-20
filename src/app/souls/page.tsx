@@ -65,6 +65,24 @@ export default function SoulsPage() {
     }
   };
 
+  const handleJoinEvent = async (eventId: string) => {
+    try {
+      const res = await fetch("/api/events/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId })
+      });
+      if (res.ok) {
+        fetchTodayEvents();
+        setFormData(prev => ({ ...prev, eventId }));
+      } else {
+        alert("Failed to join event.");
+      }
+    } catch (err) {
+      alert("Error joining event.");
+    }
+  };
+
   const fetchSouls = async () => {
     try {
       const res = await fetch("/api/souls");
@@ -217,19 +235,33 @@ export default function SoulsPage() {
                     None
                   </button>
                   {todayEvents.map(evt => (
-                    <button 
-                      key={evt.id}
-                      type="button" 
-                      onClick={() => setFormData(prev => ({ ...prev, eventId: evt.id }))}
-                      style={{ 
-                        padding: '8px 16px', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease',
-                        border: formData.eventId === evt.id ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
-                        background: formData.eventId === evt.id ? 'var(--primary)' : 'transparent',
-                        color: formData.eventId === evt.id ? 'white' : 'rgba(255,255,255,0.8)'
-                      }}
-                    >
-                      {evt.title} {!evt.hasJoined && "(Not Joined)"}
-                    </button>
+                    <div key={evt.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button 
+                        type="button" 
+                        onClick={() => setFormData(prev => ({ ...prev, eventId: evt.id }))}
+                        style={{ 
+                          padding: '8px 16px', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease',
+                          border: formData.eventId === evt.id ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+                          background: formData.eventId === evt.id ? 'var(--primary)' : 'transparent',
+                          color: formData.eventId === evt.id ? 'white' : 'rgba(255,255,255,0.8)'
+                        }}
+                      >
+                        {evt.title}
+                      </button>
+                      {!evt.hasJoined && (
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleJoinEvent(evt.id); }}
+                          style={{
+                            padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', cursor: 'pointer',
+                            background: 'rgba(16, 185, 129, 0.2)', color: 'var(--success)', border: '1px solid var(--success)',
+                            fontWeight: 'bold', transition: 'all 0.2s ease'
+                          }}
+                        >
+                          Join
+                        </button>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
