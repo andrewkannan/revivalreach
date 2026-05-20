@@ -35,8 +35,8 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
             <th>Date</th>
             <th>Location</th>
             <th>Leader</th>
-            <th>Status</th>
-            <th>Souls</th>
+            <th style={{ textAlign: 'center' }}>Status</th>
+            <th style={{ textAlign: 'center' }}>Souls</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -54,15 +54,16 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
                   <td>{date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                   <td>{event.location}</td>
                   <td>{event.leaderName || "-"}</td>
-                  <td>
+                  <td style={{ textAlign: 'center' }}>
                     <span className={`${styles.badge} ${event.status === 'APPROVED' ? styles['badge-success'] : styles['badge-warning']}`}>
                       {event.status}
                     </span>
                   </td>
-                  <td style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
+                  <td style={{ textAlign: 'center', fontWeight: 'bold', color: 'var(--primary)' }}>
                     {event._count?.souls || 0}
                   </td>
-                  <td style={{ display: 'flex', gap: '8px' }}>
+                  <td>
+                    <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       onClick={() => router.push(`/admin/events/${event.id}/edit`)}
                       className={styles.actionButton}
@@ -76,6 +77,7 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
                     >
                       Delete
                     </button>
+                    </div>
                   </td>
                 </tr>
               )
