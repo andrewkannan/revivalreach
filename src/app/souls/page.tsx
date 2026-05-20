@@ -322,7 +322,7 @@ export default function SoulsPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label>Remarks (Optional)</label>
-              <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about prayer needs, background, etc." />
+              <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about background, etc." />
             </div>
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
@@ -359,7 +359,7 @@ export default function SoulsPage() {
                       {soul.isPriority && <Star size={18} color="#eab308" fill="#eab308" />}
                     </h3>
                     <p style={{ opacity: 0.7, fontSize: '0.9rem', margin: '4px 0 0 0' }}>
-                      Added: {new Date(soul.createdAt).toLocaleDateString()}
+                      {soul.event ? `Event: ${soul.event.title}` : `Added: ${new Date(soul.createdAt).toLocaleDateString()}`}
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -373,11 +373,6 @@ export default function SoulsPage() {
                 </div>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px' }}>
-                  {soul.event && (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255, 0.1)', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 500 }}>
-                      <Activity size={12} /> {soul.event.title}
-                    </span>
-                  )}
                   {soul.prayed && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--primary)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
                       <Heart size={12} /> Prayed
@@ -415,7 +410,7 @@ export default function SoulsPage() {
                   className="btn-primary"
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: '#25D366', borderColor: '#25D366', marginTop: '8px' }}
                 >
-                  <MessageCircle size={18} /> WhatsApp {soul.phone}
+                  <MessageCircle size={18} /> WhatsApp
                 </a>
               </div>
             ))}
