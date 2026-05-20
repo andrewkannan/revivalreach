@@ -145,10 +145,32 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginTop: '10px' }}>
               <div className={authStyles.inputGroup}>
                 <label>Status</label>
-                <select name="status" className="input-glass" value={formData.status} onChange={handleChange} style={{ background: 'var(--card-bg)' }}>
-                  <option value="PENDING">PENDING</option>
-                  <option value="APPROVED">APPROVED</option>
-                </select>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, status: "PENDING" })}
+                    style={{
+                      flex: 1, padding: '10px', borderRadius: '12px', border: formData.status === "PENDING" ? '1px solid #f59e0b' : '1px solid rgba(255,255,255,0.1)',
+                      background: formData.status === "PENDING" ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,255,255,0.05)',
+                      color: formData.status === "PENDING" ? '#f59e0b' : 'rgba(255,255,255,0.6)',
+                      cursor: 'pointer', transition: 'all 0.2s ease', fontWeight: 600
+                    }}
+                  >
+                    PENDING
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, status: "APPROVED" })}
+                    style={{
+                      flex: 1, padding: '10px', borderRadius: '12px', border: formData.status === "APPROVED" ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)',
+                      background: formData.status === "APPROVED" ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)',
+                      color: formData.status === "APPROVED" ? 'var(--success)' : 'rgba(255,255,255,0.6)',
+                      cursor: 'pointer', transition: 'all 0.2s ease', fontWeight: 600
+                    }}
+                  >
+                    APPROVED
+                  </button>
+                </div>
               </div>
               <div className={authStyles.inputGroup} style={{ gridColumn: '1 / -1' }}>
                 <label>Google Maps Override Link</label>
