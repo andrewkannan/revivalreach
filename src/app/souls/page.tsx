@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2 } from "lucide-react";
+import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2, Star } from "lucide-react";
 
 type Soul = {
   id: string;
@@ -13,6 +13,7 @@ type Soul = {
   prayerNeeds: string | null;
   remarks: string | null;
   eventId: string | null;
+  isPriority: boolean;
   event?: { title: string };
   createdAt: string;
 };
@@ -34,7 +35,8 @@ export default function SoulsPage() {
     requestedPrayer: false,
     prayerNeeds: "",
     remarks: "",
-    eventId: null as string | null
+    eventId: null as string | null,
+    isPriority: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -91,7 +93,7 @@ export default function SoulsPage() {
     const joined = todayEvents.filter(e => e.hasJoined);
     const defaultEventId = joined.length === 1 ? joined[0].id : null;
     
-    setFormData({ name: "", phone: "+60", prayed: false, healed: false, requestedPrayer: false, prayerNeeds: "", remarks: "", eventId: defaultEventId });
+    setFormData({ name: "", phone: "+60", prayed: false, healed: false, requestedPrayer: false, prayerNeeds: "", remarks: "", eventId: defaultEventId, isPriority: false });
     setEditingId(null);
     setIsFormOpen(false);
   };
@@ -110,7 +112,8 @@ export default function SoulsPage() {
       requestedPrayer: soul.requestedPrayer || false,
       prayerNeeds: soul.prayerNeeds || "",
       remarks: soul.remarks || "",
-      eventId: soul.eventId || null
+      eventId: soul.eventId || null,
+      isPriority: soul.isPriority || false
     });
     setEditingId(soul.id);
     setIsFormOpen(true);
@@ -179,7 +182,20 @@ export default function SoulsPage() {
 
       {isFormOpen && (
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '30px', animation: 'slideDown 0.3s ease-out' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '16px' }}>{editingId ? "Edit Soul" : "Add New Soul"}</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? "Edit Soul" : "Add New Soul"}</h2>
+            
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: formData.isPriority ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '20px', border: formData.isPriority ? '1px solid #eab308' : '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s ease' }}>
+              <input type="checkbox" name="isPriority" checked={formData.isPriority} onChange={handleInputChange} style={{ display: 'none' }} />
+              <Star size={16} color={formData.isPriority ? "#eab308" : "rgba(255,255,255,0.4)"} fill={formData.isPriority ? "#eab308" : "none"} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.6)' }}>Priority</span>
+              
+              <div style={{ width: '36px', height: '20px', background: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.2)', borderRadius: '10px', position: 'relative', transition: 'all 0.2s ease', marginLeft: '4px' }}>
+                <div style={{ width: '16px', height: '16px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: formData.isPriority ? '18px' : '2px', transition: 'all 0.2s ease' }} />
+              </div>
+            </label>
+          </div>
+
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             
             {todayEvents.length > 0 && (
@@ -338,7 +354,10 @@ export default function SoulsPage() {
               <div key={soul.id} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>{soul.name}</h3>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {soul.name}
+                      {soul.isPriority && <Star size={18} color="#eab308" fill="#eab308" />}
+                    </h3>
                     <p style={{ opacity: 0.7, fontSize: '0.9rem', margin: '4px 0 0 0' }}>
                       Added: {new Date(soul.createdAt).toLocaleDateString()}
                     </p>

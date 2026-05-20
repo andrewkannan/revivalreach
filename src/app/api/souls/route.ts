@@ -13,7 +13,10 @@ export async function GET(req: Request) {
 
     const souls = await prisma.soul.findMany({
       where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
+      orderBy: [
+        { isPriority: "desc" },
+        { createdAt: "desc" }
+      ],
       include: {
         event: {
           select: { title: true }
@@ -36,7 +39,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, remarks, eventId } = await req.json();
+    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, remarks, eventId, isPriority } = await req.json();
 
     if (!name || !phone) {
       return NextResponse.json({ message: "Name and phone are required" }, { status: 400 });
@@ -52,7 +55,8 @@ export async function POST(req: Request) {
         requestedPrayer: Boolean(requestedPrayer),
         prayerNeeds: prayerNeeds || null,
         remarks: remarks || null,
-        eventId: eventId || null
+        eventId: eventId || null,
+        isPriority: Boolean(isPriority)
       }
     });
 

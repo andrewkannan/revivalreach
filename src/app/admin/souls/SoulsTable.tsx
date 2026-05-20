@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import styles from "../Admin.module.css";
-import { Heart, Activity, MessageCircle } from "lucide-react";
+import { Heart, Activity, MessageCircle, Star } from "lucide-react";
 
 export default function SoulsTable({ initialSouls }: { initialSouls: any[] }) {
   const [souls, setSouls] = useState(initialSouls);
@@ -52,6 +52,11 @@ export default function SoulsTable({ initialSouls }: { initialSouls: any[] }) {
                       {soul.requestedPrayer && (
                         <span style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '2px 6px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
                           <MessageCircle size={10} /> Prayer
+                        </span>
+                      )}
+                      {soul.isPriority && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(234, 179, 8, 0.2)', color: '#eab308', padding: '2px 6px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          <Star size={10} fill="#eab308" /> Priority
                         </span>
                       )}
                     </div>
