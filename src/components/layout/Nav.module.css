@@ -1,6 +1,6 @@
 /* Nav.module.css */
 .topNav {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -74,6 +74,15 @@
 
 .topNav .navLink:hover {
   transform: none;
+}
+
+@media (max-width: 767px) {
+  .topNav {
+    justify-content: center;
+  }
+  .topNavLinks {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
