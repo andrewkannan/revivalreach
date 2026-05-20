@@ -13,7 +13,12 @@ export async function GET(req: Request) {
 
     const souls = await prisma.soul.findMany({
       where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
+      include: {
+        event: {
+          select: { title: true }
+        }
+      }
     });
 
     return NextResponse.json(souls);
@@ -31,7 +36,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, phone, prayed, healed, remarks } = await req.json();
+    const { name, phone, prayed, healed, remarks, eventId } = await req.json();
 
     if (!name || !phone) {
       return NextResponse.json({ message: "Name and phone are required" }, { status: 400 });
@@ -44,7 +49,8 @@ export async function POST(req: Request) {
         phone,
         prayed: Boolean(prayed),
         healed: Boolean(healed),
-        remarks: remarks || null
+        remarks: remarks || null,
+        eventId: eventId || null
       }
     });
 

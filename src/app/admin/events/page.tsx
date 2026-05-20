@@ -16,7 +16,12 @@ export default async function AdminEventsPage() {
   // If Leader, only show their events? For now, let's show all events to Leaders too, or maybe they just manage all.
   // The prompt says "added by revival leaders during event creation" so leaders can create events.
   const events = await prisma.event.findMany({
-    orderBy: { date: 'desc' }
+    orderBy: { date: 'desc' },
+    include: {
+      _count: {
+        select: { souls: true }
+      }
+    }
   });
 
   return (

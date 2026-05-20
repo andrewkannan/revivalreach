@@ -36,6 +36,7 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
             <th>Location</th>
             <th>Leader</th>
             <th>Status</th>
+            <th>Souls</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -57,6 +58,9 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
                     <span className={`${styles.badge} ${event.status === 'APPROVED' ? styles['badge-success'] : styles['badge-warning']}`}>
                       {event.status}
                     </span>
+                  </td>
+                  <td style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
+                    {event._count?.souls || 0}
                   </td>
                   <td style={{ display: 'flex', gap: '8px' }}>
                     <button

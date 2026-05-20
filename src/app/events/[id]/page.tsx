@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, Users, User as UserIcon, ArrowLeft } from "lucide-react";
+import { MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, Users, User as UserIcon, ArrowLeft, Activity } from "lucide-react";
 import Link from "next/link";
 import JoinButton from "./JoinButton"; // We will extract the join logic to a client component
 
@@ -27,7 +27,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         }
       },
       _count: {
-        select: { participants: true }
+        select: { participants: true, souls: true }
       }
     }
   });
@@ -71,6 +71,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Users size={16} color="var(--primary)" /> 
               {event._count.participants} Participants
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--success)', fontWeight: 600 }}>
+              <Activity size={16} /> 
+              {event._count.souls || 0} Souls Met
             </span>
           </div>
         </div>

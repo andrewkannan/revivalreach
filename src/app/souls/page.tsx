@@ -10,6 +10,8 @@ type Soul = {
   prayed: boolean;
   healed: boolean;
   remarks: string | null;
+  eventId: string | null;
+  event?: { title: string };
   createdAt: string;
 };
 
@@ -21,20 +23,41 @@ export default function SoulsPage() {
   // Form State
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [todayEvents, setTodayEvents] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     phone: "+60",
     prayed: false,
     healed: false,
-    remarks: ""
+    remarks: "",
+    eventId: null as string | null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (session) {
       fetchSouls();
+      fetchTodayEvents();
     }
   }, [session]);
+
+  const fetchTodayEvents = async () => {
+    try {
+      const res = await fetch("/api/events/today");
+      if (res.ok) {
+        const data = await res.json();
+        setTodayEvents(data);
+        
+        // Default to joined event if there is exactly 1
+        const joined = data.filter((e: any) => e.hasJoined);
+        if (joined.length === 1) {
+          setFormData(prev => ({ ...prev, eventId: joined[0].id }));
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchSouls = async () => {
     try {
@@ -61,7 +84,10 @@ export default function SoulsPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: "", phone: "+60", prayed: false, healed: false, remarks: "" });
+    const joined = todayEvents.filter(e => e.hasJoined);
+    const defaultEventId = joined.length === 1 ? joined[0].id : null;
+    
+    setFormData({ name: "", phone: "+60", prayed: false, healed: false, remarks: "", eventId: defaultEventId });
     setEditingId(null);
     setIsFormOpen(false);
   };
@@ -77,7 +103,8 @@ export default function SoulsPage() {
       phone: soul.phone,
       prayed: soul.prayed,
       healed: soul.healed,
-      remarks: soul.remarks || ""
+      remarks: soul.remarks || "",
+      eventId: soul.eventId || null
     });
     setEditingId(soul.id);
     setIsFormOpen(true);
@@ -149,6 +176,43 @@ export default function SoulsPage() {
           <h2 style={{ fontSize: '1.25rem', marginBottom: '16px' }}>{editingId ? "Edit Soul" : "Add New Soul"}</h2>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             
+            {todayEvents.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '4px', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontWeight: 'bold' }}>
+                  <Activity size={16} /> Tag to Event
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  <button 
+                    type="button" 
+                    onClick={() => setFormData(prev => ({ ...prev, eventId: null }))}
+                    style={{ 
+                      padding: '8px 16px', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease',
+                      border: formData.eventId === null ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+                      background: formData.eventId === null ? 'rgba(99, 102, 241, 0.2)' : 'transparent',
+                      color: formData.eventId === null ? 'white' : 'rgba(255,255,255,0.6)'
+                    }}
+                  >
+                    None
+                  </button>
+                  {todayEvents.map(evt => (
+                    <button 
+                      key={evt.id}
+                      type="button" 
+                      onClick={() => setFormData(prev => ({ ...prev, eventId: evt.id }))}
+                      style={{ 
+                        padding: '8px 16px', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease',
+                        border: formData.eventId === evt.id ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+                        background: formData.eventId === evt.id ? 'var(--primary)' : 'transparent',
+                        color: formData.eventId === evt.id ? 'white' : 'rgba(255,255,255,0.8)'
+                      }}
+                    >
+                      {evt.title} {!evt.hasJoined && "(Not Joined)"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label>Name</label>
               <input type="text" name="name" className="input-glass" value={formData.name} onChange={handleInputChange} required />
@@ -254,7 +318,12 @@ export default function SoulsPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', marginTop: '4px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px' }}>
+                  {soul.event && (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255, 0.1)', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 500 }}>
+                      <Activity size={12} /> {soul.event.title}
+                    </span>
+                  )}
                   {soul.prayed && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--primary)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
                       <Heart size={12} /> Prayed
