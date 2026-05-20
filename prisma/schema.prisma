@@ -80,6 +80,8 @@ model Soul {
   phone     String
   prayed    Boolean  @default(false)
   healed    Boolean  @default(false)
+  requestedPrayer Boolean @default(false)
+  prayerNeeds     String?
   remarks   String?
   eventId   String?
   createdAt DateTime @default(now())

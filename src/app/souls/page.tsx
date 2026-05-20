@@ -9,6 +9,8 @@ type Soul = {
   phone: string;
   prayed: boolean;
   healed: boolean;
+  requestedPrayer: boolean;
+  prayerNeeds: string | null;
   remarks: string | null;
   eventId: string | null;
   event?: { title: string };
@@ -29,6 +31,8 @@ export default function SoulsPage() {
     phone: "+60",
     prayed: false,
     healed: false,
+    requestedPrayer: false,
+    prayerNeeds: "",
     remarks: "",
     eventId: null as string | null
   });
@@ -87,7 +91,7 @@ export default function SoulsPage() {
     const joined = todayEvents.filter(e => e.hasJoined);
     const defaultEventId = joined.length === 1 ? joined[0].id : null;
     
-    setFormData({ name: "", phone: "+60", prayed: false, healed: false, remarks: "", eventId: defaultEventId });
+    setFormData({ name: "", phone: "+60", prayed: false, healed: false, requestedPrayer: false, prayerNeeds: "", remarks: "", eventId: defaultEventId });
     setEditingId(null);
     setIsFormOpen(false);
   };
@@ -103,6 +107,8 @@ export default function SoulsPage() {
       phone: soul.phone,
       prayed: soul.prayed,
       healed: soul.healed,
+      requestedPrayer: soul.requestedPrayer || false,
+      prayerNeeds: soul.prayerNeeds || "",
       remarks: soul.remarks || "",
       eventId: soul.eventId || null
     });
@@ -267,7 +273,36 @@ export default function SoulsPage() {
               >
                 <Activity size={18} color={formData.healed ? "var(--success)" : "rgba(255,255,255,0.6)"} /> Healed
               </button>
+
+              <button 
+                type="button" 
+                onClick={() => setFormData(prev => ({ ...prev, requestedPrayer: !prev.requestedPrayer }))}
+                style={{ 
+                  flex: 1, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '8px', 
+                  padding: '12px', 
+                  borderRadius: '12px', 
+                  border: formData.requestedPrayer ? '1px solid #f59e0b' : '1px solid rgba(255,255,255,0.1)', 
+                  background: formData.requestedPrayer ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,255,255,0.05)', 
+                  color: formData.requestedPrayer ? '#f59e0b' : 'rgba(255,255,255,0.6)', 
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontWeight: 600
+                }}
+              >
+                <MessageCircle size={18} color={formData.requestedPrayer ? "#f59e0b" : "rgba(255,255,255,0.6)"} /> Prayer Request
+              </button>
             </div>
+
+            {formData.requestedPrayer && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'fadeIn 0.3s ease-out' }}>
+                <label style={{ color: '#f59e0b' }}>Prayer Needs</label>
+                <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} placeholder="What do they need prayer for?" style={{ borderColor: 'rgba(245, 158, 11, 0.3)' }} required={formData.requestedPrayer} />
+              </div>
+            )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label>Remarks (Optional)</label>
@@ -334,7 +369,19 @@ export default function SoulsPage() {
                       <CheckCircle size={12} /> Healed
                     </span>
                   )}
+                  {soul.requestedPrayer && (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
+                      <MessageCircle size={12} /> Prayer Requested
+                    </span>
+                  )}
                 </div>
+
+                {soul.prayerNeeds && (
+                  <div style={{ background: 'rgba(245, 158, 11, 0.1)', borderLeft: '3px solid #f59e0b', padding: '12px', borderRadius: '4px', fontSize: '0.9rem', marginTop: '4px' }}>
+                    <strong style={{ display: 'block', marginBottom: '4px', color: '#f59e0b' }}>Prayer Needs:</strong>
+                    {soul.prayerNeeds}
+                  </div>
+                )}
 
                 {soul.remarks && (
                   <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px', fontSize: '0.9rem', marginTop: '4px' }}>

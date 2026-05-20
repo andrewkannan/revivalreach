@@ -25,7 +25,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    const { name, phone, prayed, healed, remarks, eventId } = await req.json();
+    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, remarks, eventId } = await req.json();
 
     const updatedSoul = await prisma.soul.update({
       where: { id },
@@ -34,6 +34,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         phone,
         prayed: Boolean(prayed),
         healed: Boolean(healed),
+        requestedPrayer: Boolean(requestedPrayer),
+        prayerNeeds: prayerNeeds || null,
         remarks: remarks || null,
         eventId: eventId !== undefined ? eventId : undefined
       }
