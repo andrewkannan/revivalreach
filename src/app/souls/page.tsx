@@ -23,7 +23,7 @@ export default function SoulsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    phone: "+60",
     prayed: false,
     healed: false,
     remarks: ""
@@ -61,7 +61,7 @@ export default function SoulsPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: "", phone: "", prayed: false, healed: false, remarks: "" });
+    setFormData({ name: "", phone: "+60", prayed: false, healed: false, remarks: "" });
     setEditingId(null);
     setIsFormOpen(false);
   };
@@ -159,16 +159,50 @@ export default function SoulsPage() {
               <input type="tel" name="phone" className="input-glass" value={formData.phone} onChange={handleInputChange} required placeholder="+1234567890" />
             </div>
 
-            <div style={{ display: 'flex', gap: '24px', margin: '10px 0' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                <input type="checkbox" name="prayed" checked={formData.prayed} onChange={handleInputChange} style={{ width: '20px', height: '20px' }} />
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Heart size={16} color="var(--primary)" /> Prayed</span>
-              </label>
+            <div style={{ display: 'flex', gap: '16px', margin: '10px 0' }}>
+              <button 
+                type="button" 
+                onClick={() => setFormData(prev => ({ ...prev, prayed: !prev.prayed }))}
+                style={{ 
+                  flex: 1, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '8px', 
+                  padding: '12px', 
+                  borderRadius: '12px', 
+                  border: formData.prayed ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)', 
+                  background: formData.prayed ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', 
+                  color: formData.prayed ? 'var(--primary)' : 'rgba(255,255,255,0.6)', 
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontWeight: 600
+                }}
+              >
+                <Heart size={18} color={formData.prayed ? "var(--primary)" : "rgba(255,255,255,0.6)"} fill={formData.prayed ? "var(--primary)" : "none"} /> Prayed
+              </button>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                <input type="checkbox" name="healed" checked={formData.healed} onChange={handleInputChange} style={{ width: '20px', height: '20px' }} />
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Activity size={16} color="var(--success)" /> Healed</span>
-              </label>
+              <button 
+                type="button" 
+                onClick={() => setFormData(prev => ({ ...prev, healed: !prev.healed }))}
+                style={{ 
+                  flex: 1, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '8px', 
+                  padding: '12px', 
+                  borderRadius: '12px', 
+                  border: formData.healed ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)', 
+                  background: formData.healed ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)', 
+                  color: formData.healed ? 'var(--success)' : 'rgba(255,255,255,0.6)', 
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontWeight: 600
+                }}
+              >
+                <Activity size={18} color={formData.healed ? "var(--success)" : "rgba(255,255,255,0.6)"} /> Healed
+              </button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
