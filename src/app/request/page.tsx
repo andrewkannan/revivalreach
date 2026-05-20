@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import styles from "../login/Auth.module.css";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +11,19 @@ export default function RequestEvangelismPage() {
   const [details, setDetails] = useState("");
   const [status, setStatus] = useState({ type: "", message: "" });
   const router = useRouter();
+  const { data: session, status: sessionStatus } = useSession();
+
+  useEffect(() => {
+    if (sessionStatus === "authenticated" && session?.user) {
+      if (!name) setName(session.user.name || "");
+      
+      if (!contactInfo) {
+        // Prefer phone if available, otherwise fallback to email
+        const userPhone = (session.user as any).phone;
+        setContactInfo(userPhone || session.user.email || "");
+      }
+    }
+  }, [session, sessionStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
