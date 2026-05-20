@@ -69,13 +69,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <button 
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className="btn-primary" 
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '20px', background: 'var(--danger)', borderColor: 'var(--danger)' }}
-        >
-          <LogOut size={18} /> Sign Out
-        </button>
       </div>
 
       <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Impact</h2>
@@ -83,36 +76,44 @@ export default function ProfilePage() {
         <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>Loading your impact...</div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(99, 102, 241, 0.2)', padding: '12px', borderRadius: '50%', color: 'var(--primary)' }}>
+          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ background: 'rgba(99, 102, 241, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--primary)', flexShrink: 0 }}>
               <Users size={24} />
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.totalSouls}</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Souls Reached</div>
+            <div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Souls Reached</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.totalSouls}</div>
+            </div>
           </div>
           
-          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(236, 72, 153, 0.2)', padding: '12px', borderRadius: '50%', color: 'var(--secondary)' }}>
+          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ background: 'rgba(236, 72, 153, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--secondary)', flexShrink: 0 }}>
               <CalendarIcon size={24} />
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.revivalsJoined}</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Revivals Joined</div>
+            <div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Revivals Joined</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.revivalsJoined}</div>
+            </div>
           </div>
           
-          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(245, 158, 11, 0.2)', padding: '12px', borderRadius: '50%', color: '#f59e0b' }}>
+          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ background: 'rgba(245, 158, 11, 0.15)', padding: '12px', borderRadius: '12px', color: '#f59e0b', flexShrink: 0 }}>
               <Heart size={24} />
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.prayedFor}</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Prayers Offered</div>
+            <div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Prayers Offered</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.prayedFor}</div>
+            </div>
           </div>
           
-          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '12px', borderRadius: '50%', color: 'var(--success)' }}>
+          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ background: 'rgba(16, 185, 129, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--success)', flexShrink: 0 }}>
               <Activity size={24} />
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>{stats.healed}</div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.8, fontWeight: 600 }}>Healings Witnessed</div>
+            <div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Healings Witnessed</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.healed}</div>
+            </div>
           </div>
         </div>
       )}
@@ -153,6 +154,16 @@ export default function ProfilePage() {
           })}
         </div>
       )}
+
+      <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
+        <button 
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="btn-secondary" 
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }}
+        >
+          <LogOut size={18} /> Sign Out
+        </button>
+      </div>
     </div>
   );
 }
