@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
@@ -77,16 +77,6 @@ export default function ProfilePage() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
           <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ background: 'rgba(99, 102, 241, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--primary)', flexShrink: 0 }}>
-              <Users size={24} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Souls Reached</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.totalSouls}</div>
-            </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ background: 'rgba(236, 72, 153, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--secondary)', flexShrink: 0 }}>
               <CalendarIcon size={24} />
             </div>
@@ -103,16 +93,6 @@ export default function ProfilePage() {
             <div>
               <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Prayers Offered</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.prayedFor}</div>
-            </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ background: 'rgba(16, 185, 129, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--success)', flexShrink: 0 }}>
-              <Activity size={24} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Healings Witnessed</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.healed}</div>
             </div>
           </div>
         </div>
@@ -155,7 +135,15 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
+      <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <button 
+          onClick={() => window.open('https://wa.me/60186647872', '_blank')}
+          className="btn-secondary" 
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.3)' }}
+        >
+          <MessageCircle size={18} /> Message Support
+        </button>
+
         <button 
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="btn-secondary" 
