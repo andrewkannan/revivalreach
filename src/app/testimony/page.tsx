@@ -91,15 +91,25 @@ export default function TestimonyPage() {
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '30px', animation: 'slideDown 0.3s ease-out' }}>
           <h2 style={{ fontSize: '1.25rem', margin: '0 0 16px 0' }}>Share Your Testimony</h2>
           
-          <form onSubmit={handleSubmit} className={authStyles.form}>
-            <div className={authStyles.formGroup}>
-              <label>Your Testimony</label>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '0.9rem', fontWeight: 600, opacity: 0.9 }}>Your Testimony</label>
               <textarea 
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 required
-                className={authStyles.input}
-                style={{ minHeight: '150px', resize: 'vertical' }}
+                style={{ 
+                  width: '100%', 
+                  minHeight: '150px', 
+                  resize: 'vertical',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontFamily: 'inherit'
+                }}
                 placeholder="Share what God has done..."
               />
             </div>
