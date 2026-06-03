@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Calendar, User, Sparkles } from "lucide-react";
+import { Home, Calendar, User, BookOpen } from "lucide-react";
 import styles from "./Nav.module.css";
 
 import { useSession } from "next-auth/react";
@@ -21,7 +21,7 @@ export default function BottomNav() {
         <span>Souls</span>
       </Link>
       <Link href="/testimony" className={`${styles.navLink} ${pathname?.startsWith('/testimony') ? styles.active : ''}`}>
-        <Sparkles size={24} />
+        <BookOpen size={24} />
         <span>Testimony</span>
       </Link>
       <Link href="/profile" className={`${styles.navLink} ${pathname === '/profile' ? styles.active : ''}`}>
