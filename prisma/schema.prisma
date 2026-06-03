@@ -19,6 +19,9 @@ model User {
   updatedAt      DateTime          @updatedAt
   participations EventParticipant[]
   souls          Soul[]
+  leaderId       String?
+  leader         User?             @relation("UserToLeader", fields: [leaderId], references: [id])
+  members        User[]            @relation("UserToLeader")
 }
 
 model Event {
@@ -69,6 +72,7 @@ model SystemSettings {
   smtpPort         Int?
   smtpUser         String?
   smtpPass         String?
+  prayerEmailTargets String? // comma separated list
   whatsappTemplate String?  @default("Hi, I'm interested in the event...")
   updatedAt        DateTime @updatedAt
 }
@@ -81,6 +85,7 @@ model Soul {
   prayed    Boolean  @default(false)
   healed    Boolean  @default(false)
   requestedPrayer Boolean @default(false)
+  prayerEmailSent Boolean @default(false)
   prayerNeeds     String?
   remarks   String?
   eventId   String?
