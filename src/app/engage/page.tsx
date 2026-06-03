@@ -195,8 +195,8 @@ export default function EngagePage() {
           <p style={{ opacity: 0.8, marginTop: '8px' }}>Log your outreach efforts and track engagements.</p>
         </div>
         {!isFormOpen && (
-          <button onClick={openAddForm} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Plus size={18} /> Add Engage Record
+          <button onClick={openAddForm} className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', padding: 0, borderRadius: '50%' }}>
+            <Plus size={24} />
           </button>
         )}
       </div>

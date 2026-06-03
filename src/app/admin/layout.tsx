@@ -42,6 +42,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link href="/admin/evangelism" className={`${styles.sidebarLink} ${pathname === '/admin/evangelism' ? styles.active : ''}`}>
                 <MessageSquare size={20} /> Evangelism Requests
               </Link>
+              <Link href="/admin/testimonies" className={`${styles.sidebarLink} ${pathname === '/admin/testimonies' ? styles.active : ''}`}>
+                <MessageSquare size={20} /> Testimonies
+              </Link>
               <Link href="/admin/settings" className={`${styles.sidebarLink} ${pathname === '/admin/settings' ? styles.active : ''}`}>
                 <Settings size={20} /> Settings
               </Link>
