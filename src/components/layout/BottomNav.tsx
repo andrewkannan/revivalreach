@@ -11,6 +11,7 @@ export default function BottomNav() {
   const { data: session } = useSession();
 
   return (
+    <nav className={styles.bottomNav}>
       <Link href="/" className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}>
         <Home size={24} />
         <span>Revivals</span>
