@@ -45,7 +45,7 @@ export default async function MyTeamPage() {
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--secondary)' }}>{member._count.souls}</div>
-                <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>Souls Won</div>
+                <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>Engage Count</div>
               </div>
             </div>
           </div>

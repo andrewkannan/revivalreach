@@ -33,8 +33,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link href="/admin/events" className={`${styles.sidebarLink} ${pathname === '/admin/events' ? styles.active : ''}`}>
                 <CalendarRange size={20} /> Events
               </Link>
-              <Link href="/admin/souls" className={`${styles.sidebarLink} ${pathname === '/admin/souls' ? styles.active : ''}`}>
-                <Heart size={20} /> Souls
+              <Link href="/admin/engage" className={`${styles.sidebarLink} ${pathname === '/admin/engage' ? styles.active : ''}`}>
+                <Heart size={20} /> Engage
               </Link>
               <Link href="/admin/prayer-queue" className={`${styles.sidebarLink} ${pathname === '/admin/prayer-queue' ? styles.active : ''}`}>
                 <Heart size={20} /> Prayer Queue

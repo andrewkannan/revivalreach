@@ -18,7 +18,7 @@ type Soul = {
   createdAt: string;
 };
 
-export default function SoulsPage() {
+export default function EngagePage() {
   const { data: session } = useSession();
   const [souls, setSouls] = useState<Soul[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,7 @@ export default function SoulsPage() {
 
   const fetchSouls = async () => {
     try {
-      const res = await fetch("/api/souls");
+      const res = await fetch("/api/engage");
       if (res.ok) {
         const data = await res.json();
         setSouls(data);
@@ -142,7 +142,7 @@ export default function SoulsPage() {
     setIsSubmitting(true);
 
     try {
-      const url = editingId ? `/api/souls/${editingId}` : "/api/souls";
+      const url = editingId ? `/api/engage/${editingId}` : "/api/engage";
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -168,7 +168,7 @@ export default function SoulsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this record?")) return;
     try {
-      const res = await fetch(`/api/souls/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/engage/${id}`, { method: "DELETE" });
       if (res.ok) {
         fetchSouls();
       }
@@ -183,17 +183,20 @@ export default function SoulsPage() {
   };
 
   if (!session) {
-    return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Please log in to manage souls.</div>;
+    return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Please log in to manage engagements.</div>;
   }
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'white' }}>
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Souls</h1>
+        <div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Engage</h1>
+          <p style={{ opacity: 0.8, marginTop: '8px' }}>Log your outreach efforts and track engagements.</p>
+        </div>
         {!isFormOpen && (
           <button onClick={openAddForm} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Plus size={18} /> Add Soul
+            <Plus size={18} /> Add Engage Record
           </button>
         )}
       </div>
@@ -201,7 +204,7 @@ export default function SoulsPage() {
       {isFormOpen && (
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '30px', animation: 'slideDown 0.3s ease-out' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? "Edit Soul" : "Add New Soul"}</h2>
+            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? "Edit Record" : "Add New Engage Record"}</h2>
             
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: formData.isPriority ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '20px', border: formData.isPriority ? '1px solid #eab308' : '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s ease' }}>
               <input type="checkbox" name="isPriority" checked={formData.isPriority} onChange={handleInputChange} style={{ display: 'none' }} />
@@ -359,7 +362,7 @@ export default function SoulsPage() {
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
               <button type="submit" className="btn-primary" disabled={isSubmitting} style={{ flex: 1 }}>
-                {isSubmitting ? "Saving..." : "Save Soul"}
+                {isSubmitting ? "Saving..." : "Save Record"}
               </button>
               <button type="button" className="btn-secondary" onClick={resetForm} style={{ flex: 1 }}>
                 Cancel
@@ -371,14 +374,14 @@ export default function SoulsPage() {
 
       <div>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
-          My Souls ({souls.length})
+          My Engage Records ({souls.length})
         </h2>
         
         {loading ? (
-          <div style={{ textAlign: 'center', opacity: 0.5, padding: '20px' }}>Loading your souls...</div>
+          <div style={{ textAlign: 'center', opacity: 0.5, padding: '20px' }}>Loading your records...</div>
         ) : souls.length === 0 ? (
           <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>
-            No souls recorded yet. Click 'Add Soul' to start!
+            You haven't logged any engage records yet. Click "Add Engage Record" to start!
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

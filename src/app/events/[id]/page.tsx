@@ -74,7 +74,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--success)', fontWeight: 600 }}>
               <Activity size={16} /> 
-              {event._count.souls || 0} Souls Met
+              {event._count.souls || 0} Engaged
             </span>
           </div>
         </div>

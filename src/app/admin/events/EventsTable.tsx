@@ -36,7 +36,7 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
             <th>Location</th>
             <th>Leader</th>
             <th style={{ textAlign: 'center' }}>Status</th>
-            <th style={{ textAlign: 'center' }}>Souls</th>
+            <th style={{ textAlign: 'center' }}>Engage</th>
             <th>Actions</th>
           </tr>
         </thead>

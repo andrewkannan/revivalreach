@@ -3,7 +3,7 @@ import { useState } from "react";
 import styles from "../Admin.module.css";
 import { Heart, Activity, MessageCircle, Star } from "lucide-react";
 
-export default function SoulsTable({ initialSouls }: { initialSouls: any[] }) {
+export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
   const [souls, setSouls] = useState(initialSouls);
 
   return (
@@ -23,7 +23,7 @@ export default function SoulsTable({ initialSouls }: { initialSouls: any[] }) {
         <tbody>
           {souls.length === 0 ? (
             <tr>
-              <td colSpan={7} style={{ textAlign: 'center', opacity: 0.7 }}>No souls found.</td>
+              <td colSpan={7} style={{ textAlign: 'center', opacity: 0.7 }}>No engage records found.</td>
             </tr>
           ) : (
             souls.map((soul) => {

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flame, Calendar, User, Settings, BookOpen } from "lucide-react";
+import { Flame, Calendar, User, Settings, BookOpen, HeartHandshake } from "lucide-react";
 import styles from "./Nav.module.css";
 
 import { useSession } from "next-auth/react";
@@ -18,9 +18,9 @@ export default function TopNav() {
           <Flame size={20} />
           <span>Revivals</span>
         </Link>
-        <Link href="/souls" className={`${styles.navLink} ${pathname === '/souls' ? styles.active : ''}`}>
-          <Calendar size={20} />
-          <span>Souls</span>
+        <Link href="/engage" className={`${styles.navLink} ${pathname?.startsWith('/engage') ? styles.active : ''}`}>
+          <HeartHandshake size={20} />
+          <span>Engage</span>
         </Link>
         <Link href="/testimony" className={`${styles.navLink} ${pathname?.startsWith('/testimony') ? styles.active : ''}`}>
           <BookOpen size={20} />
