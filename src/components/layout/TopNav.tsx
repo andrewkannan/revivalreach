@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Calendar, User, Settings, ShieldCheck } from "lucide-react";
+import { Home, Calendar, User, Settings, MessageSquare } from "lucide-react";
 import styles from "./Nav.module.css";
 
 import { useSession } from "next-auth/react";
@@ -26,9 +26,9 @@ export default function TopNav() {
           <User size={20} style={session ? { filter: 'drop-shadow(0 0 8px var(--primary))', color: 'var(--primary)' } : {}} />
           <span>Profile</span>
         </Link>
-        <Link href="/admin" className={`${styles.navLink} ${pathname?.startsWith('/admin') ? styles.active : ''}`}>
-          <ShieldCheck size={20} />
-          <span>Admin</span>
+        <Link href="/testimony" className={`${styles.navLink} ${pathname?.startsWith('/testimony') ? styles.active : ''}`}>
+          <MessageSquare size={20} />
+          <span>Testimony</span>
         </Link>
       </div>
     </nav>
