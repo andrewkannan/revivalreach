@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Admin.module.css";
-import { Users, Settings, CalendarRange, Heart, ShieldCheck } from "lucide-react";
+import { Users, Settings, CalendarRange, Heart, ShieldCheck, HeartHandshake, MessageSquare } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -34,13 +34,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <CalendarRange size={20} /> Events
               </Link>
               <Link href="/admin/engage" className={`${styles.sidebarLink} ${pathname === '/admin/engage' ? styles.active : ''}`}>
-                <Heart size={20} /> Engage
+                <HeartHandshake size={20} /> Engage
               </Link>
               <Link href="/admin/prayer-queue" className={`${styles.sidebarLink} ${pathname === '/admin/prayer-queue' ? styles.active : ''}`}>
                 <Heart size={20} /> Prayer Queue
               </Link>
               <Link href="/admin/evangelism" className={`${styles.sidebarLink} ${pathname === '/admin/evangelism' ? styles.active : ''}`}>
-                <Heart size={20} /> Evangelism Requests
+                <MessageSquare size={20} /> Evangelism Requests
               </Link>
               <Link href="/admin/settings" className={`${styles.sidebarLink} ${pathname === '/admin/settings' ? styles.active : ''}`}>
                 <Settings size={20} /> Settings
