@@ -17,6 +17,7 @@ type Soul = {
   remarksAudioUrl: string | null;
   eventId: string | null;
   isPriority: boolean;
+  hasFollowedUp: boolean;
   event?: { title: string };
   createdAt: string;
 };
@@ -185,6 +186,21 @@ export default function EngagePage() {
       }
     } catch (err) {
       alert("Failed to delete soul");
+    }
+  };
+
+  const handleToggleFollowUp = async (id: string, currentStatus: boolean) => {
+    try {
+      const res = await fetch(`/api/engage/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hasFollowedUp: !currentStatus })
+      });
+      if (res.ok) {
+        setSouls(prev => prev.map(s => s.id === id ? { ...s, hasFollowedUp: !currentStatus } : s));
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -476,15 +492,31 @@ export default function EngagePage() {
                   </div>
                 )}
 
-                <a 
-                  href={formatWhatsAppLink(soul.phone)} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: '#25D366', borderColor: '#25D366', marginTop: '8px' }}
-                >
-                  <MessageCircle size={18} /> Follow Up
-                </a>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                  <a 
+                    href={formatWhatsAppLink(soul.phone)} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="btn-primary"
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: '#25D366', borderColor: '#25D366' }}
+                  >
+                    <MessageCircle size={18} /> Follow Up
+                  </a>
+                  
+                  <button
+                    onClick={() => handleToggleFollowUp(soul.id, soul.hasFollowedUp)}
+                    style={{ 
+                      flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', 
+                      background: soul.hasFollowedUp ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)', 
+                      border: soul.hasFollowedUp ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)',
+                      color: soul.hasFollowedUp ? 'var(--success)' : 'white',
+                      borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease', fontWeight: 600
+                    }}
+                  >
+                    <CheckCircle size={18} />
+                    {soul.hasFollowedUp ? "Followed Up" : "Mark Done"}
+                  </button>
+                </div>
               </div>
             ))}
           </div>

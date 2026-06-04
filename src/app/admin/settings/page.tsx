@@ -9,6 +9,7 @@ export default function AdminSettings() {
     smtpUser: "",
     smtpPass: "",
     prayerEmailTargets: "",
+    autoFollowUpReminders: true,
     rolePermissions: {} as Record<string, string[]>
   });
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,7 @@ export default function AdminSettings() {
           smtpUser: data.smtpUser || "",
           smtpPass: data.smtpPass || "",
           prayerEmailTargets: data.prayerEmailTargets || "",
+          autoFollowUpReminders: data.autoFollowUpReminders !== undefined ? data.autoFollowUpReminders : true,
           rolePermissions: data.rolePermissions ? (typeof data.rolePermissions === 'string' ? JSON.parse(data.rolePermissions) : data.rolePermissions) : {}
         });
         setLoading(false);
@@ -117,6 +119,24 @@ export default function AdminSettings() {
             onChange={e => setSettings({...settings, smtpPass: e.target.value})}
             style={{ width: '100%' }}
           />
+        </div>
+
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <h3>Automated Systems</h3>
+          <p style={{ opacity: 0.8, marginBottom: '15px' }}>Configure automated background tasks.</p>
+          
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+            <input 
+              type="checkbox" 
+              checked={settings.autoFollowUpReminders}
+              onChange={e => setSettings({...settings, autoFollowUpReminders: e.target.checked})}
+              style={{ width: '18px', height: '18px' }}
+            />
+            <span style={{ fontWeight: 500 }}>Enable Follow-up Reminders</span>
+          </label>
+          <p style={{ fontSize: '0.85rem', opacity: 0.7, marginTop: '5px', marginLeft: '28px' }}>
+            Sends emails to users who haven't followed up on Engage records after 24 hours, 3 days, and 7 days.
+          </p>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>

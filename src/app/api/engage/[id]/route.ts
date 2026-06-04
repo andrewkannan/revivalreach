@@ -26,7 +26,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
 
     const body = await req.json();
-    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, prayerNeedsAudioUrl, remarks, remarksAudioUrl, eventId, isPriority } = body;
+    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, prayerNeedsAudioUrl, remarks, remarksAudioUrl, eventId, isPriority, hasFollowedUp } = body;
 
     const updatedSoul = await prisma.soul.update({
       where: { id },
@@ -41,7 +41,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         remarks: remarks || null,
         remarksAudioUrl: remarksAudioUrl || null,
         eventId: eventId !== undefined ? eventId : undefined,
-        isPriority: isPriority !== undefined ? Boolean(isPriority) : undefined
+        isPriority: isPriority !== undefined ? Boolean(isPriority) : undefined,
+        hasFollowedUp: hasFollowedUp !== undefined ? Boolean(hasFollowedUp) : undefined
       }
     });
 
