@@ -144,6 +144,16 @@ export default function ProfilePage() {
           <MessageCircle size={18} /> Message Support
         </button>
 
+        {(session.user.role === "ADMIN" || session.user.role === "LEADER") && (
+          <button 
+            onClick={() => router.push('/admin')}
+            className="btn-primary" 
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+          >
+            <ShieldCheck size={18} /> Admin Panel
+          </button>
+        )}
+
         <button 
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="btn-secondary" 
