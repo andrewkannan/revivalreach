@@ -497,25 +497,22 @@ export default function EngagePage() {
                     href={formatWhatsAppLink(soul.phone)} 
                     target="_blank" 
                     rel="noreferrer"
+                    onClick={() => {
+                      if (!soul.hasFollowedUp) {
+                        handleToggleFollowUp(soul.id, false);
+                      }
+                    }}
                     className="btn-primary"
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: '#25D366', borderColor: '#25D366' }}
-                  >
-                    <MessageCircle size={18} /> Follow Up
-                  </a>
-                  
-                  <button
-                    onClick={() => handleToggleFollowUp(soul.id, soul.hasFollowedUp)}
                     style={{ 
                       flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', 
-                      background: soul.hasFollowedUp ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)', 
-                      border: soul.hasFollowedUp ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)',
-                      color: soul.hasFollowedUp ? 'var(--success)' : 'white',
-                      borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease', fontWeight: 600
+                      background: soul.hasFollowedUp ? 'rgba(16, 185, 129, 0.2)' : '#25D366', 
+                      borderColor: soul.hasFollowedUp ? 'var(--success)' : '#25D366',
+                      color: soul.hasFollowedUp ? 'var(--success)' : 'white'
                     }}
                   >
-                    <CheckCircle size={18} />
-                    {soul.hasFollowedUp ? "Followed Up" : "Mark Done"}
-                  </button>
+                    {soul.hasFollowedUp ? <CheckCircle size={18} /> : <MessageCircle size={18} />}
+                    {soul.hasFollowedUp ? "Followed Up" : "Follow Up"}
+                  </a>
                 </div>
               </div>
             ))}
