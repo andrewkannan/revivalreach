@@ -166,11 +166,11 @@ main.app-container {
 
 .prayer-ticker-container {
   position: fixed;
-  bottom: 0;
+  top: var(--nav-height);
   left: 0;
   width: 100vw;
   background: rgba(99, 102, 241, 0.05);
-  border-top: 1px solid rgba(99, 102, 241, 0.15);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
   color: var(--primary);
   font-weight: 500;
   font-size: 0.85rem;
@@ -179,13 +179,7 @@ main.app-container {
   z-index: 1000;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.03);
-}
-
-@media (max-width: 768px) {
-  .prayer-ticker-container {
-    bottom: calc(var(--nav-height) + var(--safe-area-bottom));
-  }
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
 }
 
 .prayer-ticker-scroll {

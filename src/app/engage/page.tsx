@@ -360,29 +360,35 @@ export default function EngagePage() {
             </div>
 
             {formData.requestedPrayer && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', animation: 'fadeIn 0.3s ease-out' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ color: '#f59e0b' }}>Prayer Needs (Text)</label>
-                  <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} placeholder="What do they need prayer for?" style={{ borderColor: 'rgba(245, 158, 11, 0.3)' }} required={formData.requestedPrayer && !formData.prayerNeedsAudioUrl} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'fadeIn 0.3s ease-out' }}>
+                <label style={{ color: '#f59e0b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Prayer Needs (Text)</span>
+                </label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                  <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} placeholder="What do they need prayer for?" style={{ borderColor: 'rgba(245, 158, 11, 0.3)', flex: 1 }} required={formData.requestedPrayer && !formData.prayerNeedsAudioUrl} />
+                  <AudioRecorder 
+                    compact
+                    initialAudioUrl={formData.prayerNeedsAudioUrl}
+                    onAudioReady={(url) => setFormData(prev => ({ ...prev, prayerNeedsAudioUrl: url }))} 
+                  />
                 </div>
-                <AudioRecorder 
-                  label="Record Prayer Needs (Optional)" 
-                  initialAudioUrl={formData.prayerNeedsAudioUrl}
-                  onAudioReady={(url) => setFormData(prev => ({ ...prev, prayerNeedsAudioUrl: url }))} 
-                />
               </div>
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label>Remarks (Optional Text)</label>
-                <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about background, etc." />
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Remarks (Optional Text)</span>
+                </label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                  <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about background, etc." style={{ flex: 1 }} />
+                  <AudioRecorder 
+                    compact
+                    initialAudioUrl={formData.remarksAudioUrl}
+                    onAudioReady={(url) => setFormData(prev => ({ ...prev, remarksAudioUrl: url }))} 
+                  />
+                </div>
               </div>
-              <AudioRecorder 
-                label="Record Remarks (Optional)" 
-                initialAudioUrl={formData.remarksAudioUrl}
-                onAudioReady={(url) => setFormData(prev => ({ ...prev, remarksAudioUrl: url }))} 
-              />
             </div>
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
@@ -477,7 +483,7 @@ export default function EngagePage() {
                   className="btn-primary"
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: '#25D366', borderColor: '#25D366', marginTop: '8px' }}
                 >
-                  <MessageCircle size={18} /> WhatsApp
+                  <MessageCircle size={18} /> Follow Up
                 </a>
               </div>
             ))}

@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Heart } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function PrayerTicker() {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const [prayers, setPrayers] = useState<any[]>([]);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export default function PrayerTicker() {
     }
   };
 
-  if (!session || prayers.length === 0) {
+  if (!session || prayers.length === 0 || pathname !== "/") {
     return null;
   }
 
