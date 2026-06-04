@@ -133,7 +133,10 @@ export default function TestimonyPage() {
           })
         });
 
-        if (!presignedRes.ok) throw new Error("Failed to get upload URL");
+        if (!presignedRes.ok) {
+          const text = await presignedRes.text();
+          throw new Error(`Failed to get upload URL: ${text}`);
+        }
         
         const { signedUrl, publicUrl } = await presignedRes.json();
 
@@ -146,7 +149,10 @@ export default function TestimonyPage() {
           body: audioBlob
         });
 
-        if (!uploadRes.ok) throw new Error("Failed to upload audio to S3");
+        if (!uploadRes.ok) {
+          const text = await uploadRes.text();
+          throw new Error(`Failed to upload audio to S3: ${uploadRes.status} ${uploadRes.statusText} - ${text}`);
+        }
         
         finalAudioUrl = publicUrl;
       }
@@ -167,10 +173,13 @@ export default function TestimonyPage() {
         setIsFormOpen(false);
         setSubmitSuccess(true);
         setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        const text = await res.text();
+        throw new Error(`Backend error: ${res.status} ${text}`);
       }
     } catch (error) {
       console.error("Failed to submit testimony:", error);
-      alert("Failed to submit testimony. Please try again.");
+      alert(`Error submitting testimony:\n${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsSubmitting(false);
     }
