@@ -169,16 +169,17 @@ main.app-container {
   bottom: 0;
   left: 0;
   width: 100vw;
-  background: var(--card-bg);
-  border-top: 1px solid var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+  border-top: 1px solid rgba(99, 102, 241, 0.15);
   color: var(--primary);
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding: 8px 0;
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 10px 0;
   overflow: hidden;
   z-index: 1000;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.03);
 }
 
 @media (max-width: 768px) {
@@ -200,7 +201,7 @@ main.app-container {
 .prayer-item {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-right: 40px;
+  gap: 12px;
+  margin-right: 60px;
 }
 

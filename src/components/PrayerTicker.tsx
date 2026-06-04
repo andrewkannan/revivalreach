@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { Heart } from "lucide-react";
 
 export default function PrayerTicker() {
   const { data: session } = useSession();
@@ -41,8 +42,8 @@ export default function PrayerTicker() {
       >
         {prayers.map((prayer, index) => (
           <span key={prayer.id || index} className="prayer-item">
-            🙏 <strong>Pray for {prayer.name}:</strong> {prayer.prayerNeeds}
-            {index < prayers.length - 1 && <span style={{ margin: '0 12px', opacity: 0.5 }}>&bull;</span>}
+            <Heart size={16} style={{ strokeWidth: 2, fill: "none", color: "var(--primary)" }} /> <strong>Pray for {prayer.name}:</strong> {prayer.prayerNeeds}
+            {index < prayers.length - 1 && <span style={{ margin: '0 12px', opacity: 0.3 }}>&bull;</span>}
           </span>
         ))}
       </div>
