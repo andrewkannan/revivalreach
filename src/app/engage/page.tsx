@@ -18,6 +18,7 @@ type Soul = {
   eventId: string | null;
   isPriority: boolean;
   hasFollowedUp: boolean;
+  lastFollowedUpAt: string | null;
   event?: { title: string };
   createdAt: string;
 };
@@ -94,7 +95,8 @@ export default function EngagePage() {
       const res = await fetch("/api/engage");
       if (res.ok) {
         const data = await res.json();
-        setSouls(data);
+        const sortedData = data.sort((a: Soul, b: Soul) => Number(b.isPriority) - Number(a.isPriority));
+        setSouls(sortedData);
       }
     } catch (err) {
       console.error("Failed to fetch souls", err);
@@ -108,6 +110,12 @@ export default function EngagePage() {
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
+    } else if (name === 'phone') {
+      let formattedPhone = value;
+      if (formattedPhone.startsWith('0')) {
+        formattedPhone = '+60' + formattedPhone.substring(1);
+      }
+      setFormData(prev => ({ ...prev, [name]: formattedPhone }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -197,7 +205,7 @@ export default function EngagePage() {
         body: JSON.stringify({ hasFollowedUp: !currentStatus })
       });
       if (res.ok) {
-        setSouls(prev => prev.map(s => s.id === id ? { ...s, hasFollowedUp: !currentStatus } : s));
+        setSouls(prev => prev.map(s => s.id === id ? { ...s, hasFollowedUp: !currentStatus, lastFollowedUpAt: !currentStatus ? new Date().toISOString() : null } : s));
       }
     } catch (err) {
       console.error(err);
@@ -432,14 +440,19 @@ export default function EngagePage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {souls.map(soul => (
-              <div key={soul.id} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {soul.name}
-                      {soul.isPriority && <Star size={18} color="#eab308" fill="#eab308" />}
-                    </h3>
+            {souls.map(soul => {
+              const isFollowedUpToday = soul.lastFollowedUpAt 
+                ? new Date(soul.lastFollowedUpAt).toDateString() === new Date().toDateString()
+                : false;
+                
+              return (
+                <div key={soul.id} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', border: soul.isPriority ? '1px solid rgba(234, 179, 8, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)', boxShadow: soul.isPriority ? '0 0 10px rgba(234, 179, 8, 0.1)' : 'none' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {soul.name}
+                        {soul.isPriority && <Star size={18} color="#eab308" fill="#eab308" />}
+                      </h3>
                     <p style={{ opacity: 0.7, fontSize: '0.9rem', margin: '4px 0 0 0' }}>
                       {soul.event ? `Event: ${soul.event.title}` : `Added: ${new Date(soul.createdAt).toLocaleDateString()}`}
                     </p>
@@ -498,24 +511,24 @@ export default function EngagePage() {
                     target="_blank" 
                     rel="noreferrer"
                     onClick={() => {
-                      if (!soul.hasFollowedUp) {
+                      if (!isFollowedUpToday) {
                         handleToggleFollowUp(soul.id, false);
                       }
                     }}
                     className="btn-primary"
                     style={{ 
                       flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', 
-                      background: soul.hasFollowedUp ? 'rgba(16, 185, 129, 0.2)' : '#25D366', 
-                      borderColor: soul.hasFollowedUp ? 'var(--success)' : '#25D366',
-                      color: soul.hasFollowedUp ? 'var(--success)' : 'white'
+                      background: isFollowedUpToday ? 'rgba(16, 185, 129, 0.2)' : '#25D366', 
+                      borderColor: isFollowedUpToday ? 'var(--success)' : '#25D366',
+                      color: isFollowedUpToday ? 'var(--success)' : 'white'
                     }}
                   >
-                    {soul.hasFollowedUp ? <CheckCircle size={18} /> : <MessageCircle size={18} />}
-                    {soul.hasFollowedUp ? "Followed Up" : "Follow Up"}
+                    {isFollowedUpToday ? <CheckCircle size={18} /> : <MessageCircle size={18} />}
+                    {isFollowedUpToday ? "Followed Up" : "Follow Up"}
                   </a>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>

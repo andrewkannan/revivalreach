@@ -42,7 +42,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         remarksAudioUrl: remarksAudioUrl || null,
         eventId: eventId !== undefined ? eventId : undefined,
         isPriority: isPriority !== undefined ? Boolean(isPriority) : undefined,
-        hasFollowedUp: hasFollowedUp !== undefined ? Boolean(hasFollowedUp) : undefined
+        hasFollowedUp: hasFollowedUp !== undefined ? Boolean(hasFollowedUp) : undefined,
+        ...(hasFollowedUp === true && { lastFollowedUpAt: new Date() })
       }
     });
 

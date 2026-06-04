@@ -99,7 +99,8 @@ model Soul {
   isPriority      Boolean  @default(false)
   
   // Follow Up Tracking
-  hasFollowedUp   Boolean  @default(false)
+  hasFollowedUp   Boolean  @default(false) // Keeping this as a general flag if needed
+  lastFollowedUpAt DateTime?
   followUp24hSent Boolean  @default(false)
   followUp3dSent  Boolean  @default(false)
   followUp7dSent  Boolean  @default(false)
