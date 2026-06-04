@@ -158,3 +158,49 @@ main.app-container {
   }
 }
 
+/* Prayer Ticker */
+@keyframes tickerScroll {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+.prayer-ticker-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background: var(--card-bg);
+  border-top: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 0;
+  overflow: hidden;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (max-width: 768px) {
+  .prayer-ticker-container {
+    bottom: calc(var(--nav-height) + var(--safe-area-bottom));
+  }
+}
+
+.prayer-ticker-scroll {
+  display: inline-block;
+  white-space: nowrap;
+  animation: tickerScroll 30s linear infinite;
+}
+
+.prayer-ticker-container:hover .prayer-ticker-scroll {
+  animation-play-state: paused;
+}
+
+.prayer-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 40px;
+}
+

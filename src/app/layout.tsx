@@ -5,6 +5,7 @@ import TopNav from "@/components/layout/TopNav";
 import BottomNav from "@/components/layout/BottomNav";
 
 import AuthProvider from "@/components/providers/SessionProvider";
+import PrayerTicker from "@/components/PrayerTicker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <TopNav />
+          <PrayerTicker />
           <main className="app-container">
             {children}
           </main>
