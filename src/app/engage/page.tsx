@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2, Star, Mic } from "lucide-react";
+import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2, Star, Mic, Users } from "lucide-react";
 import AudioRecorder from "@/components/AudioRecorder";
 
 type Soul = {
@@ -46,6 +46,13 @@ export default function EngagePage() {
     isPriority: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isContactPickerSupported, setIsContactPickerSupported] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'contacts' in navigator && 'ContactsManager' in window) {
+      setIsContactPickerSupported(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (session) {
@@ -118,6 +125,35 @@ export default function EngagePage() {
       setFormData(prev => ({ ...prev, [name]: formattedPhone }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleSelectContact = async () => {
+    try {
+      const props = ['name', 'tel'];
+      const opts = { multiple: false };
+      // @ts-ignore
+      const contacts = await navigator.contacts.select(props, opts);
+      if (contacts && contacts.length > 0) {
+        const contact = contacts[0];
+        const name = contact.name && contact.name.length > 0 ? contact.name[0] : '';
+        let phone = contact.tel && contact.tel.length > 0 ? contact.tel[0] : '';
+        
+        if (phone) {
+           phone = phone.replace(/[\s-]/g, '');
+           if (phone.startsWith('0')) {
+             phone = '+60' + phone.substring(1);
+           }
+        }
+        
+        setFormData(prev => ({
+          ...prev,
+          name: name || prev.name,
+          phone: phone || prev.phone
+        }));
+      }
+    } catch (err) {
+      console.error('Contact picker error:', err);
     }
   };
 
@@ -303,6 +339,21 @@ export default function EngagePage() {
                   ))}
                 </div>
               </div>
+            )}
+            
+            {isContactPickerSupported && (
+              <button 
+                type="button" 
+                onClick={handleSelectContact}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  background: 'rgba(99, 102, 241, 0.15)', color: 'var(--primary)',
+                  border: '1px solid var(--primary)', padding: '12px', borderRadius: '12px',
+                  fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s ease'
+                }}
+              >
+                <Users size={18} /> Choose from Contacts
+              </button>
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
