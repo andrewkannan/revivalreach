@@ -60,8 +60,17 @@ export default function TestimoniesTable({ initialTestimonies }: { initialTestim
                     <strong>{testimony.name}</strong><br />
                     <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{testimony.user?.email}</span>
                   </td>
-                  <td style={{ maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {testimony.content}
+                  <td style={{ maxWidth: '300px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {testimony.audioUrl && (
+                        <audio controls src={testimony.audioUrl} style={{ width: '100%', height: '30px' }} />
+                      )}
+                      {testimony.content && (
+                        <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {testimony.content}
+                        </div>
+                      )}
+                    </div>
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <span className={`${styles.badge} ${

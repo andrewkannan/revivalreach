@@ -28,10 +28,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { content } = await req.json();
+    const { content, audioUrl } = await req.json();
 
-    if (!content) {
-      return NextResponse.json({ error: "Content is required" }, { status: 400 });
+    if (!content && !audioUrl) {
+      return NextResponse.json({ error: "Content or Audio is required" }, { status: 400 });
     }
 
     const testimony = await prisma.testimony.create({
@@ -39,6 +39,7 @@ export async function POST(req: Request) {
         userId: session.user.id,
         name: session.user.name || "Anonymous",
         content,
+        audioUrl,
         status: "PENDING"
       }
     });
