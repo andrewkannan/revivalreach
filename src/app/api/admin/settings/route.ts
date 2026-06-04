@@ -46,6 +46,7 @@ export async function POST(req: Request) {
         smtpUser: data.smtpUser,
         smtpPass: data.smtpPass,
         prayerEmailTargets: data.prayerEmailTargets,
+        ...(data.rolePermissions && { rolePermissions: data.rolePermissions })
       },
       create: {
         id: "singleton",
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
         smtpUser: data.smtpUser,
         smtpPass: data.smtpPass,
         prayerEmailTargets: data.prayerEmailTargets,
+        ...(data.rolePermissions && { rolePermissions: data.rolePermissions })
       }
     });
 

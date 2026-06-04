@@ -5,11 +5,12 @@ import styles from "../Admin.module.css";
 import { redirect } from "next/navigation";
 import EventsTable from "./EventsTable";
 import Link from "next/link";
+import { hasAccess } from "@/lib/permissions";
 
 export default async function AdminEventsPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "LEADER")) {
+  if (!session || !(await hasAccess(session.user.role, "/admin/events"))) {
     redirect("/login");
   }
 

@@ -2,12 +2,13 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { hasAccess } from "@/lib/permissions";
 import styles from "../Admin.module.css";
 
 export default async function EvangelismRequestsPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session || !(await hasAccess(session.user.role, "/admin/evangelism"))) {
     redirect("/login");
   }
 

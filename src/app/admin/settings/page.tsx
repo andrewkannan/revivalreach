@@ -9,6 +9,7 @@ export default function AdminSettings() {
     smtpUser: "",
     smtpPass: "",
     prayerEmailTargets: "",
+    rolePermissions: {} as Record<string, string[]>
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,6 +25,7 @@ export default function AdminSettings() {
           smtpUser: data.smtpUser || "",
           smtpPass: data.smtpPass || "",
           prayerEmailTargets: data.prayerEmailTargets || "",
+          rolePermissions: data.rolePermissions ? (typeof data.rolePermissions === 'string' ? JSON.parse(data.rolePermissions) : data.rolePermissions) : {}
         });
         setLoading(false);
       });
@@ -115,6 +117,49 @@ export default function AdminSettings() {
             onChange={e => setSettings({...settings, smtpPass: e.target.value})}
             style={{ width: '100%' }}
           />
+        </div>
+
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <h3>Role Permissions (LEADER)</h3>
+          <p style={{ opacity: 0.8, marginBottom: '15px' }}>Select which admin modules are accessible to the LEADER role.</p>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { path: '/admin/my-team', label: 'My Team' },
+              { path: '/admin/users', label: 'Users' },
+              { path: '/admin/leaders', label: 'Revival Leaders' },
+              { path: '/admin/events', label: 'Events' },
+              { path: '/admin/engage', label: 'Engage (Souls)' },
+              { path: '/admin/prayer-queue', label: 'Prayer Queue' },
+              { path: '/admin/evangelism', label: 'Evangelism Requests' },
+              { path: '/admin/testimonies', label: 'Testimonies' }
+            ].map(mod => {
+              const leaderPerms = settings.rolePermissions?.LEADER || [];
+              const isChecked = leaderPerms.includes(mod.path);
+              return (
+                <label key={mod.path} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={isChecked}
+                    onChange={(e) => {
+                      const newPerms = e.target.checked 
+                        ? [...leaderPerms, mod.path]
+                        : leaderPerms.filter(p => p !== mod.path);
+                      setSettings({
+                        ...settings,
+                        rolePermissions: {
+                          ...settings.rolePermissions,
+                          LEADER: newPerms
+                        }
+                      });
+                    }}
+                    style={{ width: '18px', height: '18px' }}
+                  />
+                  <span>{mod.label}</span>
+                </label>
+              );
+            })}
+          </div>
         </div>
 
         <button type="submit" className="btn-primary" disabled={saving}>

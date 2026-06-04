@@ -75,6 +75,7 @@ model SystemSettings {
   smtpPass         String?
   prayerEmailTargets String? // comma separated list
   whatsappTemplate String?  @default("Hi, I'm interested in the event...")
+  rolePermissions  Json?    @default("{}")
   updatedAt        DateTime @updatedAt
 }
 

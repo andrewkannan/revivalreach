@@ -5,6 +5,8 @@ import styles from "./Admin.module.css";
 import { Users, Settings, CalendarRange, Heart, ShieldCheck, HeartHandshake, MessageSquare } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+import { useEffect, useState } from "react";
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
@@ -12,43 +14,74 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isAdmin = session?.user?.role === "ADMIN";
   const isLeader = session?.user?.role === "LEADER";
 
+  const [allowedPaths, setAllowedPaths] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (session) {
+      fetch("/api/admin/permissions")
+        .then(res => res.json())
+        .then(data => {
+          setAllowedPaths(data.allowedPaths || []);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [session]);
+
+  const hasAccess = (path: string) => allowedPaths.includes("ALL") || allowedPaths.includes(path);
+
+  if (loading) return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Loading admin panel...</div>;
+
   return (
     <div className={styles.adminContainer}>
       <div className={`glass-panel ${styles.adminSidebar}`}>
         <h2 className={styles.sidebarTitle}>{isAdmin ? "Admin Panel" : "Leader Panel"}</h2>
         <div className={styles.sidebarLinks}>
-          {(isAdmin || isLeader) && (
+          {hasAccess('/admin/my-team') && (
             <Link href="/admin/my-team" className={`${styles.sidebarLink} ${pathname === '/admin/my-team' ? styles.active : ''}`}>
               <ShieldCheck size={20} /> My Team
             </Link>
           )}
-          {isAdmin && (
-            <>
-              <Link href="/admin/users" className={`${styles.sidebarLink} ${pathname === '/admin/users' ? styles.active : ''}`}>
-                <Users size={20} /> Users
-              </Link>
-              <Link href="/admin/leaders" className={`${styles.sidebarLink} ${pathname === '/admin/leaders' ? styles.active : ''}`}>
-                <Users size={20} /> Revival Leaders
-              </Link>
-              <Link href="/admin/events" className={`${styles.sidebarLink} ${pathname === '/admin/events' ? styles.active : ''}`}>
-                <CalendarRange size={20} /> Events
-              </Link>
-              <Link href="/admin/engage" className={`${styles.sidebarLink} ${pathname === '/admin/engage' ? styles.active : ''}`}>
-                <HeartHandshake size={20} /> Engage
-              </Link>
-              <Link href="/admin/prayer-queue" className={`${styles.sidebarLink} ${pathname === '/admin/prayer-queue' ? styles.active : ''}`}>
-                <Heart size={20} /> Prayer Queue
-              </Link>
-              <Link href="/admin/evangelism" className={`${styles.sidebarLink} ${pathname === '/admin/evangelism' ? styles.active : ''}`}>
-                <MessageSquare size={20} /> Evangelism Requests
-              </Link>
-              <Link href="/admin/testimonies" className={`${styles.sidebarLink} ${pathname === '/admin/testimonies' ? styles.active : ''}`}>
-                <MessageSquare size={20} /> Testimonies
-              </Link>
-              <Link href="/admin/settings" className={`${styles.sidebarLink} ${pathname === '/admin/settings' ? styles.active : ''}`}>
-                <Settings size={20} /> Settings
-              </Link>
-            </>
+          {hasAccess('/admin/users') && (
+            <Link href="/admin/users" className={`${styles.sidebarLink} ${pathname === '/admin/users' ? styles.active : ''}`}>
+              <Users size={20} /> Users
+            </Link>
+          )}
+          {hasAccess('/admin/leaders') && (
+            <Link href="/admin/leaders" className={`${styles.sidebarLink} ${pathname === '/admin/leaders' ? styles.active : ''}`}>
+              <Users size={20} /> Revival Leaders
+            </Link>
+          )}
+          {hasAccess('/admin/events') && (
+            <Link href="/admin/events" className={`${styles.sidebarLink} ${pathname === '/admin/events' ? styles.active : ''}`}>
+              <CalendarRange size={20} /> Events
+            </Link>
+          )}
+          {hasAccess('/admin/engage') && (
+            <Link href="/admin/engage" className={`${styles.sidebarLink} ${pathname === '/admin/engage' ? styles.active : ''}`}>
+              <HeartHandshake size={20} /> Engage
+            </Link>
+          )}
+          {hasAccess('/admin/prayer-queue') && (
+            <Link href="/admin/prayer-queue" className={`${styles.sidebarLink} ${pathname === '/admin/prayer-queue' ? styles.active : ''}`}>
+              <Heart size={20} /> Prayer Queue
+            </Link>
+          )}
+          {hasAccess('/admin/evangelism') && (
+            <Link href="/admin/evangelism" className={`${styles.sidebarLink} ${pathname === '/admin/evangelism' ? styles.active : ''}`}>
+              <MessageSquare size={20} /> Evangelism Requests
+            </Link>
+          )}
+          {hasAccess('/admin/testimonies') && (
+            <Link href="/admin/testimonies" className={`${styles.sidebarLink} ${pathname === '/admin/testimonies' ? styles.active : ''}`}>
+              <MessageSquare size={20} /> Testimonies
+            </Link>
+          )}
+          {hasAccess('/admin/settings') && (
+            <Link href="/admin/settings" className={`${styles.sidebarLink} ${pathname === '/admin/settings' ? styles.active : ''}`}>
+              <Settings size={20} /> Settings
+            </Link>
           )}
         </div>
       </div>

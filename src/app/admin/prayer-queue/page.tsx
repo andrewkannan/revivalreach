@@ -4,11 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import styles from "../Admin.module.css";
 import PrayerQueueList from "./PrayerQueueList";
+import { hasAccess } from "@/lib/permissions";
 
 export default async function PrayerQueuePage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session || !(await hasAccess(session.user.role, "/admin/prayer-queue"))) {
     redirect("/login");
   }
 

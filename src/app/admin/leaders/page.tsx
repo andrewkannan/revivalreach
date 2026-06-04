@@ -2,13 +2,14 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { hasAccess } from "@/lib/permissions";
 import styles from "../Admin.module.css";
 import LeaderAssignmentList from "./LeaderAssignmentList";
 
 export default async function RevivalLeadersPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session || !(await hasAccess(session.user.role, "/admin/leaders"))) {
     redirect("/login");
   }
 
