@@ -124,3 +124,29 @@
   font-weight: 700;
   margin-bottom: 24px;
 }
+
+@media (max-width: 768px) {
+  .adminTable thead {
+    display: none;
+  }
+  .adminTable, .adminTable tbody, .adminTable tr, .adminTable td {
+    display: block;
+    width: 100%;
+  }
+  .adminTable tr {
+    margin-bottom: 16px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+  }
+  .adminTable td {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    padding: 12px;
+    padding-left: 12px; /* Was 50% for pseudo labels, but let's just make it block */
+  }
+  .adminTable td:last-child {
+    border-bottom: 0;
+  }
+}

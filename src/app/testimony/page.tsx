@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { Plus, MessageSquare, Quote, Mic, Square, Trash2, Play, Pause, Loader2 } from "lucide-react";
+import { Plus, MessageSquare, Quote, Mic, Square, Trash2, Play, Pause, Loader2, Edit2, X } from "lucide-react";
 import styles from "../Dashboard.module.css";
 import { useRouter } from "next/navigation";
 
@@ -9,8 +9,12 @@ export default function TestimonyPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const [testimonies, setTestimonies] = useState<any[]>([]);
+  const [myTestimonies, setMyTestimonies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -28,7 +32,10 @@ export default function TestimonyPage() {
 
   useEffect(() => {
     fetchTestimonies();
-  }, []);
+    if (session) {
+      fetchMyTestimonies();
+    }
+  }, [session]);
 
   const fetchTestimonies = async () => {
     try {
@@ -44,11 +51,33 @@ export default function TestimonyPage() {
     }
   };
 
+  const fetchMyTestimonies = async () => {
+    try {
+      const res = await fetch("/api/testimonies/me");
+      if (res.ok) {
+        const data = await res.json();
+        setMyTestimonies(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch my testimonies:", error);
+    }
+  };
+
   // Recording Logic
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      
+      let mimeType = '';
+      if (typeof MediaRecorder !== 'undefined') {
+        if (MediaRecorder.isTypeSupported('audio/webm')) {
+          mimeType = 'audio/webm';
+        } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+          mimeType = 'audio/mp4';
+        }
+      }
+      
+      const mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
@@ -59,7 +88,8 @@ export default function TestimonyPage() {
       };
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const actualMimeType = mediaRecorder.mimeType || 'audio/mp4';
+        const audioBlob = new Blob(audioChunksRef.current, { type: actualMimeType });
         setAudioBlob(audioBlob);
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
@@ -114,22 +144,34 @@ export default function TestimonyPage() {
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
+  const handleEdit = (testimony: any) => {
+    setEditingId(testimony.id);
+    setContent(testimony.content || "");
+    setAudioBlob(null);
+    setAudioUrl(testimony.audioUrl || null);
+    setIsFormOpen(true);
+    setSubmitSuccess(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim() && !audioBlob) return;
+    if (!content.trim() && !audioBlob && !audioUrl) return;
     
     setIsSubmitting(true);
-    let finalAudioUrl = null;
+    let finalAudioUrl = audioUrl && !audioBlob ? audioUrl : null; // Keep existing if not re-recorded
 
     try {
       if (audioBlob) {
+        const actualMimeType = audioBlob.type || 'audio/mp4';
+        const extension = actualMimeType.includes('webm') ? 'webm' : 'mp4';
+        
         // 1. Get presigned URL
         const presignedRes = await fetch("/api/testimonies/presigned", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
-            filename: "testimony.webm", 
-            contentType: "audio/webm" 
+            filename: `testimony.${extension}`, 
+            contentType: actualMimeType 
           })
         });
 
@@ -144,7 +186,7 @@ export default function TestimonyPage() {
         const uploadRes = await fetch(signedUrl, {
           method: "PUT",
           headers: {
-            "Content-Type": "audio/webm"
+            "Content-Type": actualMimeType
           },
           body: audioBlob
         });
@@ -158,8 +200,11 @@ export default function TestimonyPage() {
       }
 
       // 3. Submit Testimony
-      const res = await fetch("/api/testimonies", {
-        method: "POST",
+      const url = editingId ? `/api/testimonies/${editingId}` : "/api/testimonies";
+      const method = editingId ? "PUT" : "POST";
+      
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           content: content.trim() || null, 
@@ -171,8 +216,11 @@ export default function TestimonyPage() {
         setContent("");
         deleteRecording();
         setIsFormOpen(false);
+        setEditingId(null);
         setSubmitSuccess(true);
-        setTimeout(() => setSubmitSuccess(false), 5000);
+        fetchTestimonies();
+        fetchMyTestimonies();
+        setTimeout(() => setSubmitSuccess(false), 8000);
       } else {
         const text = await res.text();
         throw new Error(`Backend error: ${res.status} ${text}`);
@@ -190,7 +238,11 @@ export default function TestimonyPage() {
       router.push("/login");
       return;
     }
+    setEditingId(null);
+    setContent("");
+    deleteRecording();
     setIsFormOpen(true);
+    setSubmitSuccess(false);
   };
 
   return (
@@ -209,13 +261,18 @@ export default function TestimonyPage() {
 
       {submitSuccess && (
         <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', color: '#10b981', padding: '16px', borderRadius: '12px', marginBottom: '20px', textAlign: 'center' }}>
-          <strong>Hallelujah!</strong> Your testimony has been submitted and is pending approval.
+          <strong>Hallelujah!</strong> Your testimony has been {editingId ? 'updated' : 'submitted'}. Our Outreach team will keep in touch with you. Praise the Lord, we are so happy for you!
         </div>
       )}
 
       {isFormOpen && (
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '30px', animation: 'slideDown 0.3s ease-out' }}>
-          <h2 style={{ fontSize: '1.25rem', margin: '0 0 16px 0' }}>Share Your Testimony</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? 'Edit Your Testimony' : 'Share Your Testimony'}</h2>
+            <button onClick={() => setIsFormOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', opacity: 0.6, cursor: 'pointer' }}>
+              <X size={20} />
+            </button>
+          </div>
           
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
@@ -262,11 +319,11 @@ export default function TestimonyPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '0.9rem', fontWeight: 600, opacity: 0.9 }}>Written Testimony {audioBlob ? '(Optional)' : ''}</label>
+              <label style={{ fontSize: '0.9rem', fontWeight: 600, opacity: 0.9 }}>Written Testimony {(audioBlob || audioUrl) ? '(Optional)' : ''}</label>
               <textarea 
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                required={!audioBlob}
+                required={!(audioBlob || audioUrl)}
                 style={{ 
                   width: '100%', 
                   minHeight: '150px', 
@@ -284,18 +341,44 @@ export default function TestimonyPage() {
             </div>
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
-              <button type="submit" className="btn-primary" disabled={isSubmitting || (!content.trim() && !audioBlob)} style={{ flex: 1 }}>
+              <button type="submit" className="btn-primary" disabled={isSubmitting || (!content.trim() && !audioBlob && !audioUrl)} style={{ flex: 1 }}>
                 {isSubmitting ? (
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
-                    <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> Uploading...
+                    <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> {editingId ? 'Updating...' : 'Uploading...'}
                   </span>
-                ) : "Submit Testimony"}
+                ) : (editingId ? "Update Testimony" : "Submit Testimony")}
               </button>
               <button type="button" className="btn-secondary" onClick={() => setIsFormOpen(false)} style={{ flex: 1 }}>
                 Cancel
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {myTestimonies.length > 0 && !isFormOpen && (
+        <div style={{ marginBottom: '40px' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '16px', fontWeight: 600 }}>My Submissions</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {myTestimonies.map(testimony => (
+              <div key={testimony.id} className="glass-panel" style={{ padding: '20px', borderLeft: testimony.status === 'APPROVED' ? '4px solid var(--success)' : testimony.status === 'REJECTED' ? '4px solid var(--danger)' : '4px solid #f59e0b' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                  <div style={{ fontWeight: 600, opacity: 0.8 }}>Status: {testimony.status}</div>
+                  {testimony.status === 'PENDING' && (
+                    <button onClick={() => handleEdit(testimony)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', borderRadius: '6px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Edit2 size={14} /> Edit
+                    </button>
+                  )}
+                </div>
+                {testimony.audioUrl && (
+                  <audio controls src={testimony.audioUrl} style={{ width: '100%', height: '36px', marginBottom: testimony.content ? '12px' : '0' }} />
+                )}
+                {testimony.content && (
+                  <div style={{ fontSize: '0.95rem', opacity: 0.9 }}>"{testimony.content}"</div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
