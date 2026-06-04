@@ -46,12 +46,14 @@ model Event {
 }
 
 model EventParticipant {
-  id        String   @id @default(cuid())
-  userId    String
-  eventId   String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  userId      String
+  eventId     String
+  isPresent   Boolean  @default(false)
+  checkedInAt DateTime?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([userId, eventId])
 }

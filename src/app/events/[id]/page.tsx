@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, Users, User as UserIcon, ArrowLeft, Activity } from "lucide-react";
 import Link from "next/link";
-import JoinButton from "./JoinButton"; // We will extract the join logic to a client component
+import JoinButton from "./JoinButton";
+import AttendanceControls from "./AttendanceControls";
 
 export const dynamic = 'force-dynamic';
 
@@ -154,35 +155,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <JoinButton event={serializedEvent} initialHasJoined={hasJoined} />
         </div>
 
-        {/* Attendance List */}
-        <div style={{ marginTop: '30px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Users size={20} color="var(--primary)" /> 
-            Attendance List ({event.participants.length})
-          </h3>
-          
-          {event.participants.length === 0 ? (
-            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>
-              No one has joined yet. Be the first!
-            </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '10px' }}>
-              {event.participants.map((p: any, index: number) => (
-                <div key={p.id} style={{ background: 'rgba(255,255,255,0.05)', padding: '12px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                    {p.user.name ? p.user.name.charAt(0).toUpperCase() : '?'}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 600 }}>{p.user.name || "Anonymous User"}</div>
-                    {(session.user.role === 'ADMIN' || session.user.role === 'LEADER') && p.user.phone && (
-                      <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{p.user.phone}</div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Attendance List with Check-in Controls */}
+        <AttendanceControls 
+          eventId={event.id}
+          eventTitle={event.title}
+          initialParticipants={event.participants}
+          canManage={session.user.role === 'ADMIN' || session.user.role === 'LEADER'}
+          canViewSensitiveInfo={canViewSensitiveInfo}
+        />
 
       </div>
     </div>
