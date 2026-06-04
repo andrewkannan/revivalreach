@@ -89,13 +89,15 @@ model Soul {
   requestedPrayer Boolean @default(false)
   prayerEmailSent Boolean @default(false)
   prayerNeeds     String?
-  remarks   String?
-  eventId   String?
-  isPriority Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event     Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  prayerNeedsAudioUrl String?
+  remarks         String?
+  remarksAudioUrl String?
+  eventId         String?
+  isPriority      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event           Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
 }
 
 model Testimony {

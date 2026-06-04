@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2, Star } from "lucide-react";
+import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2, Star, Mic } from "lucide-react";
+import AudioRecorder from "@/components/AudioRecorder";
 
 type Soul = {
   id: string;
@@ -11,7 +12,9 @@ type Soul = {
   healed: boolean;
   requestedPrayer: boolean;
   prayerNeeds: string | null;
+  prayerNeedsAudioUrl: string | null;
   remarks: string | null;
+  remarksAudioUrl: string | null;
   eventId: string | null;
   isPriority: boolean;
   event?: { title: string };
@@ -34,7 +37,9 @@ export default function EngagePage() {
     healed: false,
     requestedPrayer: false,
     prayerNeeds: "",
+    prayerNeedsAudioUrl: null as string | null,
     remarks: "",
+    remarksAudioUrl: null as string | null,
     eventId: null as string | null,
     isPriority: false
   });
@@ -111,7 +116,11 @@ export default function EngagePage() {
     const joined = todayEvents.filter(e => e.hasJoined);
     const defaultEventId = joined.length === 1 ? joined[0].id : null;
     
-    setFormData({ name: "", phone: "+60", prayed: false, healed: false, requestedPrayer: false, prayerNeeds: "", remarks: "", eventId: defaultEventId, isPriority: false });
+    setFormData({ 
+      name: "", phone: "+60", prayed: false, healed: false, requestedPrayer: false, 
+      prayerNeeds: "", prayerNeedsAudioUrl: null, remarks: "", remarksAudioUrl: null, 
+      eventId: defaultEventId, isPriority: false 
+    });
     setEditingId(null);
     setIsFormOpen(false);
   };
@@ -129,7 +138,9 @@ export default function EngagePage() {
       healed: soul.healed,
       requestedPrayer: soul.requestedPrayer || false,
       prayerNeeds: soul.prayerNeeds || "",
+      prayerNeedsAudioUrl: soul.prayerNeedsAudioUrl || null,
       remarks: soul.remarks || "",
+      remarksAudioUrl: soul.remarksAudioUrl || null,
       eventId: soul.eventId || null,
       isPriority: soul.isPriority || false
     });
@@ -349,15 +360,29 @@ export default function EngagePage() {
             </div>
 
             {formData.requestedPrayer && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'fadeIn 0.3s ease-out' }}>
-                <label style={{ color: '#f59e0b' }}>Prayer Needs</label>
-                <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} placeholder="What do they need prayer for?" style={{ borderColor: 'rgba(245, 158, 11, 0.3)' }} required={formData.requestedPrayer} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', animation: 'fadeIn 0.3s ease-out' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ color: '#f59e0b' }}>Prayer Needs (Text)</label>
+                  <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} placeholder="What do they need prayer for?" style={{ borderColor: 'rgba(245, 158, 11, 0.3)' }} required={formData.requestedPrayer && !formData.prayerNeedsAudioUrl} />
+                </div>
+                <AudioRecorder 
+                  label="Record Prayer Needs (Optional)" 
+                  initialAudioUrl={formData.prayerNeedsAudioUrl}
+                  onAudioReady={(url) => setFormData(prev => ({ ...prev, prayerNeedsAudioUrl: url }))} 
+                />
               </div>
             )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label>Remarks (Optional)</label>
-              <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about background, etc." />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label>Remarks (Optional Text)</label>
+                <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about background, etc." />
+              </div>
+              <AudioRecorder 
+                label="Record Remarks (Optional)" 
+                initialAudioUrl={formData.remarksAudioUrl}
+                onAudioReady={(url) => setFormData(prev => ({ ...prev, remarksAudioUrl: url }))} 
+              />
             </div>
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
@@ -425,15 +450,22 @@ export default function EngagePage() {
                   )}
                 </div>
 
-                {soul.prayerNeeds && (
+                {(soul.prayerNeeds || soul.prayerNeedsAudioUrl) && (
                   <div style={{ background: 'rgba(245, 158, 11, 0.1)', borderLeft: '3px solid #f59e0b', padding: '12px', borderRadius: '4px', fontSize: '0.9rem', marginTop: '4px' }}>
-                    <strong style={{ display: 'block', marginBottom: '4px', color: '#f59e0b' }}>Prayer Needs:</strong>
+                    <strong style={{ display: 'block', marginBottom: '8px', color: '#f59e0b' }}>Prayer Needs:</strong>
+                    {soul.prayerNeedsAudioUrl && (
+                      <audio controls src={soul.prayerNeedsAudioUrl} style={{ width: '100%', height: '36px', marginBottom: soul.prayerNeeds ? '8px' : '0' }} />
+                    )}
                     {soul.prayerNeeds}
                   </div>
                 )}
 
-                {soul.remarks && (
+                {(soul.remarks || soul.remarksAudioUrl) && (
                   <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px', fontSize: '0.9rem', marginTop: '4px' }}>
+                    <strong style={{ display: 'block', marginBottom: '8px', opacity: 0.7 }}>Remarks:</strong>
+                    {soul.remarksAudioUrl && (
+                      <audio controls src={soul.remarksAudioUrl} style={{ width: '100%', height: '36px', marginBottom: soul.remarks ? '8px' : '0' }} />
+                    )}
                     {soul.remarks}
                   </div>
                 )}

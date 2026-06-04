@@ -39,7 +39,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, remarks, eventId, isPriority } = await req.json();
+    const body = await req.json();
+    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, prayerNeedsAudioUrl, remarks, remarksAudioUrl, eventId, isPriority } = body;
 
     if (!name || !phone) {
       return NextResponse.json({ message: "Name and phone are required" }, { status: 400 });
@@ -54,7 +55,9 @@ export async function POST(req: Request) {
         healed: Boolean(healed),
         requestedPrayer: Boolean(requestedPrayer),
         prayerNeeds: prayerNeeds || null,
+        prayerNeedsAudioUrl: prayerNeedsAudioUrl || null,
         remarks: remarks || null,
+        remarksAudioUrl: remarksAudioUrl || null,
         eventId: eventId || null,
         isPriority: Boolean(isPriority)
       }
