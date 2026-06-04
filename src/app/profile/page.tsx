@@ -11,8 +11,6 @@ export default function ProfilePage() {
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
-  const [stats, setStats] = useState({ totalSouls: 0, revivalsJoined: 0, prayedFor: 0, healed: 0 });
-  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     if (session) {
@@ -23,14 +21,6 @@ export default function ProfilePage() {
           setLoadingEvents(false);
         })
         .catch(() => setLoadingEvents(false));
-        
-      fetch("/api/profile/stats")
-        .then(res => res.json())
-        .then(data => {
-          setStats(data);
-          setLoadingStats(false);
-        })
-        .catch(() => setLoadingStats(false));
     }
   }, [session]);
 
@@ -70,33 +60,6 @@ export default function ProfilePage() {
         </div>
 
       </div>
-
-      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Impact</h2>
-      {loadingStats ? (
-        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>Loading your impact...</div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ background: 'rgba(236, 72, 153, 0.15)', padding: '12px', borderRadius: '12px', color: 'var(--secondary)', flexShrink: 0 }}>
-              <CalendarIcon size={24} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Revivals Joined</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.revivalsJoined}</div>
-            </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ background: 'rgba(245, 158, 11, 0.15)', padding: '12px', borderRadius: '12px', color: '#f59e0b', flexShrink: 0 }}>
-              <Heart size={24} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Prayers Offered</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>{stats.prayedFor}</div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Events</h2>
       {loadingEvents ? (
