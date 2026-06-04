@@ -15,11 +15,12 @@ export default function EventQRModal({ eventId, eventTitle, onClose }: EventQRMo
   return (
     <div style={{
       position: 'fixed',
-      top: 0, left: 0, width: '100vw', height: '100vh',
+      top: 0, left: 0, width: '100%', height: '100%',
       background: 'rgba(0,0,0,0.8)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       zIndex: 9999,
-      padding: '20px'
+      padding: '20px',
+      boxSizing: 'border-box'
     }} onClick={onClose}>
       <div style={{
         background: 'var(--card-bg)',
