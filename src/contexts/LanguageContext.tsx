@@ -2,8 +2,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { en } from "@/locales/en";
 import { ta } from "@/locales/ta";
+import { ms } from "@/locales/ms";
 
-type Language = "en" | "ta";
+type Language = "en" | "ta" | "ms";
 type Dictionary = typeof en;
 
 interface LanguageContextType {
@@ -15,6 +16,7 @@ interface LanguageContextType {
 const dictionaries: Record<Language, Dictionary> = {
   en,
   ta,
+  ms,
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -26,7 +28,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Load saved language on client side
     const saved = localStorage.getItem("preferredLanguage") as Language;
-    if (saved && (saved === "en" || saved === "ta")) {
+    if (saved && (saved === "en" || saved === "ta" || saved === "ms")) {
       setLanguageState(saved);
     }
     setMounted(true);

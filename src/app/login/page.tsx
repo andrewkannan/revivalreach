@@ -48,11 +48,12 @@ function LoginForm() {
         <Globe size={16} opacity={0.7} />
         <select 
           value={language} 
-          onChange={(e) => setLanguage(e.target.value as "en" | "ta")}
+          onChange={(e) => setLanguage(e.target.value as "en" | "ta" | "ms")}
           style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
         >
           <option value="en" style={{ color: 'black' }}>English</option>
           <option value="ta" style={{ color: 'black' }}>தமிழ்</option>
+          <option value="ms" style={{ color: 'black' }}>Melayu</option>
         </select>
       </div>
 
