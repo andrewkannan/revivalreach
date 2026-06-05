@@ -13,7 +13,7 @@ export async function GET() {
   try {
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { evangelismGoal: true }
+      select: { evangelismGoal: true, createdAt: true }
     });
 
     // Get first day of current month
@@ -33,7 +33,8 @@ export async function GET() {
 
     return NextResponse.json({
       goal: user?.evangelismGoal || 0,
-      current: monthlyEngagements
+      current: monthlyEngagements,
+      memberSince: user?.createdAt || null
     });
   } catch (error) {
     console.error("Error fetching goal:", error);

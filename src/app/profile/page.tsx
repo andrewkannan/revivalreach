@@ -90,11 +90,11 @@ export default function ProfilePage() {
               <strong>Account Role:</strong> <span style={{ textTransform: 'capitalize' }}>{session.user.role.toLowerCase()}</span>
             </div>
           </div>
-          {(session.user as any).createdAt && (
+          {((session.user as any).createdAt || (goalData as any).memberSince) && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CalendarIcon size={20} color="var(--primary)" />
               <div>
-                <strong>Member Since:</strong> {new Date((session.user as any).createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                <strong>Member Since:</strong> {new Date((session.user as any).createdAt || (goalData as any).memberSince).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </div>
             </div>
           )}
