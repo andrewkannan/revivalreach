@@ -3,12 +3,14 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { language, setLanguage, t } = useLanguage();
   const [events, setEvents] = useState<any[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
@@ -66,7 +68,20 @@ export default function ProfilePage() {
 
   return (
     <div className={styles.dashboard}>
-      <h1 className={styles.sectionTitle}>My Profile</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1 className={styles.sectionTitle} style={{ margin: 0 }}>{t('profile_title')}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <Globe size={16} opacity={0.7} />
+          <select 
+            value={language} 
+            onChange={(e) => setLanguage(e.target.value as "en" | "ta")}
+            style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
+          >
+            <option value="en" style={{ color: 'black' }}>English</option>
+            <option value="ta" style={{ color: 'black' }}>தமிழ் (Tamil)</option>
+          </select>
+        </div>
+      </div>
       
       <div className="glass-panel" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -87,14 +102,14 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <ShieldCheck size={20} color="var(--primary)" />
             <div>
-              <strong>Account Role:</strong> <span style={{ textTransform: 'capitalize' }}>{session.user.role.toLowerCase()}</span>
+              <strong>{t('profile_role')}:</strong> <span style={{ textTransform: 'capitalize' }}>{session.user.role.toLowerCase()}</span>
             </div>
           </div>
           {((session.user as any).createdAt || (goalData as any).memberSince) && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CalendarIcon size={20} color="var(--primary)" />
               <div>
-                <strong>Member Since:</strong> {new Date((session.user as any).createdAt || (goalData as any).memberSince).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                <strong>{t('profile_member_since')}:</strong> {new Date((session.user as any).createdAt || (goalData as any).memberSince).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </div>
             </div>
           )}
@@ -102,22 +117,22 @@ export default function ProfilePage() {
 
       </div>
 
-      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>Evangelism Goal</h2>
+      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>{t('profile_evangelism_goal')}</h2>
       <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {loadingGoal ? (
-          <div style={{ opacity: 0.7, textAlign: 'center' }}>Loading goal...</div>
+          <div style={{ opacity: 0.7, textAlign: 'center' }}>{t('profile_loading_goal')}</div>
         ) : (
           <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, color: 'var(--primary)' }}>
-                <Target size={20} /> Monthly Target
+                <Target size={20} /> {t('profile_monthly_target')}
               </div>
               {!isEditingGoal && (
                 <button 
                   onClick={() => setIsEditingGoal(true)}
                   style={{ background: 'transparent', border: 'none', color: 'white', opacity: 0.6, fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
                 >
-                  Edit Goal
+                  {t('profile_edit_goal')}
                 </button>
               )}
             </div>
@@ -137,14 +152,14 @@ export default function ProfilePage() {
               </div>
             ) : goalData.goal === 0 ? (
               <div style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
-                <p style={{ margin: '0 0 12px 0', opacity: 0.8 }}>Set a monthly goal to stay motivated in sharing the gospel!</p>
-                <button onClick={() => setIsEditingGoal(true)} className="btn-primary" style={{ display: 'inline-flex', padding: '8px 16px', fontSize: '0.9rem' }}>Set My Goal</button>
+                <p style={{ margin: '0 0 12px 0', opacity: 0.8 }}>{t('profile_set_goal_prompt')}</p>
+                <button onClick={() => setIsEditingGoal(true)} className="btn-primary" style={{ display: 'inline-flex', padding: '8px 16px', fontSize: '0.9rem' }}>{t('profile_set_my_goal')}</button>
               </div>
             ) : (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{goalData.current} / {goalData.goal} Completed</span>
-                  {goalData.current >= goalData.goal && <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}><Flame size={16} /> Goal Met!</span>}
+                  <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{goalData.current} / {goalData.goal} {t('profile_completed')}</span>
+                  {goalData.current >= goalData.goal && <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}><Flame size={16} /> {t('profile_goal_met')}</span>}
                 </div>
                 <div style={{ width: '100%', height: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '6px', overflow: 'hidden' }}>
                   <div 
@@ -156,18 +171,18 @@ export default function ProfilePage() {
                     }} 
                   />
                 </div>
-                <p style={{ fontSize: '0.85rem', opacity: 0.6, marginTop: '8px', marginBottom: 0 }}>Based on your Engage records this month.</p>
+                <p style={{ fontSize: '0.85rem', opacity: 0.6, marginTop: '8px', marginBottom: 0 }}>{t('profile_based_on_records')}</p>
               </div>
             )}
           </>
         )}
       </div>
 
-      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Events</h2>
+      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>{t('profile_my_events')}</h2>
       {loadingEvents ? (
-        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>Loading your events...</div>
+        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>{t('profile_loading_events')}</div>
       ) : events.length === 0 ? (
-        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>You haven't joined any upcoming events yet.</div>
+        <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>{t('profile_no_events')}</div>
       ) : (
         <div className={styles.eventsList}>
           {events.map(event => {
@@ -206,7 +221,7 @@ export default function ProfilePage() {
           className="btn-secondary" 
           style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.3)' }}
         >
-          <MessageCircle size={18} /> Message Support
+          <MessageCircle size={18} /> {t('profile_msg_support')}
         </button>
 
         {(session.user.role === "ADMIN" || session.user.role === "LEADER") && (
@@ -215,7 +230,7 @@ export default function ProfilePage() {
             className="btn-primary" 
             style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
           >
-            <ShieldCheck size={18} /> Admin Panel
+            <ShieldCheck size={18} /> {t('profile_admin_panel')}
           </button>
         )}
 
@@ -224,7 +239,7 @@ export default function ProfilePage() {
           className="btn-secondary" 
           style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }}
         >
-          <LogOut size={18} /> Sign Out
+          <LogOut size={18} /> {t('profile_sign_out')}
         </button>
       </div>
     </div>

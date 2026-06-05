@@ -3,12 +3,14 @@ import { useState } from "react";
 import styles from "./Dashboard.module.css";
 import { Search, MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function DashboardClient({ initialEvents, user, settings, hideBanner = false }: { initialEvents: any[], user: any, settings: any, hideBanner?: boolean }) {
   const [events, setEvents] = useState(initialEvents);
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const filteredEvents = events.filter(e => 
     e.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -68,7 +70,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
               <Search size={20} style={{ position: 'absolute', left: '16px', top: '14px', opacity: 0.5 }} />
               <input 
                 type="text" 
-                placeholder="Search events, locations..." 
+                placeholder={t('search_placeholder')} 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{ paddingLeft: '48px' }}
@@ -78,7 +80,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
             <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-              Upcoming Revivals
+              {t('upcoming_revivals')}
               <span className={styles.blinkDot}></span>
             </h2>
             {(user?.role === 'ADMIN' || user?.role === 'LEADER') && (
@@ -87,7 +89,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                 onClick={() => router.push('/admin/events/create')}
                 style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '8px' }}
               >
-                + Create Revival
+                + {t('create_revival')}
               </button>
             )}
           </div>
@@ -100,7 +102,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
               onClick={() => router.push('/admin/events/create')}
               style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '8px' }}
             >
-              + Create Revival
+              + {t('create_revival')}
             </button>
           )}
         </div>
@@ -109,7 +111,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
       <div className={styles.eventsList} style={{ marginBottom: hideBanner ? '0' : '30px' }}>
         {filteredEvents.length === 0 ? (
           <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>
-            No events found.
+            {t('no_events_found')}
           </div>
         ) : (
           filteredEvents.map(event => {
@@ -140,7 +142,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                   </div>
                   {event.leaderName && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <UserIcon size={14} /> Leaders: {event.leaderName}
+                      <UserIcon size={14} /> {t('leaders')}: {event.leaderName}
                     </div>
                   )}
                 </div>
@@ -149,7 +151,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                   <div className={styles.eventExpanded} onClick={(e) => e.stopPropagation()}>
                     {event.remarks && (
                       <div style={{ background: 'rgba(0,0,0,0.05)', padding: '12px', borderRadius: '8px', fontSize: '0.85rem' }}>
-                        <strong>Remarks:</strong> {event.remarks}
+                        <strong>{t('event_remarks')}:</strong> {event.remarks}
                       </div>
                     )}
                     
@@ -157,7 +159,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                       <>
                         {event.meetingPoint && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
-                            <Info size={16} color="var(--primary)" /> <strong>Meeting Point:</strong> {event.meetingPoint}
+                            <Info size={16} color="var(--primary)" /> <strong>{t('meeting_point')}:</strong> {event.meetingPoint}
                           </div>
                         )}
 
@@ -186,7 +188,7 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                       </>
                     ) : (
                       <div style={{ fontSize: '0.85rem', color: 'var(--warning)', fontStyle: 'italic', opacity: 0.8 }}>
-                        Join this revival to view the meeting point and location links.
+                        {t('join_to_view')}
                       </div>
                     )}
 
@@ -200,14 +202,14 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                           }
                         }}
                       >
-                        {hasJoined ? "Joined" : "Join Revival"}
+                        {hasJoined ? t('event_joined') : t('join_revival')}
                       </button>
                       <button 
                         className="btn-secondary" 
                         style={{ flex: 1, padding: '12px', borderRadius: '8px', fontWeight: 600, fontSize: '0.95rem' }}
                         onClick={() => router.push(`/events/${event.id}`)}
                       >
-                        View Full Detail
+                        {t('view_full_detail')}
                       </button>
                     </div>
                   </div>
@@ -220,10 +222,10 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
 
       {!hideBanner && (
         <div className={styles.evangelismBanner} style={{ marginTop: '20px' }}>
-          <h2>Request Evangelism</h2>
-          <p>Would you like us to come to your area? Let us know and we'll arrange a special event!</p>
+          <h2>{t('request_evangelism')}</h2>
+          <p>{t('request_evangelism_desc')}</p>
           <button className={styles.bannerButton} onClick={() => router.push('/request')}>
-            Request Now
+            {t('request_now')}
           </button>
         </div>
       )}

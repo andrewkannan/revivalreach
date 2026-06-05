@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Plus, Edit2, MessageCircle, Heart, Activity, CheckCircle, Trash2, Star, Mic, Users } from "lucide-react";
 import AudioRecorder from "@/components/AudioRecorder";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Soul = {
   id: string;
@@ -25,6 +26,7 @@ type Soul = {
 
 export default function EngagePage() {
   const { data: session } = useSession();
+  const { t } = useLanguage();
   const [souls, setSouls] = useState<Soul[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -254,7 +256,7 @@ export default function EngagePage() {
   };
 
   if (!session) {
-    return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Please log in to manage engagements.</div>;
+    return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>{t('engage_login_prompt')}</div>;
   }
 
   return (
@@ -262,8 +264,8 @@ export default function EngagePage() {
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Engage</h1>
-          <p style={{ opacity: 0.8, marginTop: '8px' }}>Log your outreach efforts and track engagements.</p>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>{t('engage_title')}</h1>
+          <p style={{ opacity: 0.8, marginTop: '8px' }}>{t('engage_subtitle')}</p>
         </div>
         {!isFormOpen && (
           <button onClick={openAddForm} className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', padding: 0, borderRadius: '50%' }}>
@@ -275,12 +277,12 @@ export default function EngagePage() {
       {isFormOpen && (
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '30px', animation: 'slideDown 0.3s ease-out' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? "Edit Record" : "Add New Engage Record"}</h2>
+            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? t('engage_edit_record') : t('engage_add_new')}</h2>
             
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: formData.isPriority ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '20px', border: formData.isPriority ? '1px solid #eab308' : '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s ease' }}>
               <input type="checkbox" name="isPriority" checked={formData.isPriority} onChange={handleInputChange} style={{ display: 'none' }} />
               <Star size={16} color={formData.isPriority ? "#eab308" : "rgba(255,255,255,0.4)"} fill={formData.isPriority ? "#eab308" : "none"} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.6)' }}>Priority</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.6)' }}>{t('engage_priority')}</span>
               
               <div style={{ width: '36px', height: '20px', background: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.2)', borderRadius: '10px', position: 'relative', transition: 'all 0.2s ease', marginLeft: '4px' }}>
                 <div style={{ width: '16px', height: '16px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: formData.isPriority ? '18px' : '2px', transition: 'all 0.2s ease' }} />
@@ -293,7 +295,7 @@ export default function EngagePage() {
             {todayEvents.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '4px', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontWeight: 'bold' }}>
-                  <Activity size={16} /> Tag to Event
+                  <Activity size={16} /> {t('engage_tag_event')}
                 </label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   <button 
@@ -306,7 +308,7 @@ export default function EngagePage() {
                       color: formData.eventId === null ? 'white' : 'rgba(255,255,255,0.6)'
                     }}
                   >
-                    None
+                    {t('engage_none')}
                   </button>
                   {todayEvents.map(evt => (
                     <div key={evt.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -332,7 +334,7 @@ export default function EngagePage() {
                             fontWeight: 'bold', transition: 'all 0.2s ease'
                           }}
                         >
-                          Join
+                          {t('engage_join')}
                         </button>
                       )}
                     </div>
@@ -352,18 +354,18 @@ export default function EngagePage() {
                   fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s ease'
                 }}
               >
-                <Users size={18} /> Choose from Contacts
+                <Users size={18} /> {t('engage_choose_contacts')}
               </button>
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label>Name</label>
+              <label>{t('engage_name')}</label>
               <input type="text" name="name" className="input-glass" value={formData.name} onChange={handleInputChange} required />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label>Phone Number</label>
-              <input type="tel" name="phone" className="input-glass" value={formData.phone} onChange={handleInputChange} required placeholder="+1234567890" />
+              <label>{t('engage_phone')}</label>
+              <input type="tel" name="phone" className="input-glass" value={formData.phone} onChange={handleInputChange} required placeholder="+60123456789" />
             </div>
 
             <div style={{ display: 'flex', gap: '16px', margin: '10px 0' }}>
@@ -386,7 +388,7 @@ export default function EngagePage() {
                   fontWeight: 600
                 }}
               >
-                <Heart size={18} color={formData.prayed ? "var(--primary)" : "rgba(255,255,255,0.6)"} fill={formData.prayed ? "var(--primary)" : "none"} /> Prayed
+                <Heart size={18} color={formData.prayed ? "var(--primary)" : "rgba(255,255,255,0.6)"} fill={formData.prayed ? "var(--primary)" : "none"} /> {t('engage_prayed')}
               </button>
 
               <button 
@@ -408,7 +410,7 @@ export default function EngagePage() {
                   fontWeight: 600
                 }}
               >
-                <Activity size={18} color={formData.healed ? "var(--success)" : "rgba(255,255,255,0.6)"} /> Healed
+                <Activity size={18} color={formData.healed ? "var(--success)" : "rgba(255,255,255,0.6)"} /> {t('engage_healed')}
               </button>
 
               <button 
@@ -430,17 +432,17 @@ export default function EngagePage() {
                   fontWeight: 600
                 }}
               >
-                <MessageCircle size={18} color={formData.requestedPrayer ? "#f59e0b" : "rgba(255,255,255,0.6)"} /> Prayer Request
+                <MessageCircle size={18} color={formData.requestedPrayer ? "#f59e0b" : "rgba(255,255,255,0.6)"} /> {t('engage_prayer_request')}
               </button>
             </div>
 
             {formData.requestedPrayer && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'fadeIn 0.3s ease-out' }}>
                 <label style={{ color: '#f59e0b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>Prayer Needs (Text)</span>
+                  <span>{t('engage_prayer_needs')}</span>
                 </label>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                  <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} placeholder="What do they need prayer for?" style={{ borderColor: 'rgba(245, 158, 11, 0.3)', flex: 1 }} required={formData.requestedPrayer && !formData.prayerNeedsAudioUrl} />
+                  <textarea name="prayerNeeds" className="input-glass" value={formData.prayerNeeds} onChange={handleInputChange} rows={3} style={{ borderColor: 'rgba(245, 158, 11, 0.3)', flex: 1 }} required={formData.requestedPrayer && !formData.prayerNeedsAudioUrl} />
                   <AudioRecorder 
                     compact
                     initialAudioUrl={formData.prayerNeedsAudioUrl}
@@ -453,10 +455,10 @@ export default function EngagePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>Remarks (Optional Text)</span>
+                  <span>{t('engage_remarks')}</span>
                 </label>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                  <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} placeholder="Notes about background, etc." style={{ flex: 1 }} />
+                  <textarea name="remarks" className="input-glass" value={formData.remarks} onChange={handleInputChange} rows={3} style={{ flex: 1 }} />
                   <AudioRecorder 
                     compact
                     initialAudioUrl={formData.remarksAudioUrl}
@@ -468,10 +470,10 @@ export default function EngagePage() {
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
               <button type="submit" className="btn-primary" disabled={isSubmitting} style={{ flex: 1 }}>
-                {isSubmitting ? "Saving..." : "Save Record"}
+                {isSubmitting ? t('engage_saving') : t('engage_save_record')}
               </button>
               <button type="button" className="btn-secondary" onClick={resetForm} style={{ flex: 1 }}>
-                Cancel
+                {t('engage_cancel')}
               </button>
             </div>
           </form>
@@ -480,14 +482,14 @@ export default function EngagePage() {
 
       <div>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
-          My Engage Records ({souls.length})
+          {t('engage_my_records')} ({souls.length})
         </h2>
         
         {loading ? (
-          <div style={{ textAlign: 'center', opacity: 0.5, padding: '20px' }}>Loading your records...</div>
+          <div style={{ textAlign: 'center', opacity: 0.5, padding: '20px' }}>{t('engage_loading')}</div>
         ) : souls.length === 0 ? (
           <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>
-            You haven't logged any engage records yet. Click "Add Engage Record" to start!
+            {t('engage_no_records')}
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -505,7 +507,7 @@ export default function EngagePage() {
                         {soul.isPriority && <Star size={18} color="#eab308" fill="#eab308" />}
                       </h3>
                     <p style={{ opacity: 0.7, fontSize: '0.9rem', margin: '4px 0 0 0' }}>
-                      {soul.event ? `Event: ${soul.event.title}` : `Added: ${new Date(soul.createdAt).toLocaleDateString()}`}
+                      {soul.event ? `${t('engage_event')}: ${soul.event.title}` : `${t('engage_added')}: ${new Date(soul.createdAt).toLocaleDateString()}`}
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -521,17 +523,17 @@ export default function EngagePage() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px' }}>
                   {soul.prayed && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--primary)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
-                      <Heart size={12} /> Prayed
+                      <Heart size={12} /> {t('engage_prayed')}
                     </span>
                   )}
                   {soul.healed && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(16, 185, 129, 0.2)', color: 'var(--success)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
-                      <CheckCircle size={12} /> Healed
+                      <CheckCircle size={12} /> {t('engage_healed')}
                     </span>
                   )}
                   {soul.requestedPrayer && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
-                      <MessageCircle size={12} /> Prayer Requested
+                      <MessageCircle size={12} /> {t('engage_prayer_request')}
                     </span>
                   )}
                 </div>
@@ -575,7 +577,7 @@ export default function EngagePage() {
                     }}
                   >
                     {isFollowedUpToday ? <CheckCircle size={18} /> : <MessageCircle size={18} />}
-                    {isFollowedUpToday ? "Followed Up" : "Follow Up"}
+                    {isFollowedUpToday ? t('engage_followed_up') : t('engage_follow_up')}
                   </a>
                 </div>
               </div>
