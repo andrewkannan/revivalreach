@@ -67,7 +67,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', opacity: 0.9 }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <CalendarIcon size={16} color="var(--primary)" /> 
-              {date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              {date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Users size={16} color="var(--primary)" /> 

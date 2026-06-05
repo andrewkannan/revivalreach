@@ -55,7 +55,7 @@ export default function TestimoniesTable({ initialTestimonies }: { initialTestim
               const date = new Date(testimony.createdAt);
               return (
                 <tr key={testimony.id}>
-                  <td>{date.toLocaleDateString()}</td>
+                  <td>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
                   <td>
                     <strong>{testimony.name}</strong><br />
                     <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{testimony.user?.email}</span>

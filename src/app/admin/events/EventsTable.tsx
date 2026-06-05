@@ -51,7 +51,7 @@ export default function EventsTable({ initialEvents }: { initialEvents: any[] })
               return (
                 <tr key={event.id}>
                   <td>{event.title}</td>
-                  <td>{date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                  <td>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                   <td>{event.location}</td>
                   <td>{event.leaderName || "-"}</td>
                   <td style={{ textAlign: 'center' }}>

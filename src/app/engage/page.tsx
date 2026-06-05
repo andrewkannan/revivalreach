@@ -507,7 +507,7 @@ export default function EngagePage() {
                         {soul.isPriority && <Star size={18} color="#eab308" fill="#eab308" />}
                       </h3>
                     <p style={{ opacity: 0.7, fontSize: '0.9rem', margin: '4px 0 0 0' }}>
-                      {soul.event ? `${t('engage_event')}: ${soul.event.title}` : `${t('engage_added')}: ${new Date(soul.createdAt).toLocaleDateString()}`}
+                      {soul.event ? `${t('engage_event')}: ${soul.event.title}` : `${t('engage_added')}: ${new Date(soul.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`}
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>

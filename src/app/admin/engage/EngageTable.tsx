@@ -73,7 +73,7 @@ export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
                       </div>
                     )}
                   </td>
-                  <td>{date.toLocaleDateString()}</td>
+                  <td>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
                 </tr>
               )
             })
