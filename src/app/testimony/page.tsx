@@ -363,7 +363,9 @@ export default function TestimonyPage() {
             {myTestimonies.map(testimony => (
               <div key={testimony.id} className="glass-panel" style={{ padding: '20px', borderLeft: testimony.status === 'APPROVED' ? '4px solid var(--success)' : testimony.status === 'REJECTED' ? '4px solid var(--danger)' : '4px solid #f59e0b' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div style={{ fontWeight: 600, opacity: 0.8 }}>Status: {testimony.status}</div>
+                  <div style={{ fontWeight: 600, opacity: 0.8 }}>
+                    {new Date(testimony.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </div>
                   {testimony.status === 'PENDING' && (
                     <button onClick={() => handleEdit(testimony)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', borderRadius: '6px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Edit2 size={14} /> Edit

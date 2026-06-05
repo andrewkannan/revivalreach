@@ -52,11 +52,21 @@ export default function ProfilePage() {
 
         <div style={{ borderTop: '1px solid var(--card-border)', margin: '10px 0' }}></div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <ShieldCheck size={20} color="var(--primary)" />
-          <div>
-            <strong>Account Role:</strong> <span style={{ textTransform: 'capitalize' }}>{session.user.role.toLowerCase()}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <ShieldCheck size={20} color="var(--primary)" />
+            <div>
+              <strong>Account Role:</strong> <span style={{ textTransform: 'capitalize' }}>{session.user.role.toLowerCase()}</span>
+            </div>
           </div>
+          {(session.user as any).createdAt && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <CalendarIcon size={20} color="var(--primary)" />
+              <div>
+                <strong>Member Since:</strong> {new Date((session.user as any).createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              </div>
+            </div>
+          )}
         </div>
 
       </div>
