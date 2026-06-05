@@ -50,7 +50,7 @@ export default async function EventsPage() {
   // We can reuse the DashboardClient component, it will just display the filtered events.
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-      <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '20px', color: 'white' }}>My Events</h1>
+      <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '20px', color: 'var(--foreground)' }}>My Events</h1>
       {events.length === 0 ? (
         <div className="glass-panel" style={{ padding: '30px', textAlign: 'center', opacity: 0.7 }}>
           You haven't joined any events yet.

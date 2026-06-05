@@ -49,7 +49,7 @@ export default function JoinButton({ event, initialHasJoined = false }: { event:
         fontWeight: 'bold', 
         borderRadius: '12px',
         background: hasJoined ? 'transparent' : 'var(--primary)',
-        color: hasJoined ? 'var(--danger)' : 'white',
+        color: hasJoined ? 'var(--danger)' : 'var(--foreground)',
         border: hasJoined ? '2px solid var(--danger)' : 'none',
         cursor: loading ? 'not-allowed' : 'pointer',
         opacity: loading ? 0.7 : 1

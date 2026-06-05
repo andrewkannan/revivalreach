@@ -44,7 +44,7 @@ export default function CheckinPage({ params }: { params: Promise<{ eventId: str
 
   if (status === "loading" || loading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: 'white', gap: '20px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: 'var(--foreground)', gap: '20px' }}>
         <Loader2 size={48} className="spin" color="var(--primary)" style={{ animation: 'spin 1s linear infinite' }} />
         <h2>Checking you in...</h2>
       </div>
@@ -52,7 +52,7 @@ export default function CheckinPage({ params }: { params: Promise<{ eventId: str
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '500px', margin: '40px auto', textAlign: 'center', color: 'white' }}>
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '40px auto', textAlign: 'center', color: 'var(--foreground)' }}>
       <div className="glass-panel" style={{ padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
         {success ? (
           <>

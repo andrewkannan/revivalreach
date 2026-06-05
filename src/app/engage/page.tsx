@@ -256,11 +256,11 @@ export default function EngagePage() {
   };
 
   if (!session) {
-    return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>{t('engage_login_prompt')}</div>;
+    return <div style={{ padding: '50px', textAlign: 'center', color: 'var(--foreground)' }}>{t('engage_login_prompt')}</div>;
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'white' }}>
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'var(--foreground)' }}>
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
@@ -303,9 +303,9 @@ export default function EngagePage() {
                     onClick={() => setFormData(prev => ({ ...prev, eventId: null }))}
                     style={{ 
                       padding: '8px 16px', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease',
-                      border: formData.eventId === null ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
-                      background: formData.eventId === null ? 'rgba(99, 102, 241, 0.2)' : 'transparent',
-                      color: formData.eventId === null ? 'white' : 'rgba(255,255,255,0.6)'
+                      color: formData.eventId === null ? 'var(--foreground)' : 'var(--foreground)',
+                      background: formData.eventId === null ? 'var(--primary)' : 'var(--card-bg)',
+                      border: formData.eventId === null ? '1px solid transparent' : '1px solid var(--card-border)'
                     }}
                   >
                     {t('engage_none')}
@@ -317,9 +317,9 @@ export default function EngagePage() {
                         onClick={() => setFormData(prev => ({ ...prev, eventId: evt.id }))}
                         style={{ 
                           padding: '8px 16px', borderRadius: '20px', fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s ease',
-                          border: formData.eventId === evt.id ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
-                          background: formData.eventId === evt.id ? 'var(--primary)' : 'transparent',
-                          color: formData.eventId === evt.id ? 'white' : 'rgba(255,255,255,0.8)'
+                          color: formData.eventId === evt.id ? 'var(--foreground)' : 'var(--foreground)',
+                          background: formData.eventId === evt.id ? 'var(--primary)' : 'var(--card-bg)',
+                          border: formData.eventId === evt.id ? '1px solid transparent' : '1px solid var(--card-border)'
                         }}
                       >
                         {evt.title}
@@ -511,7 +511,7 @@ export default function EngagePage() {
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => openEditForm(soul)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}>
+                    <button onClick={() => openEditForm(soul)} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--foreground)', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}>
                       <Edit2 size={16} />
                     </button>
                     <button onClick={() => handleDelete(soul.id)} style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: 'var(--danger)', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}>

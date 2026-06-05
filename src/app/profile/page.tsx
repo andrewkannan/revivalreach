@@ -60,7 +60,7 @@ export default function ProfilePage() {
   };
 
   if (status === "loading") {
-    return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Loading...</div>;
+    return <div style={{ padding: '50px', textAlign: 'center', color: 'var(--foreground)' }}>Loading...</div>;
   }
 
   if (!session) {
@@ -77,7 +77,7 @@ export default function ProfilePage() {
           <select 
             value={language} 
             onChange={(e) => setLanguage(e.target.value as "en" | "ta" | "ms")}
-            style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
+            style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
           >
             <option value="en" style={{ color: 'black' }}>English</option>
             <option value="ta" style={{ color: 'black' }}>தமிழ் (Tamil)</option>
@@ -133,7 +133,7 @@ export default function ProfilePage() {
               {!isEditingGoal && (
                 <button 
                   onClick={() => setIsEditingGoal(true)}
-                  style={{ background: 'transparent', border: 'none', color: 'white', opacity: 0.6, fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', opacity: 0.6, fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
                 >
                   {t('profile_edit_goal')}
                 </button>

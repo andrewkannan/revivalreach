@@ -8,7 +8,7 @@ export default function GlobalError({
   reset: () => void
 }) {
   return (
-    <div style={{ padding: '50px', maxWidth: '800px', margin: '0 auto', fontFamily: 'monospace', color: 'white' }}>
+    <div style={{ padding: '50px', maxWidth: '800px', margin: '0 auto', fontFamily: 'monospace', color: 'var(--foreground)' }}>
       <h1 style={{ color: '#ff4444' }}>Something went wrong!</h1>
       <p>A server error occurred. Please screenshot this and send it to the developer:</p>
       

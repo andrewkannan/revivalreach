@@ -115,7 +115,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
     }
   };
 
-  if (isLoading) return <div style={{ padding: '50px', color: 'white', textAlign: 'center' }}>Loading...</div>;
+  if (isLoading) return <div style={{ padding: '50px', color: 'var(--foreground)', textAlign: 'center' }}>Loading...</div>;
 
   const isAdmin = session?.user?.role === "ADMIN";
   const isApproved = formData.status === "APPROVED";
@@ -223,9 +223,9 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
                       onClick={() => toggleLeader(displayName)}
                       style={{ 
                         display: 'flex', alignItems: 'center', padding: '6px 14px', borderRadius: '20px', fontSize: '0.9rem', cursor: 'pointer',
-                        background: isSelected ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
-                        color: isSelected ? 'white' : 'rgba(255,255,255,0.8)',
-                        border: isSelected ? '1px solid transparent' : '1px solid rgba(255,255,255,0.2)',
+                        background: isSelected ? 'var(--primary)' : 'var(--card-bg)',
+                        color: isSelected ? 'white' : 'var(--foreground)',
+                        border: isSelected ? '1px solid transparent' : '1px solid var(--card-border)',
                         transition: 'all 0.2s ease'
                       }}
                     >

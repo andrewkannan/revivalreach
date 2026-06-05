@@ -36,7 +36,7 @@ export default function EventQRModal({ eventId, eventTitle, onClose }: EventQRMo
         
         <button onClick={onClose} style={{
           position: 'absolute', top: '15px', right: '15px',
-          background: 'none', border: 'none', color: 'white', cursor: 'pointer'
+          background: 'none', border: 'none', color: 'var(--foreground)', cursor: 'pointer'
         }}>
           <X size={24} />
         </button>

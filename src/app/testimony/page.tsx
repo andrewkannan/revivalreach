@@ -334,7 +334,7 @@ export default function TestimonyPage() {
                   borderRadius: '12px',
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: 'white',
+                  color: 'var(--foreground)',
                   fontSize: '1rem',
                   fontFamily: 'inherit'
                 }}
@@ -369,7 +369,7 @@ export default function TestimonyPage() {
                     {new Date(testimony.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </div>
                   {testimony.status === 'PENDING' && (
-                    <button onClick={() => handleEdit(testimony)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', borderRadius: '6px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <button onClick={() => handleEdit(testimony)} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--foreground)', borderRadius: '6px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Edit2 size={14} /> Edit
                     </button>
                   )}

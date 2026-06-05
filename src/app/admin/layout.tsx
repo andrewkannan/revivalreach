@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const hasAccess = (path: string) => allowedPaths.includes("ALL") || allowedPaths.includes(path);
 
-  if (loading) return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Loading admin panel...</div>;
+  if (loading) return <div style={{ padding: '50px', textAlign: 'center', color: 'var(--foreground)' }}>Loading admin panel...</div>;
 
   return (
     <div className={styles.adminContainer}>

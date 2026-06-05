@@ -34,7 +34,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   });
 
   if (!event) {
-    return <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>Event not found</div>;
+    return <div style={{ color: 'var(--foreground)', textAlign: 'center', padding: '50px' }}>Event not found</div>;
   }
 
   const settings = await prisma.systemSettings.findUnique({
@@ -55,7 +55,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const canViewSensitiveInfo = hasJoined || session.user.role === "ADMIN" || session.user.role === "LEADER";
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'white' }}>
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'var(--foreground)' }}>
       <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--primary)', marginBottom: '20px', textDecoration: 'none', fontWeight: 600 }}>
         <ArrowLeft size={18} /> Back to Dashboard
       </Link>
@@ -125,11 +125,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
         {canViewSensitiveInfo ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '10px' }}>
-            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500 }}>
+            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)' }}>
               <MapPin size={18} /> Open in Google Maps
             </a>
             
-            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500 }}>
+            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)' }}>
               <Navigation size={18} /> Open in Waze
             </a>
             

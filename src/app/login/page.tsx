@@ -49,7 +49,7 @@ function LoginForm() {
         <select 
           value={language} 
           onChange={(e) => setLanguage(e.target.value as "en" | "ta" | "ms")}
-          style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
+          style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
         >
           <option value="en" style={{ color: 'black' }}>English</option>
           <option value="ta" style={{ color: 'black' }}>தமிழ்</option>
