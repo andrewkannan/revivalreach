@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-:root {
+:root, .light-theme {
   --background: #f8fafc;
   --foreground: #0f172a;
   
@@ -22,8 +22,24 @@
   --safe-area-bottom: env(safe-area-inset-bottom, 20px);
 }
 
+.dark-theme {
+  --background: #09090b;
+  --foreground: #fafafa;
+  
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --secondary: #f472b6;
+  
+  --card-bg: rgba(24, 24, 27, 0.7);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  
+  --nav-bg: rgba(9, 9, 11, 0.85);
+  --nav-border: rgba(255, 255, 255, 0.1);
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light-theme) {
     --background: #09090b;
     --foreground: #fafafa;
     
@@ -199,3 +215,6 @@ main.app-container {
   margin-right: 60px;
 }
 
+.large-text {
+  font-size: 125% !important;
+}

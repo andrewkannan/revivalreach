@@ -24,6 +24,12 @@ export const en = {
   profile_sign_out: "Sign Out",
   profile_loading_events: "Loading your events...",
   profile_loading_goal: "Loading goal...",
+  profile_accessibility: "Accessibility & Preferences",
+  profile_theme: "Theme",
+  profile_theme_light: "Light",
+  profile_theme_dark: "Dark",
+  profile_theme_system: "System Default",
+  profile_large_text: "Large Text Mode",
 
   // Dashboard
   dashboard_hello: "Hello",

@@ -24,6 +24,12 @@ export const ms = {
   profile_sign_out: "Log Keluar",
   profile_loading_events: "Memuatkan acara anda...",
   profile_loading_goal: "Memuatkan matlamat...",
+  profile_accessibility: "Kebolehcapaian & Keutamaan",
+  profile_theme: "Tema",
+  profile_theme_light: "Cerah",
+  profile_theme_dark: "Gelap",
+  profile_theme_system: "Lalai Sistem",
+  profile_large_text: "Mod Teks Besar",
 
   // Dashboard
   dashboard_hello: "Helo",

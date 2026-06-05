@@ -10,6 +10,7 @@ import PrayerTicker from "@/components/PrayerTicker";
 const inter = Inter({ subsets: ["latin"] });
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
 
 export const metadata: Metadata = {
   title: "Revival Reach",
@@ -25,14 +26,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <LanguageProvider>
-            <TopNav />
-            <PrayerTicker />
-            <main className="app-container">
-              {children}
-            </main>
-            <BottomNav />
-          </LanguageProvider>
+          <PreferencesProvider>
+            <LanguageProvider>
+              <TopNav />
+              <PrayerTicker />
+              <main className="app-container">
+                {children}
+              </main>
+              <BottomNav />
+            </LanguageProvider>
+          </PreferencesProvider>
         </AuthProvider>
       </body>
     </html>

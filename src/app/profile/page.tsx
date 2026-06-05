@@ -3,14 +3,16 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePreferences } from "@/contexts/PreferencesContext";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme, textSize, setTextSize } = usePreferences();
   const [events, setEvents] = useState<any[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
@@ -215,6 +217,64 @@ export default function ProfilePage() {
           })}
         </div>
       )}
+
+      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>{t('profile_accessibility')}</h2>
+      <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        
+        {/* Theme Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {theme === 'dark' ? <Moon size={20} color="var(--primary)" /> : theme === 'light' ? <Sun size={20} color="var(--primary)" /> : <Monitor size={20} color="var(--primary)" />}
+            </div>
+            <div>
+              <div style={{ fontWeight: 600 }}>{t('profile_theme')}</div>
+              <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>
+                {theme === 'dark' ? t('profile_theme_dark') : theme === 'light' ? t('profile_theme_light') : t('profile_theme_system')}
+              </div>
+            </div>
+          </div>
+          <select 
+            value={theme} 
+            onChange={(e) => setTheme(e.target.value as any)}
+            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'var(--foreground)', padding: '6px 12px', borderRadius: '8px', outline: 'none', cursor: 'pointer' }}
+          >
+            <option value="system" style={{ color: 'black' }}>{t('profile_theme_system')}</option>
+            <option value="light" style={{ color: 'black' }}>{t('profile_theme_light')}</option>
+            <option value="dark" style={{ color: 'black' }}>{t('profile_theme_dark')}</option>
+          </select>
+        </div>
+
+        {/* Text Size Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Type size={20} color="var(--primary)" />
+            </div>
+            <div>
+              <div style={{ fontWeight: 600 }}>{t('profile_large_text')}</div>
+            </div>
+          </div>
+          <label style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px' }}>
+            <input 
+              type="checkbox" 
+              checked={textSize === 'large'} 
+              onChange={(e) => setTextSize(e.target.checked ? 'large' : 'normal')}
+              style={{ opacity: 0, width: 0, height: 0 }} 
+            />
+            <span style={{
+              position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: textSize === 'large' ? 'var(--primary)' : 'rgba(255,255,255,0.2)',
+              transition: '.4s', borderRadius: '24px'
+            }}>
+              <span style={{
+                position: 'absolute', content: '""', height: '18px', width: '18px', left: textSize === 'large' ? '22px' : '3px', bottom: '3px',
+                backgroundColor: 'white', transition: '.4s', borderRadius: '50%'
+              }} />
+            </span>
+          </label>
+        </div>
+      </div>
 
       <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <button 

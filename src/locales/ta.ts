@@ -22,8 +22,14 @@ export const ta = {
   profile_msg_support: "உதவிக்கு மெசேஜ் செய்யவும்", // Message Support
   profile_admin_panel: "நிர்வாகி பக்கம்", // Admin Panel
   profile_sign_out: "வெளியேறு", // Sign Out
-  profile_loading_events: "நிகழ்வுகள் ஏற்றப்படுகின்றன...", // Loading your events...
-  profile_loading_goal: "இலக்கு ஏற்றப்படுகிறது...", // Loading goal...
+  profile_loading_events: "உங்கள் நிகழ்வுகளை ஏற்றுகிறது...", // Loading your events...
+  profile_loading_goal: "இலக்கை ஏற்றுகிறது...", // Loading goal...
+  profile_accessibility: "அணுகல் மற்றும் விருப்பத்தேர்வுகள்", // Accessibility & Preferences
+  profile_theme: "தீம்", // Theme
+  profile_theme_light: "ஒளி", // Light
+  profile_theme_dark: "இருள்", // Dark
+  profile_theme_system: "கணினி இயல்புநிலை", // System Default
+  profile_large_text: "பெரிய உரை முறை", // Large Text Mode
 
   // Dashboard
   dashboard_hello: "வணக்கம்", // Hello
