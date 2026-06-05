@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
@@ -11,6 +11,12 @@ export default function ProfilePage() {
   const router = useRouter();
   const [events, setEvents] = useState<any[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+
+  // Goal Tracker State
+  const [goalData, setGoalData] = useState({ goal: 0, current: 0 });
+  const [loadingGoal, setLoadingGoal] = useState(true);
+  const [isEditingGoal, setIsEditingGoal] = useState(false);
+  const [newGoalValue, setNewGoalValue] = useState("");
 
   useEffect(() => {
     if (session) {
@@ -21,8 +27,33 @@ export default function ProfilePage() {
           setLoadingEvents(false);
         })
         .catch(() => setLoadingEvents(false));
+
+      fetch("/api/profile/goal")
+        .then(res => res.json())
+        .then(data => {
+          setGoalData(data);
+          setNewGoalValue(data.goal.toString());
+          setLoadingGoal(false);
+        })
+        .catch(() => setLoadingGoal(false));
     }
   }, [session]);
+
+  const saveGoal = async () => {
+    const parsed = parseInt(newGoalValue, 10);
+    if (isNaN(parsed) || parsed < 0) return;
+    try {
+      await fetch("/api/profile/goal", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal: parsed })
+      });
+      setGoalData(prev => ({ ...prev, goal: parsed }));
+      setIsEditingGoal(false);
+    } catch (err) {
+      console.error("Error saving goal", err);
+    }
+  };
 
   if (status === "loading") {
     return <div style={{ padding: '50px', textAlign: 'center', color: 'white' }}>Loading...</div>;
@@ -69,6 +100,67 @@ export default function ProfilePage() {
           )}
         </div>
 
+      </div>
+
+      <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>Evangelism Goal</h2>
+      <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {loadingGoal ? (
+          <div style={{ opacity: 0.7, textAlign: 'center' }}>Loading goal...</div>
+        ) : (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, color: 'var(--primary)' }}>
+                <Target size={20} /> Monthly Target
+              </div>
+              {!isEditingGoal && (
+                <button 
+                  onClick={() => setIsEditingGoal(true)}
+                  style={{ background: 'transparent', border: 'none', color: 'white', opacity: 0.6, fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Edit Goal
+                </button>
+              )}
+            </div>
+
+            {isEditingGoal ? (
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input 
+                  type="number" 
+                  className="input-glass" 
+                  value={newGoalValue} 
+                  onChange={(e) => setNewGoalValue(e.target.value)}
+                  style={{ width: '80px', padding: '8px' }}
+                  min="0"
+                />
+                <button onClick={saveGoal} className="btn-primary" style={{ padding: '8px 16px' }}><Check size={16} /></button>
+                <button onClick={() => { setIsEditingGoal(false); setNewGoalValue(goalData.goal.toString()); }} className="btn-secondary" style={{ padding: '8px 16px' }}><X size={16} /></button>
+              </div>
+            ) : goalData.goal === 0 ? (
+              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+                <p style={{ margin: '0 0 12px 0', opacity: 0.8 }}>Set a monthly goal to stay motivated in sharing the gospel!</p>
+                <button onClick={() => setIsEditingGoal(true)} className="btn-primary" style={{ display: 'inline-flex', padding: '8px 16px', fontSize: '0.9rem' }}>Set My Goal</button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{goalData.current} / {goalData.goal} Completed</span>
+                  {goalData.current >= goalData.goal && <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}><Flame size={16} /> Goal Met!</span>}
+                </div>
+                <div style={{ width: '100%', height: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '6px', overflow: 'hidden' }}>
+                  <div 
+                    style={{ 
+                      height: '100%', 
+                      background: goalData.current >= goalData.goal ? '#10b981' : 'var(--primary)', 
+                      width: `${Math.min(100, (goalData.current / goalData.goal) * 100)}%`,
+                      transition: 'width 0.5s ease-out'
+                    }} 
+                  />
+                </div>
+                <p style={{ fontSize: '0.85rem', opacity: 0.6, marginTop: '8px', marginBottom: 0 }}>Based on your Engage records this month.</p>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>My Events</h2>

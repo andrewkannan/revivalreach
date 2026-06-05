@@ -15,6 +15,7 @@ model User {
   passwordHash   String?
   role           String            @default("MEMBER") // ADMIN, LEADER, MEMBER
   isApproved     Boolean           @default(false)
+  evangelismGoal Int?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   participations EventParticipant[]
