@@ -50,6 +50,54 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { role: value },
       });
+    } else if (action === "disable") {
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { isActive: false },
+      });
+    } else if (action === "enable") {
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { isActive: true },
+      });
+    } else if (action === "trigger-reset") {
+      const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+      if (!targetUser || !targetUser.email) {
+        return NextResponse.json({ message: "User not found or has no email" }, { status: 400 });
+      }
+      const crypto = require("crypto");
+      const token = crypto.randomBytes(32).toString("hex");
+      const expiry = new Date();
+      expiry.setHours(expiry.getHours() + 1);
+      
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { resetToken: token, resetTokenExpiry: expiry }
+      });
+
+      const appUrl = process.env.NEXTAUTH_URL || req.headers.get("origin") || "https://revivalreach.up.railway.app";
+      const resetUrl = `${appUrl}/reset-password?token=${token}`;
+
+      await sendEmail({
+        to: targetUser.email,
+        subject: "Revival Reach - Password Reset Request (Admin Initiated)",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2>Password Reset</h2>
+            <p>Hi ${targetUser.name || "User"},</p>
+            <p>An administrator has requested a password reset for your Revival Reach account. Click the button below to reset it.</p>
+            <br/>
+            <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+            <br/><br/>
+            <p>This link will expire in 1 hour.</p>
+          </div>
+        `
+      });
+    } else if (action === "delete") {
+      await prisma.user.delete({
+        where: { id: userId }
+      });
+      return NextResponse.json({ message: "User deleted" });
     } else {
       return NextResponse.json({ message: "Invalid action" }, { status: 400 });
     }

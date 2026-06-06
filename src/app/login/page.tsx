@@ -101,6 +101,9 @@ function LoginForm() {
         </form>
 
         <div className={styles.authFooter}>
+          <Link href="/forgot-password" style={{ display: 'block', marginBottom: '10px', fontSize: '0.9rem', color: 'var(--primary)' }}>
+            Forgot Password?
+          </Link>
           {t('login_no_account')} <Link href="/register">{t('login_signup')}</Link>
         </div>
       </div>

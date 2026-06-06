@@ -12,22 +12,48 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing email or password");
+        if (!credentials?.email) {
+          throw new Error("Missing email");
         }
-        
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!user || !user.passwordHash) {
+        if (!user) {
           throw new Error("Invalid credentials");
         }
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
+        // Impersonation Flow
+        if (credentials.password && credentials.password.startsWith("IMPERSONATE:")) {
+          const token = credentials.password.split(":")[1];
+          if (!user.impersonationToken || user.impersonationToken !== token) {
+            throw new Error("Invalid impersonation token");
+          }
+          if (user.impersonationTokenExpiry && user.impersonationTokenExpiry < new Date()) {
+            throw new Error("Impersonation token expired");
+          }
+          // Clear token after successful impersonation login
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { impersonationToken: null, impersonationTokenExpiry: null }
+          });
+        } else {
+          // Standard Login Flow
+          if (!credentials.password) {
+            throw new Error("Missing password");
+          }
+          if (!user.passwordHash) {
+            throw new Error("Invalid credentials");
+          }
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
+          if (!isPasswordValid) {
+            throw new Error("Invalid credentials");
+          }
+        }
 
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials");
+        if (!user.isActive) {
+          throw new Error("Your account has been disabled by an administrator.");
         }
 
         if (!user.isApproved) {
