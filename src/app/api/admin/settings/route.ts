@@ -47,6 +47,8 @@ export async function POST(req: Request) {
         smtpPass: data.smtpPass,
         prayerEmailTargets: data.prayerEmailTargets,
         autoFollowUpReminders: data.autoFollowUpReminders !== undefined ? data.autoFollowUpReminders : true,
+        emailTemplateApproved: data.emailTemplateApproved,
+        emailTemplateReset: data.emailTemplateReset,
         ...(data.rolePermissions && { rolePermissions: data.rolePermissions })
       },
       create: {
@@ -57,6 +59,8 @@ export async function POST(req: Request) {
         smtpPass: data.smtpPass,
         prayerEmailTargets: data.prayerEmailTargets,
         autoFollowUpReminders: data.autoFollowUpReminders !== undefined ? data.autoFollowUpReminders : true,
+        emailTemplateApproved: data.emailTemplateApproved,
+        emailTemplateReset: data.emailTemplateReset,
         ...(data.rolePermissions && { rolePermissions: data.rolePermissions })
       }
     });

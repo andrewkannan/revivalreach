@@ -10,6 +10,8 @@ export default function AdminSettings() {
     smtpPass: "",
     prayerEmailTargets: "",
     autoFollowUpReminders: true,
+    emailTemplateApproved: "",
+    emailTemplateReset: "",
     rolePermissions: {} as Record<string, string[]>
   });
   const [loading, setLoading] = useState(true);
@@ -31,6 +33,8 @@ export default function AdminSettings() {
           smtpPass: data.smtpPass || "",
           prayerEmailTargets: data.prayerEmailTargets || "",
           autoFollowUpReminders: data.autoFollowUpReminders !== undefined ? data.autoFollowUpReminders : true,
+          emailTemplateApproved: data.emailTemplateApproved || "Your account has been approved by an administrator. You can now access the system.",
+          emailTemplateReset: data.emailTemplateReset || "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.",
           rolePermissions: data.rolePermissions ? (typeof data.rolePermissions === 'string' ? JSON.parse(data.rolePermissions) : data.rolePermissions) : {}
         });
         setLoading(false);
@@ -144,6 +148,29 @@ export default function AdminSettings() {
             value={settings.smtpPass}
             onChange={e => setSettings({...settings, smtpPass: e.target.value})}
             style={{ width: '100%' }}
+          />
+        </div>
+
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <h3>Email Templates</h3>
+          <p style={{ opacity: 0.8, marginBottom: '15px' }}>
+            Customize the text of outgoing emails. Variables available: <code>{"{{name}}"}</code>, <code>{"{{email}}"}</code>
+          </p>
+
+          <label style={{ display: 'block', marginBottom: '5px' }}>Account Approved Template</label>
+          <textarea
+            className="input-glass"
+            value={settings.emailTemplateApproved}
+            onChange={e => setSettings({...settings, emailTemplateApproved: e.target.value})}
+            style={{ width: '100%', minHeight: '100px', marginBottom: '15px', resize: 'vertical' }}
+          />
+
+          <label style={{ display: 'block', marginBottom: '5px' }}>Password Reset Template</label>
+          <textarea
+            className="input-glass"
+            value={settings.emailTemplateReset}
+            onChange={e => setSettings({...settings, emailTemplateReset: e.target.value})}
+            style={{ width: '100%', minHeight: '100px', marginBottom: '15px', resize: 'vertical' }}
           />
         </div>
 

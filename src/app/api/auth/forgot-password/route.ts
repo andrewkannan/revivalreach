@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
-import { sendEmail } from "@/lib/email";
+import { sendEmail, getSleekEmailHtml } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -36,21 +36,23 @@ export async function POST(req: Request) {
     const appUrl = process.env.NEXTAUTH_URL || req.headers.get("origin") || "https://revivalreach.up.railway.app";
     const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
+    const settings = await prisma.systemSettings.findUnique({ where: { id: "singleton" } });
+    const defaultTemplate = "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.";
+    let bodyContent = (settings?.emailTemplateReset || defaultTemplate)
+      .replace(/{{name}}/g, user.name || "User")
+      .replace(/{{email}}/g, user.email || "");
+
+    const html = getSleekEmailHtml({
+      title: "Password Reset Request",
+      bodyContent,
+      buttonText: "Reset Password",
+      buttonUrl: resetUrl
+    });
+
     await sendEmail({
       to: user.email!,
       subject: "Revival Reach - Password Reset Request",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Password Reset Request</h2>
-          <p>Hi ${user.name || "User"},</p>
-          <p>You recently requested to reset your password for your Revival Reach account. Click the button below to reset it.</p>
-          <br/>
-          <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
-          <br/><br/>
-          <p>If you did not request a password reset, please ignore this email. This link will expire in 1 hour.</p>
-          <p>Blessings,<br/>The Revival Reach Team</p>
-        </div>
-      `,
+      html
     });
 
     return NextResponse.json({ message: "If an account with that email exists, a password reset link has been sent." });

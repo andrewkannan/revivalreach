@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
-import { sendEmail } from "@/lib/email";
+import { sendEmail, getSleekEmailHtml } from "@/lib/email";
 
 export async function PATCH(req: Request) {
   try {
@@ -28,21 +28,24 @@ export async function PATCH(req: Request) {
       
       const appUrl = process.env.NEXTAUTH_URL || req.headers.get("origin") || "https://revivalreach.up.railway.app";
       if (updatedUser.email) {
+        const settings = await prisma.systemSettings.findUnique({ where: { id: "singleton" } });
+        const defaultTemplate = "Your account has been approved by an administrator. You can now access the system.";
+        let bodyContent = (settings?.emailTemplateApproved || defaultTemplate)
+          .replace(/{{name}}/g, updatedUser.name || "User")
+          .replace(/{{email}}/g, updatedUser.email);
+        
+        const html = getSleekEmailHtml({
+          title: "Account Approved",
+          subtitle: "Welcome to Revival Reach!",
+          bodyContent,
+          buttonText: "Go to Dashboard",
+          buttonUrl: appUrl
+        });
+
         await sendEmail({
           to: updatedUser.email,
           subject: "Your Revival Reach Account is Approved!",
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2>Welcome to Revival Reach!</h2>
-              <p>Hi ${updatedUser.name || "User"},</p>
-              <p>Your account has been approved by an administrator. You can now access the system.</p>
-              <p><strong>Your Username (Email):</strong> ${updatedUser.email}</p>
-              <br/>
-              <a href="${appUrl}" style="display: inline-block; padding: 10px 20px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px;">Go to Dashboard</a>
-              <br/><br/>
-              <p>Blessings,<br/>The Revival Reach Team</p>
-            </div>
-          `
+          html
         });
       }
     } else if (action === "role") {
@@ -78,20 +81,24 @@ export async function PATCH(req: Request) {
       const appUrl = process.env.NEXTAUTH_URL || req.headers.get("origin") || "https://revivalreach.up.railway.app";
       const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
+      const settings = await prisma.systemSettings.findUnique({ where: { id: "singleton" } });
+      const defaultTemplate = "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.";
+      let bodyContent = (settings?.emailTemplateReset || defaultTemplate)
+        .replace(/{{name}}/g, targetUser.name || "User")
+        .replace(/{{email}}/g, targetUser.email);
+
+      const html = getSleekEmailHtml({
+        title: "Password Reset",
+        subtitle: "Admin Initiated Request",
+        bodyContent,
+        buttonText: "Reset Password",
+        buttonUrl: resetUrl
+      });
+
       await sendEmail({
         to: targetUser.email,
-        subject: "Revival Reach - Password Reset Request (Admin Initiated)",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>Password Reset</h2>
-            <p>Hi ${targetUser.name || "User"},</p>
-            <p>An administrator has requested a password reset for your Revival Reach account. Click the button below to reset it.</p>
-            <br/>
-            <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
-            <br/><br/>
-            <p>This link will expire in 1 hour.</p>
-          </div>
-        `
+        subject: "Revival Reach - Password Reset Request",
+        html
       });
     } else if (action === "delete") {
       await prisma.user.delete({
