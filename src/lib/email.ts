@@ -23,6 +23,8 @@ export async function sendEmail({
     host: settings.smtpHost,
     port: settings.smtpPort,
     secure: settings.smtpPort === 465, // true for 465, false for other ports
+    connectionTimeout: 10000, // 10 seconds to timeout
+    greetingTimeout: 10000,
     auth: {
       user: settings.smtpUser,
       pass: settings.smtpPass,
@@ -37,9 +39,30 @@ export async function sendEmail({
       html,
     });
     console.log("Message sent: %s", info.messageId);
+    
+    // Log success
+    await prisma.emailLog.create({
+      data: {
+        to,
+        subject,
+        status: "SUCCESS",
+      }
+    });
+    
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error("Error sending email:", error);
+    
+    // Log failure
+    await prisma.emailLog.create({
+      data: {
+        to,
+        subject,
+        status: "FAILED",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }
+    });
+
     return { success: false, message: error instanceof Error ? error.message : "Unknown error sending email" };
   }
 }

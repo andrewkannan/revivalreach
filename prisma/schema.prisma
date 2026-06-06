@@ -123,3 +123,12 @@ model Testimony {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+  
+model EmailLog {  
+  id        String   @id @default(cuid())  
+  to        String  
+  subject   String  
+  status    String  
+  error     String?  
+  createdAt DateTime @default(now())  
+} 

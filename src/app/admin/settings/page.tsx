@@ -202,7 +202,8 @@ export default function AdminSettings() {
               { path: '/admin/engage', label: 'Engage (Souls)' },
               { path: '/admin/prayer-queue', label: 'Prayer Queue' },
               { path: '/admin/evangelism', label: 'Evangelism Requests' },
-              { path: '/admin/testimonies', label: 'Testimonies' }
+              { path: '/admin/testimonies', label: 'Testimonies' },
+              { path: '/admin/email-logs', label: 'Email Logs' }
             ].map(mod => {
               const leaderPerms = settings.rolePermissions?.LEADER || [];
               const isChecked = leaderPerms.includes(mod.path);

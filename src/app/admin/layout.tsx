@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Admin.module.css";
-import { Users, Settings, CalendarRange, Heart, ShieldCheck, HeartHandshake, MessageSquare } from "lucide-react";
+import { Users, Settings, CalendarRange, Heart, ShieldCheck, HeartHandshake, MessageSquare, Mail } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { useEffect, useState } from "react";
@@ -76,6 +76,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {hasAccess('/admin/testimonies') && (
             <Link href="/admin/testimonies" className={`${styles.sidebarLink} ${pathname === '/admin/testimonies' ? styles.active : ''}`}>
               <MessageSquare size={20} /> Testimonies
+            </Link>
+          )}
+          {hasAccess('/admin/email-logs') && (
+            <Link href="/admin/email-logs" className={`${styles.sidebarLink} ${pathname === '/admin/email-logs' ? styles.active : ''}`}>
+              <Mail size={20} /> Email Logs
             </Link>
           )}
           {hasAccess('/admin/settings') && (
