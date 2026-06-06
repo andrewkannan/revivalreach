@@ -187,8 +187,8 @@ export function getSleekEmailHtml({
       ` : ''}
     </div>
     <div class="footer">
-      <p>Empowering the church to reach the world.</p>
-      <p style="margin-top: 8px; font-size: 12px; color: #475569;">&copy; ${new Date().getFullYear()} Revival Reach. All rights reserved.</p>
+      <p>Season of territory expansion.</p>
+      <p style="margin-top: 8px; font-size: 12px; color: #475569;">&copy; ${new Date().getFullYear()} CCC Bilingual. All rights reserved.</p>
     </div>
   </div>
 </body>
