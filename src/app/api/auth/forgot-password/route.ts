@@ -37,17 +37,17 @@ export async function POST(req: Request) {
     const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
     const settings = await prisma.systemSettings.findUnique({ where: { id: "singleton" } });
-    const defaultTemplate = "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.";
-    let bodyContent = (settings?.emailTemplateReset || defaultTemplate)
-      .replace(/{{name}}/g, user.name || "User")
-      .replace(/{{email}}/g, user.email || "");
-
-    const html = getSleekEmailHtml({
+    const defaultHtml = getSleekEmailHtml({
       title: "Password Reset Request",
-      bodyContent,
+      bodyContent: "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.",
       buttonText: "Reset Password",
       buttonUrl: resetUrl
     });
+    
+    const html = (settings?.emailTemplateReset || defaultHtml)
+      .replace(/{{name}}/g, user.name || "User")
+      .replace(/{{email}}/g, user.email || "")
+      .replace(/{{link}}/g, resetUrl);
 
     await sendEmail({
       to: user.email!,

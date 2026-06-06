@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
+import { getSleekEmailHtml } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -18,6 +19,25 @@ export async function GET() {
     if (!settings) {
       settings = await prisma.systemSettings.create({
         data: { id: "singleton" }
+      });
+    }
+
+    if (!settings.emailTemplateApproved) {
+      settings.emailTemplateApproved = getSleekEmailHtml({
+        title: "Account Approved",
+        subtitle: "Welcome to Revival Reach!",
+        bodyContent: "Your account has been approved by an administrator. You can now access the system.",
+        buttonText: "Go to Dashboard",
+        buttonUrl: "{{link}}"
+      });
+    }
+
+    if (!settings.emailTemplateReset) {
+      settings.emailTemplateReset = getSleekEmailHtml({
+        title: "Password Reset Request",
+        bodyContent: "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.",
+        buttonText: "Reset Password",
+        buttonUrl: "{{link}}"
       });
     }
 

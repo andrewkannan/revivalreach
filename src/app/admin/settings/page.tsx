@@ -152,9 +152,9 @@ export default function AdminSettings() {
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
-          <h3>Email Templates</h3>
+          <h3>Email Templates (Full HTML)</h3>
           <p style={{ opacity: 0.8, marginBottom: '15px' }}>
-            Customize the text of outgoing emails. Variables available: <code>{"{{name}}"}</code>, <code>{"{{email}}"}</code>
+            Customize the full HTML code of outgoing emails. Variables available: <code>{"{{name}}"}</code>, <code>{"{{email}}"}</code>, <code>{"{{link}}"}</code>
           </p>
 
           <label style={{ display: 'block', marginBottom: '5px' }}>Account Approved Template</label>
@@ -162,7 +162,7 @@ export default function AdminSettings() {
             className="input-glass"
             value={settings.emailTemplateApproved}
             onChange={e => setSettings({...settings, emailTemplateApproved: e.target.value})}
-            style={{ width: '100%', minHeight: '100px', marginBottom: '15px', resize: 'vertical' }}
+            style={{ width: '100%', minHeight: '300px', marginBottom: '15px', resize: 'vertical', fontFamily: 'monospace', fontSize: '0.9rem' }}
           />
 
           <label style={{ display: 'block', marginBottom: '5px' }}>Password Reset Template</label>
@@ -170,7 +170,7 @@ export default function AdminSettings() {
             className="input-glass"
             value={settings.emailTemplateReset}
             onChange={e => setSettings({...settings, emailTemplateReset: e.target.value})}
-            style={{ width: '100%', minHeight: '100px', marginBottom: '15px', resize: 'vertical' }}
+            style={{ width: '100%', minHeight: '300px', marginBottom: '15px', resize: 'vertical', fontFamily: 'monospace', fontSize: '0.9rem' }}
           />
         </div>
 

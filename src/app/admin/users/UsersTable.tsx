@@ -111,11 +111,8 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
-        <div>
-          <h2 style={{ margin: 0, fontSize: '1.2rem' }}>Total Users: {filteredUsers.length}</h2>
-        </div>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', width: '100%' }}>
           <input 
             type="text" 
             placeholder="Search name or email..." 
@@ -233,6 +230,11 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
             )}
           </tbody>
         </table>
+      </div>
+      <div style={{ marginTop: '15px', textAlign: 'right' }}>
+        <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--foreground)', opacity: 0.8 }}>
+          Total Users: {filteredUsers.length}
+        </h3>
       </div>
     </div>
   );

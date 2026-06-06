@@ -25,22 +25,21 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { isApproved: true },
       });
-      
       const appUrl = process.env.NEXTAUTH_URL || req.headers.get("origin") || "https://revivalreach.up.railway.app";
       if (updatedUser.email) {
         const settings = await prisma.systemSettings.findUnique({ where: { id: "singleton" } });
-        const defaultTemplate = "Your account has been approved by an administrator. You can now access the system.";
-        let bodyContent = (settings?.emailTemplateApproved || defaultTemplate)
-          .replace(/{{name}}/g, updatedUser.name || "User")
-          .replace(/{{email}}/g, updatedUser.email);
-        
-        const html = getSleekEmailHtml({
+        const defaultHtml = getSleekEmailHtml({
           title: "Account Approved",
           subtitle: "Welcome to Revival Reach!",
-          bodyContent,
+          bodyContent: "Your account has been approved by an administrator. You can now access the system.",
           buttonText: "Go to Dashboard",
           buttonUrl: appUrl
         });
+
+        const html = (settings?.emailTemplateApproved || defaultHtml)
+          .replace(/{{name}}/g, updatedUser.name || "User")
+          .replace(/{{email}}/g, updatedUser.email)
+          .replace(/{{link}}/g, appUrl);
 
         await sendEmail({
           to: updatedUser.email,
@@ -82,18 +81,18 @@ export async function PATCH(req: Request) {
       const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
       const settings = await prisma.systemSettings.findUnique({ where: { id: "singleton" } });
-      const defaultTemplate = "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.";
-      let bodyContent = (settings?.emailTemplateReset || defaultTemplate)
-        .replace(/{{name}}/g, targetUser.name || "User")
-        .replace(/{{email}}/g, targetUser.email);
-
-      const html = getSleekEmailHtml({
+      const defaultHtml = getSleekEmailHtml({
         title: "Password Reset",
         subtitle: "Admin Initiated Request",
-        bodyContent,
+        bodyContent: "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.",
         buttonText: "Reset Password",
         buttonUrl: resetUrl
       });
+
+      const html = (settings?.emailTemplateReset || defaultHtml)
+        .replace(/{{name}}/g, targetUser.name || "User")
+        .replace(/{{email}}/g, targetUser.email)
+        .replace(/{{link}}/g, resetUrl);
 
       await sendEmail({
         to: targetUser.email,
