@@ -83,7 +83,9 @@ model SystemSettings {
   smtpPass         String?
   prayerEmailTargets String? // comma separated list
   whatsappTemplate String?  @default("Hi, I'm interested in the event...")
+  emailSubjectApproved String? @default("Your Revival Reach Account is Approved!")
   emailTemplateApproved String? @default("Your account has been approved by an administrator. You can now access the system.")
+  emailSubjectReset String? @default("Revival Reach - Password Reset Request")
   emailTemplateReset String? @default("A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.")
   rolePermissions  Json?    @default("{}")
   autoFollowUpReminders Boolean @default(true)

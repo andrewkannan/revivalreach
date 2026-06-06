@@ -11,7 +11,9 @@ export default function AdminSettings() {
     prayerEmailTargets: "",
     autoFollowUpReminders: true,
     emailTemplateApproved: "",
+    emailSubjectApproved: "",
     emailTemplateReset: "",
+    emailSubjectReset: "",
     rolePermissions: {} as Record<string, string[]>
   });
   const [loading, setLoading] = useState(true);
@@ -34,7 +36,9 @@ export default function AdminSettings() {
           prayerEmailTargets: data.prayerEmailTargets || "",
           autoFollowUpReminders: data.autoFollowUpReminders !== undefined ? data.autoFollowUpReminders : true,
           emailTemplateApproved: data.emailTemplateApproved || "Your account has been approved by an administrator. You can now access the system.",
+          emailSubjectApproved: data.emailSubjectApproved || "Your Revival Reach Account is Approved!",
           emailTemplateReset: data.emailTemplateReset || "A password reset has been requested for your account. Click the button below to reset it. This link will expire in 1 hour.",
+          emailSubjectReset: data.emailSubjectReset || "Revival Reach - Password Reset Request",
           rolePermissions: data.rolePermissions ? (typeof data.rolePermissions === 'string' ? JSON.parse(data.rolePermissions) : data.rolePermissions) : {}
         });
         setLoading(false);
@@ -157,7 +161,16 @@ export default function AdminSettings() {
             Customize the full HTML code of outgoing emails. Variables available: <code>{"{{name}}"}</code>, <code>{"{{email}}"}</code>, <code>{"{{link}}"}</code>
           </p>
 
-          <label style={{ display: 'block', marginBottom: '5px' }}>Account Approved Template</label>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Account Approved Subject</label>
+          <input
+            type="text"
+            className="input-glass"
+            value={settings.emailSubjectApproved}
+            onChange={e => setSettings({...settings, emailSubjectApproved: e.target.value})}
+            style={{ width: '100%', marginBottom: '15px' }}
+          />
+
+          <label style={{ display: 'block', marginBottom: '5px' }}>Account Approved HTML Template</label>
           <textarea
             className="input-glass"
             value={settings.emailTemplateApproved}
@@ -165,7 +178,16 @@ export default function AdminSettings() {
             style={{ width: '100%', minHeight: '300px', marginBottom: '15px', resize: 'vertical', fontFamily: 'monospace', fontSize: '0.9rem' }}
           />
 
-          <label style={{ display: 'block', marginBottom: '5px' }}>Password Reset Template</label>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Password Reset Subject</label>
+          <input
+            type="text"
+            className="input-glass"
+            value={settings.emailSubjectReset}
+            onChange={e => setSettings({...settings, emailSubjectReset: e.target.value})}
+            style={{ width: '100%', marginBottom: '15px' }}
+          />
+
+          <label style={{ display: 'block', marginBottom: '5px' }}>Password Reset HTML Template</label>
           <textarea
             className="input-glass"
             value={settings.emailTemplateReset}

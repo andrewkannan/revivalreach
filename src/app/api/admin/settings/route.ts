@@ -32,6 +32,10 @@ export async function GET() {
       });
     }
 
+    if (!settings.emailSubjectApproved) {
+      settings.emailSubjectApproved = "Your Revival Reach Account is Approved!";
+    }
+
     if (!settings.emailTemplateReset) {
       settings.emailTemplateReset = getSleekEmailHtml({
         title: "Password Reset Request",
@@ -39,6 +43,10 @@ export async function GET() {
         buttonText: "Reset Password",
         buttonUrl: "{{link}}"
       });
+    }
+
+    if (!settings.emailSubjectReset) {
+      settings.emailSubjectReset = "Revival Reach - Password Reset Request";
     }
 
     return NextResponse.json(settings);

@@ -41,9 +41,11 @@ export async function PATCH(req: Request) {
           .replace(/{{email}}/g, updatedUser.email)
           .replace(/{{link}}/g, appUrl);
 
+        const subject = settings?.emailSubjectApproved || "Your Revival Reach Account is Approved!";
+
         await sendEmail({
           to: updatedUser.email,
-          subject: "Your Revival Reach Account is Approved!",
+          subject,
           html
         });
       }
@@ -94,9 +96,11 @@ export async function PATCH(req: Request) {
         .replace(/{{email}}/g, targetUser.email)
         .replace(/{{link}}/g, resetUrl);
 
+      const subject = settings?.emailSubjectReset || "Revival Reach - Password Reset Request";
+
       await sendEmail({
         to: targetUser.email,
-        subject: "Revival Reach - Password Reset Request",
+        subject,
         html
       });
     } else if (action === "delete") {

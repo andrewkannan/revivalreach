@@ -49,9 +49,11 @@ export async function POST(req: Request) {
       .replace(/{{email}}/g, user.email || "")
       .replace(/{{link}}/g, resetUrl);
 
+    const subject = settings?.emailSubjectReset || "Revival Reach - Password Reset Request";
+
     await sendEmail({
       to: user.email!,
-      subject: "Revival Reach - Password Reset Request",
+      subject,
       html
     });
 
