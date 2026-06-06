@@ -187,7 +187,7 @@ export function getSleekEmailHtml({
       ` : ''}
     </div>
     <div class="footer">
-      <p>Season of territory expansion.</p>
+      <p>Season of Territory Expansion.</p>
       <p style="margin-top: 8px; font-size: 12px; color: #475569;">&copy; ${new Date().getFullYear()} CCC Bilingual. All rights reserved.</p>
     </div>
   </div>
