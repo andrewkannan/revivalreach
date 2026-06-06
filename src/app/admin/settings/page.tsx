@@ -15,6 +15,10 @@ export default function AdminSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  
+  const [testEmail, setTestEmail] = useState("");
+  const [sendingTest, setSendingTest] = useState(false);
+  const [testMessage, setTestMessage] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/settings")
@@ -53,6 +57,28 @@ export default function AdminSettings() {
       setMessage("An error occurred.");
     }
     setSaving(false);
+  };
+
+  const handleTestEmail = async () => {
+    if (!testEmail) return;
+    setSendingTest(true);
+    setTestMessage("");
+    try {
+      const res = await fetch("/api/admin/settings/test-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: testEmail })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setTestMessage(data.message || "Test email sent successfully!");
+      } else {
+        setTestMessage(data.message || "Failed to send test email.");
+      }
+    } catch (err) {
+      setTestMessage("An error occurred while sending test email.");
+    }
+    setSendingTest(false);
   };
 
   if (loading) return <div>Loading settings...</div>;
@@ -119,6 +145,30 @@ export default function AdminSettings() {
             onChange={e => setSettings({...settings, smtpPass: e.target.value})}
             style={{ width: '100%' }}
           />
+        </div>
+
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <h3>Test Email Setup</h3>
+          <p style={{ opacity: 0.8, marginBottom: '15px' }}>Test your SMTP configuration by sending a test email.</p>
+          {testMessage && <div style={{ padding: '10px', marginBottom: '15px', background: testMessage.includes('Failed') || testMessage.includes('error') ? 'rgba(255,0,0,0.1)' : 'rgba(0,255,0,0.1)', color: testMessage.includes('Failed') || testMessage.includes('error') ? 'var(--error)' : 'var(--success)' }}>{testMessage}</div>}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <input 
+              type="email" 
+              className="input-glass"
+              placeholder="Enter test email address"
+              value={testEmail}
+              onChange={e => setTestEmail(e.target.value)}
+              style={{ flex: 1 }}
+            />
+            <button 
+              type="button" 
+              className="btn-secondary" 
+              onClick={handleTestEmail}
+              disabled={sendingTest || !testEmail}
+            >
+              {sendingTest ? "Sending..." : "Send Test Email"}
+            </button>
+          </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
