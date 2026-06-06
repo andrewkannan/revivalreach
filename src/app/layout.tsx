@@ -11,21 +11,25 @@ const inter = Inter({ subsets: ["latin"] });
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { PreferencesProvider } from "@/contexts/PreferencesContext";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authOptions";
 
 export const metadata: Metadata = {
   title: "Revival Reach",
   description: "Event and evangelism management system",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
+        <AuthProvider session={session}>
           <PreferencesProvider>
             <LanguageProvider>
               <TopNav />
