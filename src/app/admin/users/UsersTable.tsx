@@ -115,28 +115,28 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
         <div>
           <h2 style={{ margin: 0, fontSize: '1.2rem' }}>Total Users: {filteredUsers.length}</h2>
         </div>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
           <input 
             type="text" 
             placeholder="Search name or email..." 
             className="input-glass"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ minWidth: '200px' }}
+            style={{ flex: '1 1 200px', minWidth: '200px', width: 'auto' }}
           />
-          <select className="input-glass" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
+          <select className="input-glass" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} style={{ flex: '1 1 140px', width: 'auto' }}>
             <option value="ALL">All Roles</option>
             <option value="ADMIN">Admins</option>
             <option value="LEADER">Leaders</option>
             <option value="MEMBER">Members</option>
           </select>
-          <select className="input-glass" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <select className="input-glass" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={{ flex: '1 1 140px', width: 'auto' }}>
             <option value="ALL">All Statuses</option>
             <option value="APPROVED">Approved</option>
             <option value="PENDING">Pending</option>
             <option value="DISABLED">Disabled</option>
           </select>
-          <button onClick={exportToCSV} className="btn-secondary">Export CSV</button>
+          <button onClick={exportToCSV} className="btn-secondary" style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }}>Export CSV</button>
         </div>
       </div>
 
