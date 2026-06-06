@@ -16,7 +16,8 @@ import { authOptions } from "@/lib/authOptions";
 
 export const metadata: Metadata = {
   title: "Revival Reach",
-  description: "Event and evangelism management system",
+  description: "CCC Bilingual presenting an Outreach Management System - Season of Territory Expansion",
+  metadataBase: new URL("https://reach.thisiscccbilingual.com"),
 };
 
 export default async function RootLayout({
