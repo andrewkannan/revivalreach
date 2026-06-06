@@ -59,12 +59,17 @@ export default function ProfilePage() {
     }
   };
 
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
   if (status === "loading") {
     return <div style={{ padding: '50px', textAlign: 'center', color: 'var(--foreground)' }}>Loading...</div>;
   }
 
   if (!session) {
-    router.push("/login");
     return null;
   }
 
