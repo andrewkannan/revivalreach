@@ -36,7 +36,18 @@ export async function PATCH(req: Request) {
           buttonUrl: appUrl
         });
 
-        const html = (settings?.emailTemplateApproved || defaultHtml)
+        let htmlTemplate = settings?.emailTemplateApproved || defaultHtml;
+        if (settings?.emailTemplateApproved && !settings.emailTemplateApproved.includes("<html") && !settings.emailTemplateApproved.includes("<div")) {
+          htmlTemplate = getSleekEmailHtml({
+            title: "Account Approved",
+            subtitle: "Welcome to Revival Reach!",
+            bodyContent: settings.emailTemplateApproved,
+            buttonText: "Go to Dashboard",
+            buttonUrl: "{{link}}"
+          });
+        }
+
+        const html = htmlTemplate
           .replace(/{{name}}/g, updatedUser.name || "User")
           .replace(/{{email}}/g, updatedUser.email)
           .replace(/{{link}}/g, appUrl);
@@ -91,7 +102,18 @@ export async function PATCH(req: Request) {
         buttonUrl: resetUrl
       });
 
-      const html = (settings?.emailTemplateReset || defaultHtml)
+      let htmlTemplate = settings?.emailTemplateReset || defaultHtml;
+      if (settings?.emailTemplateReset && !settings.emailTemplateReset.includes("<html") && !settings.emailTemplateReset.includes("<div")) {
+        htmlTemplate = getSleekEmailHtml({
+          title: "Password Reset",
+          subtitle: "Admin Initiated Request",
+          bodyContent: settings.emailTemplateReset,
+          buttonText: "Reset Password",
+          buttonUrl: "{{link}}"
+        });
+      }
+
+      const html = htmlTemplate
         .replace(/{{name}}/g, targetUser.name || "User")
         .replace(/{{email}}/g, targetUser.email)
         .replace(/{{link}}/g, resetUrl);

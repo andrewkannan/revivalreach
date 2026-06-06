@@ -43,8 +43,17 @@ export async function POST(req: Request) {
       buttonText: "Reset Password",
       buttonUrl: resetUrl
     });
+    let htmlTemplate = settings?.emailTemplateReset || defaultHtml;
+    if (settings?.emailTemplateReset && !settings.emailTemplateReset.includes("<html") && !settings.emailTemplateReset.includes("<div")) {
+      htmlTemplate = getSleekEmailHtml({
+        title: "Password Reset Request",
+        bodyContent: settings.emailTemplateReset,
+        buttonText: "Reset Password",
+        buttonUrl: "{{link}}"
+      });
+    }
     
-    const html = (settings?.emailTemplateReset || defaultHtml)
+    const html = htmlTemplate
       .replace(/{{name}}/g, user.name || "User")
       .replace(/{{email}}/g, user.email || "")
       .replace(/{{link}}/g, resetUrl);
