@@ -81,6 +81,10 @@
   font-size: 0.9rem;
   color: var(--foreground);
   opacity: 0.8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .authFooter a {
