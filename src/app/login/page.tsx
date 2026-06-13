@@ -17,7 +17,14 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const urlMessage = searchParams.get("message");
   const { status } = useSession();
+
+  useEffect(() => {
+    if (urlMessage) {
+      // You can store this in a local state or just use it directly. We'll use a local state.
+    }
+  }, [urlMessage]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -68,6 +75,7 @@ function LoginForm() {
         <h1 className={styles.authTitle}>{t('login_welcome')}</h1>
         <p className={styles.authSubtitle}>{t('login_title')}</p>
         
+        {urlMessage && <div style={{ color: 'var(--success)', marginBottom: '1rem', textAlign: 'center', background: 'rgba(0,255,0,0.1)', padding: '10px', borderRadius: '5px' }}>{urlMessage}</div>}
         {error && <div className={styles.error}>{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.authForm}>

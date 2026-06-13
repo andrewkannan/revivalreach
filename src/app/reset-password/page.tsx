@@ -54,7 +54,7 @@ function ResetPasswordForm() {
       if (res.ok) {
         setMessage("Password has been successfully reset. Redirecting to login...");
         setTimeout(() => {
-          router.push("/login");
+          router.push("/login?message=Your password has been successfully reset. Please sign in.");
         }, 2000);
       } else {
         setError(data.message || "An error occurred");
