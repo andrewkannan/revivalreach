@@ -135,7 +135,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             
             {event.whatsappGroupLink && (
               <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', fontWeight: 500, gridColumn: '1 / -1' }}>
-                <MessageCircle size={18} /> Join WhatsApp Group
+                <MessageCircle size={18} /> Rejoin WhatsApp Group
               </a>
             )}
             
