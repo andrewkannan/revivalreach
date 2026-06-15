@@ -14,6 +14,7 @@ model User {
   phone          String?
   image          String?
   vision         String?
+  ministry       String?
   passwordHash   String?
   role           String            @default("MEMBER") // ADMIN, LEADER, MEMBER
   isApproved     Boolean           @default(false)

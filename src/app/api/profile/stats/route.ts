@@ -17,7 +17,7 @@ export async function GET() {
       prisma.soul.count({ where: { userId } }),
       prisma.eventParticipant.count({ where: { userId } }),
       prisma.testimony.count({ where: { userId } }),
-      prisma.user.findUnique({ where: { id: userId }, select: { image: true, vision: true, name: true, email: true } })
+      prisma.user.findUnique({ where: { id: userId }, select: { image: true, vision: true, name: true, email: true, ministry: true } })
     ]);
 
     return NextResponse.json({

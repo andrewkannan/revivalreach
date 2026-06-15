@@ -22,6 +22,8 @@ export default function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isEditingVision, setIsEditingVision] = useState(false);
   const [visionText, setVisionText] = useState("");
+  const [isEditingMinistry, setIsEditingMinistry] = useState(false);
+  const [ministryText, setMinistryText] = useState("");
 
   // Goal Tracker State
   const [goalData, setGoalData] = useState({ goal: 0, current: 0 });
@@ -66,6 +68,7 @@ export default function ProfilePage() {
         .then(data => {
           setProfileStats(data);
           if (data.user?.vision) setVisionText(data.user.vision);
+          if (data.user?.ministry) setMinistryText(data.user.ministry);
           setLoadingStats(false);
         })
         .catch(() => setLoadingStats(false));
@@ -128,6 +131,20 @@ export default function ProfilePage() {
       });
       setProfileStats(prev => ({ ...prev, user: { ...prev.user, vision: visionText } }));
       setIsEditingVision(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleMinistrySave = async () => {
+    try {
+      await fetch('/api/profile/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ministry: ministryText })
+      });
+      setProfileStats(prev => ({ ...prev, user: { ...prev.user, ministry: ministryText } }));
+      setIsEditingMinistry(false);
     } catch (err) {
       console.error(err);
     }
@@ -207,7 +224,35 @@ export default function ProfilePage() {
 
       {/* Bio / Vision Line */}
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '4px' }}>{session.user.name}</h2>
+        {isEditingMinistry ? (
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+            <select
+              value={ministryText}
+              onChange={(e) => setMinistryText(e.target.value)}
+              style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--subtle-bg)', color: 'var(--foreground)', outline: 'none' }}
+            >
+              <option value="">Select 5-Fold Ministry</option>
+              <option value="Apostle">Apostle</option>
+              <option value="Prophet">Prophet</option>
+              <option value="Evangelist">Evangelist</option>
+              <option value="Pastor">Pastor</option>
+              <option value="Teacher">Teacher</option>
+            </select>
+            <div style={{ display: 'flex', gap: '4px' }}>
+              <button onClick={handleMinistrySave} style={{ padding: '6px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><Check size={16} /></button>
+              <button onClick={() => { setIsEditingMinistry(false); setMinistryText(profileStats.user?.ministry || ""); }} style={{ padding: '6px', background: 'var(--subtle-bg)', color: 'var(--foreground)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><X size={16} /></button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>
+              {profileStats.user?.ministry || session.user.name}
+            </h2>
+            <button onClick={() => setIsEditingMinistry(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '2px' }}>
+              <Edit3 size={14} />
+            </button>
+          </div>
+        )}
         {isEditingVision ? (
           <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
             <textarea 
