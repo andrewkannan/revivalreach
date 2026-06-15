@@ -28,7 +28,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push(callbackUrl);
+      window.location.href = callbackUrl;
     }
   }, [status, router, callbackUrl]);
 
@@ -48,7 +48,8 @@ function LoginForm() {
         setError(res.error);
         setIsLoading(false);
       } else {
-        router.push(callbackUrl);
+        // Force a hard navigation to clear Next.js App Router cache and load the authenticated session correctly
+        window.location.href = callbackUrl;
       }
     } catch (err) {
       setError("An unexpected error occurred");
