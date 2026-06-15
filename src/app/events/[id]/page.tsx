@@ -125,24 +125,24 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         )}
 
         {canViewSensitiveInfo ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '10px' }}>
-            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)' }}>
-              <MapPin size={18} /> Open in Google Maps
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginTop: '10px' }}>
+            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center' }}>
+              <MapPin size={18} /> Google Maps
             </a>
             
-            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)' }}>
-              <Navigation size={18} /> Open in Waze
+            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center' }}>
+              <Navigation size={18} /> Waze
             </a>
             
             {event.whatsappGroupLink && (
-              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', fontWeight: 500, gridColumn: '1 / -1' }}>
-                <MessageCircle size={18} /> Rejoin WhatsApp Group
+              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', fontWeight: 500, textAlign: 'center' }}>
+                <MessageCircle size={18} /> Rejoin Group
               </a>
             )}
             
             {event.whatsappLink && (
-              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ padding: '12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, gridColumn: '1 / -1' }}>
-                <MessageCircle size={18} /> Contact Leader
+              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ padding: '12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, textAlign: 'center' }}>
+                <MessageCircle size={18} /> Contact
               </a>
             )}
           </div>
