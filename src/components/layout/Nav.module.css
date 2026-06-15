@@ -2,14 +2,16 @@
 .topNav {
   display: flex;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 16px;
+  left: 16px;
+  right: 16px;
   height: var(--nav-height);
-  background: var(--nav-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--nav-border);
+  background: rgba(20, 20, 24, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 40px;
   z-index: 50;
   padding: 0 24px;
   align-items: center;

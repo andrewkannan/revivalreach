@@ -170,7 +170,7 @@ a {
 
 /* Base Layout Padding for Navbars */
 main.app-container {
-  padding-top: calc(var(--nav-height) + 20px);
+  padding-top: calc(var(--nav-height) + 36px);
   padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 20px);
   min-height: 100vh;
   display: flex;
