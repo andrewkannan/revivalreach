@@ -6,11 +6,11 @@
   left: 16px;
   right: 16px;
   height: var(--nav-height);
-  background: rgba(20, 20, 24, 0.85);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--nav-border);
+  box-shadow: var(--card-shadow);
   border-radius: 40px;
   z-index: 50;
   padding: 0 24px;
@@ -24,11 +24,11 @@
   left: 16px;
   right: 16px;
   height: var(--nav-height);
-  background: rgba(20, 20, 24, 0.85); /* Slightly darker, distinct background */
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--nav-border);
+  box-shadow: var(--card-shadow);
   border-radius: 40px; /* Island pill shape */
   z-index: 50;
   display: flex;
