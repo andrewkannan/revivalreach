@@ -9,6 +9,7 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [editingUser, setEditingUser] = useState<any>(null);
   const router = useRouter();
 
   const filteredUsers = useMemo(() => {
@@ -206,9 +207,17 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
                     )}
 
                     <button
-                      onClick={() => handleUpdateUser(user.id, "trigger-reset")}
+                      onClick={() => setEditingUser(user)}
                       className={styles.actionButton}
                       style={{ color: 'var(--primary)', borderColor: 'var(--primary)' }}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleUpdateUser(user.id, "trigger-reset")}
+                      className={styles.actionButton}
+                      style={{ color: 'var(--foreground)', borderColor: 'var(--foreground)' }}
                     >
                       Reset Email
                     </button>
@@ -258,6 +267,58 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
           Total Users: {filteredUsers.length}
         </h3>
       </div>
+
+      {editingUser && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }} onClick={() => setEditingUser(null)}>
+          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '16px', padding: '30px', width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ marginTop: 0, marginBottom: '20px' }}>Edit User</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>Name</label>
+                <input type="text" className="input-glass" value={editingUser.name || ""} onChange={e => setEditingUser({...editingUser, name: e.target.value})} />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>Email</label>
+                <input type="email" className="input-glass" value={editingUser.email || ""} onChange={e => setEditingUser({...editingUser, email: e.target.value})} />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>Phone</label>
+                <input type="text" className="input-glass" value={editingUser.phone || ""} onChange={e => setEditingUser({...editingUser, phone: e.target.value})} />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>Ministry</label>
+                <select className="input-glass" value={editingUser.ministry || ""} onChange={e => setEditingUser({...editingUser, ministry: e.target.value})}>
+                  <option value="">Select Ministry</option>
+                  <option value="Apostle">Apostle</option>
+                  <option value="Prophet">Prophet</option>
+                  <option value="Evangelist">Evangelist</option>
+                  <option value="Pastor">Pastor</option>
+                  <option value="Teacher">Teacher</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>Vision</label>
+                <textarea className="input-glass" value={editingUser.vision || ""} onChange={e => setEditingUser({...editingUser, vision: e.target.value})} style={{ minHeight: '80px', resize: 'vertical' }} />
+              </div>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button 
+                  className="btn-primary" 
+                  style={{ flex: 1 }}
+                  onClick={() => {
+                    handleUpdateUser(editingUser.id, "update-details", editingUser);
+                    setEditingUser(null);
+                  }}
+                >
+                  Save Changes
+                </button>
+                <button className="btn-secondary" style={{ flex: 1 }} onClick={() => setEditingUser(null)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

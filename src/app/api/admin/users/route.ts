@@ -136,6 +136,17 @@ export async function PATCH(req: Request) {
         data: { passwordHash: hashedPassword }
       });
       return NextResponse.json({ message: "Password updated successfully" });
+    } else if (action === "update-details") {
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          name: value.name,
+          email: value.email,
+          phone: value.phone,
+          vision: value.vision,
+          ministry: value.ministry,
+        }
+      });
     } else if (action === "delete") {
       await prisma.user.delete({
         where: { id: userId }
