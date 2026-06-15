@@ -110,7 +110,7 @@ export const en = {
 
   // Login/Auth
   login_title: "Sign In to Revival Reach",
-  login_welcome: "Welcome Back",
+  login_welcome: "Welcome",
   login_email: "Email Address",
   login_password: "Password",
   login_signin: "Sign In",

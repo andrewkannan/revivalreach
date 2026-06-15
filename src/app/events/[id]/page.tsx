@@ -139,23 +139,23 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         )}
 
         {canViewSensitiveInfo ? (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
-            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '100px', padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center', whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', gap: '10px', marginTop: '10px', paddingBottom: '4px' }}>
+            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ flex: '0 0 auto', minWidth: 0, padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center', whiteSpace: 'nowrap' }}>
               <GoogleMapsIcon size={18} /> Maps
             </a>
             
-            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '100px', padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center', whiteSpace: 'nowrap' }}>
+            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ flex: '0 0 auto', minWidth: 0, padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center', whiteSpace: 'nowrap' }}>
               <WazeIcon size={18} /> Waze
             </a>
             
             {event.whatsappGroupLink && (
-              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '100px', padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', borderColor: '#25D366', fontWeight: 500, border: '1px solid #25D366', textAlign: 'center', whiteSpace: 'nowrap' }}>
+              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ flex: '0 0 auto', minWidth: 0, padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', borderColor: '#25D366', fontWeight: 500, border: '1px solid #25D366', textAlign: 'center', whiteSpace: 'nowrap' }}>
                 <WhatsAppIcon size={18} /> WhatsApp
               </a>
             )}
             
             {event.whatsappLink && (
-              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ flexBasis: '100%', padding: '8px 12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, textAlign: 'center', whiteSpace: 'nowrap', border: '1px solid #25D366' }}>
+              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ flex: '0 0 auto', padding: '8px 12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, textAlign: 'center', whiteSpace: 'nowrap', border: '1px solid #25D366' }}>
                 <WhatsAppIcon size={18} /> Contact
               </a>
             )}

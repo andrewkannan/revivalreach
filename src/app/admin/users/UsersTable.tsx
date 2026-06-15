@@ -151,9 +151,9 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
           <tbody>
             {filteredUsers.map((user) => (
               <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>
+                <td data-label="Name">{user.name}</td>
+                <td data-label="Email">{user.email}</td>
+                <td data-label="Role">
                   <select
                     value={user.role}
                     onChange={(e) => handleUpdateUser(user.id, "role", e.target.value)}
@@ -165,7 +165,7 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
                     <option value="ADMIN">Admin</option>
                   </select>
                 </td>
-                <td>
+                <td data-label="Status">
                   {!user.isActive ? (
                     <span className={`${styles.badge}`} style={{ backgroundColor: 'rgba(255,0,0,0.1)', color: 'var(--error)' }}>Disabled</span>
                   ) : user.isApproved ? (
@@ -174,7 +174,7 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
                     <span className={`${styles.badge} ${styles['badge-warning']}`}>Pending</span>
                   )}
                 </td>
-                <td>
+                <td data-label="Actions">
                   <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                     {!user.isApproved && user.isActive && (
                       <button

@@ -143,8 +143,18 @@
   .adminTable td {
     border-bottom: 1px solid rgba(255,255,255,0.05);
     position: relative;
-    padding: 12px;
-    padding-left: 12px; /* Was 50% for pseudo labels, but let's just make it block */
+    padding: 16px 12px;
+    text-align: left !important;
+  }
+  .adminTable td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 8px;
+    opacity: 0.8;
   }
   .adminTable td:last-child {
     border-bottom: 0;

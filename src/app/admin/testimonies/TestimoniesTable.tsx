@@ -55,24 +55,24 @@ export default function TestimoniesTable({ initialTestimonies }: { initialTestim
               const date = new Date(testimony.createdAt);
               return (
                 <tr key={testimony.id}>
-                  <td>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                  <td>
+                  <td data-label="Date">{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                  <td data-label="Name">
                     <strong>{testimony.name}</strong><br />
                     <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{testimony.user?.email}</span>
                   </td>
-                  <td style={{ maxWidth: '300px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <td data-label="Content" style={{ maxWidth: '300px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
                       {testimony.audioUrl && (
-                        <audio controls src={testimony.audioUrl} style={{ width: '100%', height: '30px' }} />
+                        <audio controls src={testimony.audioUrl} style={{ width: '100%', maxWidth: '100%', height: '30px' }} />
                       )}
                       {testimony.content && (
-                        <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ whiteSpace: 'normal', overflowWrap: 'break-word' }}>
                           {testimony.content}
                         </div>
                       )}
                     </div>
                   </td>
-                  <td style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+                  <td data-label="Status" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
                     {testimony.isPrivate && (
                       <span className={`${styles.badge}`} style={{ background: 'var(--primary)', color: 'white' }}>
                         PRIVATE
@@ -86,8 +86,8 @@ export default function TestimoniesTable({ initialTestimonies }: { initialTestim
                       {testimony.status}
                     </span>
                   </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                  <td data-label="Actions">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {testimony.status !== 'APPROVED' && (
                         <button 
                           onClick={() => handleUpdateStatus(testimony.id, "APPROVED")}

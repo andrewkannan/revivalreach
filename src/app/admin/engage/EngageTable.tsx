@@ -30,14 +30,14 @@ export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
               const date = new Date(soul.createdAt);
               return (
                 <tr key={soul.id}>
-                  <td style={{ fontWeight: 'bold' }}>{soul.name}</td>
-                  <td>{soul.phone}</td>
-                  <td>
+                  <td data-label="Soul Name" style={{ fontWeight: 'bold' }}>{soul.name}</td>
+                  <td data-label="Contact">{soul.phone}</td>
+                  <td data-label="Submitted By">
                     <div>{soul.user?.name || "Unknown"}</div>
                     <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{soul.user?.email || ""}</div>
                   </td>
-                  <td>{soul.event?.title || "-"}</td>
-                  <td>
+                  <td data-label="Event">{soul.event?.title || "-"}</td>
+                  <td data-label="Status">
                     <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                       {soul.prayed && (
                         <span style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--primary)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
@@ -61,7 +61,7 @@ export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
                       )}
                     </div>
                   </td>
-                  <td style={{ maxWidth: '250px' }}>
+                  <td data-label="Remarks / Prayer Needs" style={{ maxWidth: '250px' }}>
                     {soul.prayerNeeds && (
                       <div style={{ fontSize: '0.85rem', marginBottom: '4px', color: '#f59e0b' }}>
                         <strong>Prayer Needs:</strong> {soul.prayerNeeds}
@@ -78,7 +78,7 @@ export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
                       </div>
                     )}
                   </td>
-                  <td>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                  <td data-label="Date">{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
                 </tr>
               )
             })
