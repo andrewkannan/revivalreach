@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor, Camera, Edit3 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePreferences } from "@/contexts/PreferencesContext";
@@ -15,6 +15,13 @@ export default function ProfilePage() {
   const { theme, setTheme, textSize, setTextSize } = usePreferences();
   const [events, setEvents] = useState<any[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+
+  // Profile Stats & Layout State
+  const [profileStats, setProfileStats] = useState({ engage: 0, revivals: 0, testimony: 0, user: null as any });
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isEditingVision, setIsEditingVision] = useState(false);
+  const [visionText, setVisionText] = useState("");
 
   // Goal Tracker State
   const [goalData, setGoalData] = useState({ goal: 0, current: 0 });
@@ -40,6 +47,15 @@ export default function ProfilePage() {
           setLoadingGoal(false);
         })
         .catch(() => setLoadingGoal(false));
+
+      fetch("/api/profile/stats")
+        .then(res => res.json())
+        .then(data => {
+          setProfileStats(data);
+          if (data.user?.vision) setVisionText(data.user.vision);
+          setLoadingStats(false);
+        })
+        .catch(() => setLoadingStats(false));
     }
   }, [session]);
 
@@ -56,6 +72,51 @@ export default function ProfilePage() {
       setIsEditingGoal(false);
     } catch (err) {
       console.error("Error saving goal", err);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const res = await fetch('/api/profile/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, fileType: file.type })
+      });
+      const { presignedUrl, publicUrl } = await res.json();
+      
+      await fetch(presignedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file
+      });
+      
+      await fetch('/api/profile/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: publicUrl })
+      });
+      
+      setProfileStats(prev => ({ ...prev, user: { ...prev.user, image: publicUrl } }));
+    } catch (err) {
+      console.error(err);
+    }
+    setIsUploading(false);
+  };
+
+  const handleVisionSave = async () => {
+    try {
+      await fetch('/api/profile/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vision: visionText })
+      });
+      setProfileStats(prev => ({ ...prev, user: { ...prev.user, vision: visionText } }));
+      setIsEditingVision(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -76,7 +137,9 @@ export default function ProfilePage() {
   return (
     <div className={styles.dashboard}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1 className={styles.sectionTitle} style={{ margin: 0 }}>{t('profile_title')}</h1>
+        <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShieldCheck size={18} /> {session.user.name}
+        </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--subtle-bg)', padding: '6px 12px', borderRadius: '20px', border: '1px solid var(--subtle-border)' }}>
           <Globe size={16} opacity={0.7} />
           <select 
@@ -84,45 +147,83 @@ export default function ProfilePage() {
             onChange={(e) => setLanguage(e.target.value as "en" | "ta" | "ms")}
             style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
           >
-            <option value="en" style={{ color: 'black' }}>English</option>
-            <option value="ta" style={{ color: 'black' }}>தமிழ் (Tamil)</option>
-            <option value="ms" style={{ color: 'black' }}>Melayu (Malay)</option>
+            <option value="en" style={{ color: 'black' }}>EN</option>
+            <option value="ta" style={{ color: 'black' }}>TA</option>
+            <option value="ms" style={{ color: 'black' }}>MS</option>
           </select>
         </div>
       </div>
       
-      <div className="glass-panel" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ background: 'var(--primary)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: 'white', fontWeight: 'bold' }}>
-            {session.user.name?.charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{session.user.name}</h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.8, fontSize: '0.9rem', marginTop: '4px' }}>
-              <Mail size={14} /> {session.user.email}
+      {/* Instagram-style Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0 20px 0' }}>
+        {/* Profile Picture */}
+        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0 }}>
+          <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', padding: '3px' }}>
+            <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              {profileStats.user?.image ? (
+                <img src={profileStats.user.image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--foreground)' }}>
+                  {session.user.name?.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
           </div>
+          <label style={{ position: 'absolute', bottom: 0, right: 0, background: 'var(--foreground)', color: 'var(--background)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', border: '2px solid var(--background)' }}>
+            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} disabled={isUploading} />
+            {isUploading ? <Activity size={14} /> : <Camera size={14} />}
+          </label>
         </div>
 
-        <div style={{ borderTop: '1px solid var(--card-border)', margin: '10px 0' }}></div>
+        {/* Stats */}
+        <div style={{ display: 'flex', gap: '20px', flex: 1, justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.revivals || 0}</span>
+            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>revivals</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.engage || 0}</span>
+            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>engage</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.testimony || 0}</span>
+            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>testimony</span>
+          </div>
+        </div>
+      </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <ShieldCheck size={20} color="var(--primary)" />
-            <div>
-              <strong>{t('profile_role')}:</strong> <span style={{ textTransform: 'capitalize' }}>{session.user.role.toLowerCase()}</span>
+      {/* Bio / Vision Line */}
+      <div style={{ marginBottom: '24px' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '4px' }}>{session.user.name}</h2>
+        {isEditingVision ? (
+          <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+            <textarea 
+              value={visionText}
+              onChange={(e) => setVisionText(e.target.value)}
+              placeholder="Add your vision lines..."
+              style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--subtle-bg)', color: 'var(--foreground)', fontFamily: 'inherit', resize: 'none' }}
+              rows={2}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <button onClick={handleVisionSave} style={{ padding: '6px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><Check size={16} /></button>
+              <button onClick={() => { setIsEditingVision(false); setVisionText(profileStats.user?.vision || ""); }} style={{ padding: '6px', background: 'var(--subtle-bg)', color: 'var(--foreground)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><X size={16} /></button>
             </div>
           </div>
-          {((session.user as any).createdAt || (goalData as any).memberSince) && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <CalendarIcon size={20} color="var(--primary)" />
-              <div>
-                <strong>{t('profile_member_since')}:</strong> {new Date((session.user as any).createdAt || (goalData as any).memberSince).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-              </div>
-            </div>
-          )}
-        </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <p style={{ fontSize: '0.9rem', opacity: 0.9, whiteSpace: 'pre-wrap', fontStyle: profileStats.user?.vision ? 'italic' : 'normal', color: profileStats.user?.vision ? 'var(--foreground)' : 'gray' }}>
+              {profileStats.user?.vision || "Add your vision lines..."}
+            </p>
+            <button onClick={() => setIsEditingVision(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '2px' }}>
+              <Edit3 size={14} />
+            </button>
+          </div>
+        )}
+      </div>
 
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '30px' }}>
+        <button style={{ flex: 1, padding: '8px', background: 'var(--subtle-bg)', border: '1px solid var(--subtle-border)', borderRadius: '8px', color: 'var(--foreground)', fontWeight: 600, cursor: 'pointer' }}>Edit Profile</button>
+        <button style={{ flex: 1, padding: '8px', background: 'var(--subtle-bg)', border: '1px solid var(--subtle-border)', borderRadius: '8px', color: 'var(--foreground)', fontWeight: 600, cursor: 'pointer' }}>Share Profile</button>
       </div>
 
       <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>{t('profile_evangelism_goal')}</h2>

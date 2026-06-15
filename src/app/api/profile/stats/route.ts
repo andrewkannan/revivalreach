@@ -13,18 +13,18 @@ export async function GET() {
 
     const userId = session.user.id;
 
-    const [totalSouls, revivalsJoined, prayedFor, hasTestimony] = await Promise.all([
+    const [totalSouls, revivalsJoined, totalTestimonies, user] = await Promise.all([
       prisma.soul.count({ where: { userId } }),
       prisma.eventParticipant.count({ where: { userId } }),
-      prisma.soul.count({ where: { userId, prayed: true } }),
-      prisma.soul.count({ where: { userId, hasTestimony: true } })
+      prisma.testimony.count({ where: { userId } }),
+      prisma.user.findUnique({ where: { id: userId }, select: { image: true, vision: true, name: true, email: true } })
     ]);
 
     return NextResponse.json({
-      totalSouls,
-      revivalsJoined,
-      prayedFor,
-      healed: hasTestimony // Keeping the output key as healed to not break frontend if we didn't change it, wait actually let me change it
+      engage: totalSouls,
+      revivals: revivalsJoined,
+      testimony: totalTestimonies,
+      user
     });
   } catch (error) {
     console.error("Profile Stats GET Error:", error);
