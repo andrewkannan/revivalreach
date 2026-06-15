@@ -6,6 +6,7 @@ import { MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, User
 import Link from "next/link";
 import JoinButton from "./JoinButton";
 import AttendanceControls from "./AttendanceControls";
+import EventShareButtons from "./EventShareButtons";
 
 export const dynamic = 'force-dynamic';
 
@@ -161,6 +162,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div style={{ marginTop: '20px' }}>
           <JoinButton event={serializedEvent} initialHasJoined={hasJoined} />
         </div>
+
+        {event.status === 'APPROVED' && (
+          <EventShareButtons event={serializedEvent} />
+        )}
 
         {/* Attendance List with Check-in Controls */}
         <AttendanceControls 
