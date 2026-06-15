@@ -146,8 +146,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
         ) : (
-          <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#f59e0b', padding: '16px', borderRadius: '12px', textAlign: 'center', fontWeight: 500 }}>
-            Join this revival to view the meeting point, map links, and WhatsApp group.
+          <div style={{ display: 'grid', gap: '10px' }}>
+            <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#f59e0b', padding: '16px', borderRadius: '12px', textAlign: 'center', fontWeight: 500 }}>
+              Join this revival to view the meeting point, map links, and WhatsApp group.
+            </div>
+            {event.whatsappGroupLink && (
+              <div style={{ padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'rgba(255,255,255,0.3)', fontWeight: 500, cursor: 'not-allowed' }}>
+                <MessageCircle size={18} /> Join WhatsApp Group
+              </div>
+            )}
           </div>
         )}
 
