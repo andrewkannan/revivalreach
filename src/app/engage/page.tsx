@@ -285,12 +285,12 @@ export default function EngagePage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{editingId ? t('engage_edit_record') : t('engage_add_new')}</h2>
             
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: formData.isPriority ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '20px', border: formData.isPriority ? '1px solid #eab308' : '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s ease' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: formData.isPriority ? 'rgba(234, 179, 8, 0.2)' : 'var(--subtle-bg)', padding: '6px 12px', borderRadius: '20px', border: formData.isPriority ? '1px solid #eab308' : '1px solid var(--subtle-border)', transition: 'all 0.2s ease' }}>
               <input type="checkbox" name="isPriority" checked={formData.isPriority} onChange={handleInputChange} style={{ display: 'none' }} />
-              <Star size={16} color={formData.isPriority ? "#eab308" : "rgba(255,255,255,0.4)"} fill={formData.isPriority ? "#eab308" : "none"} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.6)' }}>{t('engage_priority')}</span>
+              <Star size={16} color={formData.isPriority ? "#eab308" : "var(--foreground)"} opacity={formData.isPriority ? 1 : 0.4} fill={formData.isPriority ? "#eab308" : "none"} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: formData.isPriority ? '#eab308' : 'var(--foreground)', opacity: formData.isPriority ? 1 : 0.6 }}>{t('engage_priority')}</span>
               
-              <div style={{ width: '36px', height: '20px', background: formData.isPriority ? '#eab308' : 'rgba(255,255,255,0.2)', borderRadius: '10px', position: 'relative', transition: 'all 0.2s ease', marginLeft: '4px' }}>
+              <div style={{ width: '36px', height: '20px', background: formData.isPriority ? '#eab308' : 'var(--subtle-border)', borderRadius: '10px', position: 'relative', transition: 'all 0.2s ease', marginLeft: '4px' }}>
                 <div style={{ width: '16px', height: '16px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: formData.isPriority ? '18px' : '2px', transition: 'all 0.2s ease' }} />
               </div>
             </label>
@@ -299,7 +299,7 @@ export default function EngagePage() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             
             {todayEvents.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '4px', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '4px', background: 'var(--subtle-bg)', padding: '16px', borderRadius: '12px', border: '1px solid var(--subtle-border)' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontWeight: 'bold' }}>
                   <Activity size={16} /> {t('engage_tag_event')}
                 </label>
@@ -386,15 +386,15 @@ export default function EngagePage() {
                   gap: '8px', 
                   padding: '12px', 
                   borderRadius: '12px', 
-                  border: formData.prayed ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)', 
-                  background: formData.prayed ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', 
-                  color: formData.prayed ? 'var(--primary)' : 'rgba(255,255,255,0.6)', 
+                  border: formData.prayed ? '1px solid var(--primary)' : '1px solid var(--subtle-border)', 
+                  background: formData.prayed ? 'rgba(99, 102, 241, 0.2)' : 'var(--subtle-bg)', 
+                  color: formData.prayed ? 'var(--primary)' : 'var(--foreground)', opacity: formData.prayed ? 1 : 0.6,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   fontWeight: 600
                 }}
               >
-                <Heart size={18} color={formData.prayed ? "var(--primary)" : "rgba(255,255,255,0.6)"} fill={formData.prayed ? "var(--primary)" : "none"} /> {t('engage_prayed')}
+                <Heart size={18} color={formData.prayed ? "var(--primary)" : "var(--foreground)"} opacity={formData.prayed ? 1 : 0.6} fill={formData.prayed ? "var(--primary)" : "none"} /> {t('engage_prayed')}
               </button>
 
               <button 
@@ -408,15 +408,15 @@ export default function EngagePage() {
                   gap: '8px', 
                   padding: '12px', 
                   borderRadius: '12px', 
-                  border: formData.hasTestimony ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)', 
-                  background: formData.hasTestimony ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)', 
-                  color: formData.hasTestimony ? 'var(--success)' : 'rgba(255,255,255,0.6)', 
+                  border: formData.hasTestimony ? '1px solid var(--success)' : '1px solid var(--subtle-border)', 
+                  background: formData.hasTestimony ? 'rgba(16, 185, 129, 0.2)' : 'var(--subtle-bg)', 
+                  color: formData.hasTestimony ? 'var(--success)' : 'var(--foreground)', opacity: formData.hasTestimony ? 1 : 0.6,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   fontWeight: 600
                 }}
               >
-                <Mic size={18} color={formData.hasTestimony ? "var(--success)" : "rgba(255,255,255,0.6)"} /> Testimony
+                <Mic size={18} color={formData.hasTestimony ? "var(--success)" : "var(--foreground)"} opacity={formData.hasTestimony ? 1 : 0.6} /> Testimony
               </button>
 
               <button 
@@ -430,15 +430,15 @@ export default function EngagePage() {
                   gap: '8px', 
                   padding: '12px', 
                   borderRadius: '12px', 
-                  border: formData.requestedPrayer ? '1px solid #f59e0b' : '1px solid rgba(255,255,255,0.1)', 
-                  background: formData.requestedPrayer ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,255,255,0.05)', 
-                  color: formData.requestedPrayer ? '#f59e0b' : 'rgba(255,255,255,0.6)', 
+                  border: formData.requestedPrayer ? '1px solid #f59e0b' : '1px solid var(--subtle-border)', 
+                  background: formData.requestedPrayer ? 'rgba(245, 158, 11, 0.2)' : 'var(--subtle-bg)', 
+                  color: formData.requestedPrayer ? '#f59e0b' : 'var(--foreground)', opacity: formData.requestedPrayer ? 1 : 0.6,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   fontWeight: 600
                 }}
               >
-                <MessageCircle size={18} color={formData.requestedPrayer ? "#f59e0b" : "rgba(255,255,255,0.6)"} /> {t('engage_prayer_request')}
+                <MessageCircle size={18} color={formData.requestedPrayer ? "#f59e0b" : "var(--foreground)"} opacity={formData.requestedPrayer ? 1 : 0.6} /> {t('engage_prayer_request')}
               </button>
             </div>
 
@@ -503,7 +503,7 @@ export default function EngagePage() {
       )}
 
       <div>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', borderBottom: '1px solid var(--subtle-border)', paddingBottom: '10px' }}>
           {t('engage_my_records')} ({souls.length})
         </h2>
         

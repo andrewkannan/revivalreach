@@ -77,7 +77,7 @@ export default function ProfilePage() {
     <div className={styles.dashboard}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1 className={styles.sectionTitle} style={{ margin: 0 }}>{t('profile_title')}</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--subtle-bg)', padding: '6px 12px', borderRadius: '20px', border: '1px solid var(--subtle-border)' }}>
           <Globe size={16} opacity={0.7} />
           <select 
             value={language} 
@@ -159,7 +159,7 @@ export default function ProfilePage() {
                 <button onClick={() => { setIsEditingGoal(false); setNewGoalValue(goalData.goal.toString()); }} className="btn-secondary" style={{ padding: '8px 16px' }}><X size={16} /></button>
               </div>
             ) : goalData.goal === 0 ? (
-              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ background: 'var(--subtle-bg)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
                 <p style={{ margin: '0 0 12px 0', opacity: 0.8 }}>{t('profile_set_goal_prompt')}</p>
                 <button onClick={() => setIsEditingGoal(true)} className="btn-primary" style={{ display: 'inline-flex', padding: '8px 16px', fontSize: '0.9rem' }}>{t('profile_set_my_goal')}</button>
               </div>
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                   <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{goalData.current} / {goalData.goal} {t('profile_completed')}</span>
                   {goalData.current >= goalData.goal && <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}><Flame size={16} /> {t('profile_goal_met')}</span>}
                 </div>
-                <div style={{ width: '100%', height: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '6px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '12px', background: 'var(--subtle-bg)', borderRadius: '6px', overflow: 'hidden' }}>
                   <div 
                     style={{ 
                       height: '100%', 
@@ -229,7 +229,7 @@ export default function ProfilePage() {
         {/* Theme Toggle */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--subtle-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {theme === 'dark' ? <Moon size={20} color="var(--primary)" /> : theme === 'light' ? <Sun size={20} color="var(--primary)" /> : <Monitor size={20} color="var(--primary)" />}
             </div>
             <div>
@@ -242,7 +242,7 @@ export default function ProfilePage() {
           <select 
             value={theme} 
             onChange={(e) => setTheme(e.target.value as any)}
-            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'var(--foreground)', padding: '6px 12px', borderRadius: '8px', outline: 'none', cursor: 'pointer' }}
+            style={{ background: 'var(--subtle-bg)', border: '1px solid var(--subtle-border)', color: 'var(--foreground)', padding: '6px 12px', borderRadius: '8px', outline: 'none', cursor: 'pointer' }}
           >
             <option value="system" style={{ color: 'black' }}>{t('profile_theme_system')}</option>
             <option value="light" style={{ color: 'black' }}>{t('profile_theme_light')}</option>
@@ -251,9 +251,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Text Size Toggle */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', paddingTop: '16px', borderTop: '1px solid var(--subtle-border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--subtle-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Type size={20} color="var(--primary)" />
             </div>
             <div>
@@ -269,7 +269,7 @@ export default function ProfilePage() {
             />
             <span style={{
               position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: textSize === 'large' ? 'var(--primary)' : 'rgba(255,255,255,0.2)',
+              backgroundColor: textSize === 'large' ? 'var(--primary)' : 'var(--subtle-border)',
               transition: '.4s', borderRadius: '24px'
             }}>
               <span style={{
@@ -281,7 +281,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ marginTop: '40px', borderTop: '1px solid var(--subtle-border)', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <button 
           onClick={() => window.open('https://wa.me/60186647872', '_blank')}
           className="btn-secondary" 

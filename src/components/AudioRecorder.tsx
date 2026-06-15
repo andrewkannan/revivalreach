@@ -186,7 +186,7 @@ export default function AudioRecorder({ label, onAudioReady, initialAudioUrl, co
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.2)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'var(--subtle-bg)', padding: '16px', borderRadius: '12px', border: '1px dashed var(--subtle-border)' }}>
       {label && <label style={{ fontSize: '0.9rem', fontWeight: 600, opacity: 0.9 }}>{label}</label>}
       
       {isUploading ? (

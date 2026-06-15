@@ -283,7 +283,7 @@ export default function TestimonyPage() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
             {/* Audio Recorder Section */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.2)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'var(--subtle-bg)', padding: '16px', borderRadius: '12px', border: '1px dashed var(--subtle-border)' }}>
               <label style={{ fontSize: '0.9rem', fontWeight: 600, opacity: 0.9 }}>{t('testimony_record_audio')}</label>
               
               {!audioUrl ? (
@@ -346,9 +346,9 @@ export default function TestimonyPage() {
               />
             </div>
 
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: isPrivate ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255,255,255,0.05)', padding: '12px 16px', borderRadius: '12px', border: isPrivate ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s ease' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: isPrivate ? 'rgba(99, 102, 241, 0.1)' : 'var(--subtle-bg)', padding: '12px 16px', borderRadius: '12px', border: isPrivate ? '1px solid var(--primary)' : '1px solid var(--subtle-border)', transition: 'all 0.2s ease' }}>
               <input type="checkbox" checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} style={{ display: 'none' }} />
-              <div style={{ width: '40px', height: '24px', background: isPrivate ? 'var(--primary)' : 'rgba(255,255,255,0.2)', borderRadius: '12px', position: 'relative', transition: 'all 0.2s ease', flexShrink: 0 }}>
+              <div style={{ width: '40px', height: '24px', background: isPrivate ? 'var(--primary)' : 'var(--subtle-border)', borderRadius: '12px', position: 'relative', transition: 'all 0.2s ease', flexShrink: 0 }}>
                 <div style={{ width: '20px', height: '20px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: isPrivate ? '18px' : '2px', transition: 'all 0.2s ease' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -428,7 +428,7 @@ export default function TestimonyPage() {
                 </p>
               )}
               
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', marginTop: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderTop: '1px solid var(--subtle-border)', paddingTop: '16px', marginTop: '16px' }}>
                 <div style={{ background: 'var(--primary)', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: 'white', fontWeight: 'bold' }}>
                   {testimony.name.charAt(0).toUpperCase()}
                 </div>

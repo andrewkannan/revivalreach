@@ -41,7 +41,7 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
   };
 
   return (
-    <div style={{ marginTop: '30px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
+    <div style={{ marginTop: '30px', borderTop: '1px solid var(--subtle-border)', paddingTop: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <h3 style={{ fontSize: '1.2rem', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Users size={20} color="var(--primary)" /> 
@@ -56,13 +56,13 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
       </div>
       
       {participants.length === 0 ? (
-        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>
+        <div style={{ background: 'var(--subtle-bg)', padding: '15px', borderRadius: '8px', color: 'var(--foreground)', opacity: 0.5, textAlign: 'center' }}>
           No one has joined yet. Be the first!
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>
           {participants.map((p: any) => (
-            <div key={p.id} style={{ background: 'rgba(255,255,255,0.05)', padding: '12px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+            <div key={p.id} style={{ background: 'var(--subtle-bg)', padding: '12px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
                   {p.user.name ? p.user.name.charAt(0).toUpperCase() : '?'}
@@ -80,7 +80,7 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
                   <button 
                     onClick={() => toggleAttendance(p.userId, p.isPresent)} 
                     disabled={loadingId === p.userId}
-                    style={{ background: 'none', border: 'none', cursor: loadingId === p.userId ? 'wait' : 'pointer', color: p.isPresent ? 'var(--success)' : 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', gap: '6px', padding: '4px' }}
+                    style={{ background: 'none', border: 'none', cursor: loadingId === p.userId ? 'wait' : 'pointer', color: p.isPresent ? 'var(--success)' : 'var(--foreground)', opacity: p.isPresent ? 1 : 0.3, display: 'flex', alignItems: 'center', gap: '6px', padding: '4px' }}
                     title={p.isPresent ? "Mark Absent" : "Mark Present"}
                   >
                     {p.isPresent ? <CheckCircle size={24} /> : <Circle size={24} />}
