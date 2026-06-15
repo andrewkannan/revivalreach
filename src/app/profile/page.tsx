@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor, Camera, Edit3, Crown, UserCheck } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor, Camera, Edit3, Crown, UserCheck, HeartHandshake } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePreferences } from "@/contexts/PreferencesContext";
@@ -151,7 +151,7 @@ export default function ProfilePage() {
     <div className={styles.dashboard}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {session.user.role === 'ADMIN' || session.user.role === 'LEADER' ? <Crown size={18} color="#f59e0b" /> : <UserCheck size={18} color="var(--primary)" />} {session.user.name}
+          <HeartHandshake size={18} color="var(--primary)" /> {session.user.name}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--subtle-bg)', padding: '6px 12px', borderRadius: '20px', border: '1px solid var(--subtle-border)' }}>
           <Globe size={16} opacity={0.7} />
@@ -324,8 +324,8 @@ export default function ProfilePage() {
                 className={`glass-panel ${styles.eventCard}`} 
                 style={{ 
                   borderLeft: borderStyle,
-                  filter: (isPast && !isPresent) ? 'grayscale(100%)' : 'none',
-                  opacity: (isPast && !isPresent) ? 0.6 : 1
+                  filter: isPast ? 'grayscale(100%)' : 'none',
+                  opacity: isPast ? 0.6 : 1
                 }}
                 onClick={() => router.push(`/events/${event.id}`)}
               >
