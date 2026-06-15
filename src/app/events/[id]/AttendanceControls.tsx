@@ -64,8 +64,12 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
           {participants.map((p: any) => (
             <div key={p.id} style={{ background: 'var(--subtle-bg)', padding: '12px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                  {p.user.name ? p.user.name.charAt(0).toUpperCase() : '?'}
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', overflow: 'hidden' }}>
+                  {p.user.image ? (
+                    <img src={p.user.image} alt={p.user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    p.user.name ? p.user.name.charAt(0).toUpperCase() : '?'
+                  )}
                 </div>
                 <div>
                   <div style={{ fontWeight: 600 }}>{p.user.name || "Anonymous User"}</div>

@@ -343,7 +343,7 @@ export default function ProfilePage() {
                     ) : isPresent ? (
                       <span className={`${styles.badge}`} style={{ fontSize: '0.65rem', background: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>COMPLETED</span>
                     ) : (
-                      <span className={`${styles.badge}`} style={{ fontSize: '0.65rem', background: 'rgba(107, 114, 128, 0.2)', color: '#9ca3af' }}>ABSENT</span>
+                      <span className={`${styles.badge}`} style={{ fontSize: '0.65rem', background: 'rgba(107, 114, 128, 0.2)', color: '#9ca3af' }}>MISSED</span>
                     )}
                   </div>
                 </div>

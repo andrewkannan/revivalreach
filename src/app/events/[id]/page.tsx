@@ -29,7 +29,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       participants: {
         include: {
           user: {
-            select: { name: true, email: true, phone: true }
+            select: { name: true, email: true, phone: true, image: true }
           }
         }
       },

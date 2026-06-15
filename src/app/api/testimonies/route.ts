@@ -10,7 +10,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
       include: {
         user: {
-          select: { name: true }
+          select: { id: true, name: true, image: true }
         }
       }
     });

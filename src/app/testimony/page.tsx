@@ -429,11 +429,17 @@ export default function TestimonyPage() {
               )}
               
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderTop: '1px solid var(--subtle-border)', paddingTop: '16px', marginTop: '16px' }}>
-                <div style={{ background: 'var(--primary)', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: 'white', fontWeight: 'bold' }}>
-                  {testimony.name.charAt(0).toUpperCase()}
+                <div style={{ background: 'var(--primary)', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: 'white', fontWeight: 'bold', overflow: 'hidden' }}>
+                  {testimony.user?.image ? (
+                    <img src={testimony.user.image} alt={testimony.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    testimony.name.charAt(0).toUpperCase()
+                  )}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{testimony.name}</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>
+                    <a href="#" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>{testimony.name}</a>
+                  </div>
                   <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{new Date(testimony.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
                 </div>
               </div>
