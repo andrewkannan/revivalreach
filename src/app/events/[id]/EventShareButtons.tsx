@@ -13,7 +13,8 @@ export default function EventShareButtons({ event }: { event: any }) {
   }, []);
 
   const eventDate = new Date(event.date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-  const eventUrl = typeof window !== 'undefined' ? window.location.href : `https://revivalreach.com/events/${event.id}`;
+  const shareId = event.slug || event.id;
+  const eventUrl = typeof window !== 'undefined' ? `${window.location.origin}/events/${shareId}` : `https://revivalreach.com/events/${shareId}`;
   
   const shareText = `*Join us for: ${event.title}*\n🗓 *Date:* ${eventDate}\n📍 *Location:* ${event.location}\n\n*Click here to join the team and find out more:*\n${eventUrl}`;
 

@@ -31,9 +31,35 @@ export async function POST(req: Request) {
       }
     }
 
+    // Generate slug
+    const generateSlug = async (title: string, date: Date) => {
+      const baseSlug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+      
+      const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+      const dateStr = `${monthNames[date.getMonth()]}-${date.getDate()}`;
+      
+      let initialSlug = `${baseSlug}-${dateStr}`;
+      let slug = initialSlug;
+      let counter = 1;
+      
+      while (true) {
+        const existing = await prisma.event.findUnique({ where: { slug } });
+        if (!existing) break;
+        slug = `${initialSlug}-${counter}`;
+        counter++;
+      }
+      return slug;
+    };
+
+    const slug = await generateSlug(data.title, new Date(data.date));
+
     const event = await prisma.event.create({
       data: {
         eventCode: newCode,
+        slug,
         title: data.title,
         date: new Date(data.date),
         location: data.location,

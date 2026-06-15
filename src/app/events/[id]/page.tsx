@@ -18,8 +18,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     redirect("/login");
   }
 
-  const event = await prisma.event.findUnique({
-    where: { id },
+  const event = await prisma.event.findFirst({
+    where: {
+      OR: [
+        { id: id },
+        { slug: id }
+      ]
+    },
     include: {
       participants: {
         include: {
