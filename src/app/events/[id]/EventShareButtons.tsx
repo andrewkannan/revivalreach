@@ -46,11 +46,11 @@ export default function EventShareButtons({ event }: { event: any }) {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginTop: '20px' }}>
       <button 
         onClick={handleWhatsApp}
         style={{ 
-          flex: 1, minWidth: '140px', padding: '12px', background: '#25D366', color: 'white', 
+          width: '100%', padding: '12px', background: '#25D366', color: 'white', 
           borderRadius: '8px', border: 'none', display: 'flex', alignItems: 'center', 
           justifyContent: 'center', gap: '8px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease' 
         }}
@@ -61,7 +61,7 @@ export default function EventShareButtons({ event }: { event: any }) {
       <button 
         onClick={handleCopy}
         style={{ 
-          flex: 1, minWidth: '140px', padding: '12px', background: 'var(--card-bg)', color: 'var(--foreground)', 
+          width: '100%', padding: '12px', background: 'var(--card-bg)', color: 'var(--foreground)', 
           borderRadius: '8px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', 
           justifyContent: 'center', gap: '8px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease' 
         }}
@@ -74,13 +74,13 @@ export default function EventShareButtons({ event }: { event: any }) {
         <button 
           onClick={handleNativeShare}
           style={{ 
-            width: '48px', padding: '12px', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', 
+            width: '100%', padding: '12px', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', 
             borderRadius: '8px', border: '1px solid var(--primary)', display: 'flex', alignItems: 'center', 
             justifyContent: 'center', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease' 
           }}
           title="More Share Options"
         >
-          <Share2 size={18} />
+          <Share2 size={18} /> Share
         </button>
       )}
     </div>

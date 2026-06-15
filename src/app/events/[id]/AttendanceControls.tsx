@@ -42,14 +42,14 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
 
   return (
     <div style={{ marginTop: '30px', borderTop: '1px solid var(--subtle-border)', paddingTop: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '15px' }}>
         <h3 style={{ fontSize: '1.2rem', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Users size={20} color="var(--primary)" /> 
           Attendance List ({participants.length})
         </h3>
         
         {canManage && (
-          <button onClick={() => setShowQR(true)} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', fontSize: '0.9rem' }}>
+          <button onClick={() => setShowQR(true)} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.9rem', flex: '1 1 auto', maxWidth: '200px' }}>
             <QrCode size={16} /> Show QR Check-in
           </button>
         )}

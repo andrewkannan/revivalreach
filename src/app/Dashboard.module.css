@@ -134,15 +134,13 @@
 }
 
 .linksGrid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px; /* for scrollbar */
 }
 
 .linkButton {
-  flex: 0 0 auto;
-  min-width: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
