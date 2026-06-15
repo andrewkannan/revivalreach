@@ -20,9 +20,8 @@ export default function ProfilePage() {
   const [profileStats, setProfileStats] = useState({ engage: 0, revivals: 0, testimony: 0, user: null as any });
   const [loadingStats, setLoadingStats] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
-  const [isEditingVision, setIsEditingVision] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [visionText, setVisionText] = useState("");
-  const [isEditingMinistry, setIsEditingMinistry] = useState(false);
   const [ministryText, setMinistryText] = useState("");
 
   // Goal Tracker State
@@ -122,29 +121,18 @@ export default function ProfilePage() {
     setIsUploading(false);
   };
 
-  const handleVisionSave = async () => {
+  const handleProfileSave = async () => {
     try {
       await fetch('/api/profile/update', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ vision: visionText })
+        body: JSON.stringify({ vision: visionText, ministry: ministryText })
       });
-      setProfileStats(prev => ({ ...prev, user: { ...prev.user, vision: visionText } }));
-      setIsEditingVision(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleMinistrySave = async () => {
-    try {
-      await fetch('/api/profile/update', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ministry: ministryText })
-      });
-      setProfileStats(prev => ({ ...prev, user: { ...prev.user, ministry: ministryText } }));
-      setIsEditingMinistry(false);
+      setProfileStats(prev => ({ 
+        ...prev, 
+        user: { ...prev.user, vision: visionText, ministry: ministryText } 
+      }));
+      setIsEditingProfile(false);
     } catch (err) {
       console.error(err);
     }
@@ -185,7 +173,7 @@ export default function ProfilePage() {
       </div>
       
       {/* Instagram-style Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0 20px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0 20px 0', gap: '20px' }}>
         {/* Profile Picture */}
         <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0 }}>
           <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', padding: '3px' }}>
@@ -199,82 +187,86 @@ export default function ProfilePage() {
               )}
             </div>
           </div>
-          <label style={{ position: 'absolute', bottom: 0, right: 0, background: 'var(--foreground)', color: 'var(--background)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', border: '2px solid var(--background)' }}>
-            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} disabled={isUploading} />
-            {isUploading ? <Activity size={14} /> : <Camera size={14} />}
-          </label>
+          {isEditingProfile && (
+            <label style={{ position: 'absolute', bottom: 0, right: 0, background: 'var(--foreground)', color: 'var(--background)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', border: '2px solid var(--background)' }}>
+              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} disabled={isUploading} />
+              {isUploading ? <Activity size={14} /> : <Camera size={14} />}
+            </label>
+          )}
         </div>
 
-        {/* Stats */}
-        <div style={{ display: 'flex', gap: '20px', flex: 1, justifyContent: 'center' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.revivals || 0}</span>
-            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>revivals</span>
+        {/* Stats & Actions */}
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '16px' }}>
+          <div style={{ display: 'flex', gap: '24px', justifyContent: 'space-around', width: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.revivals || 0}</span>
+              <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>revivals</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.engage || 0}</span>
+              <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>engage</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.testimony || 0}</span>
+              <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>testimony</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.engage || 0}</span>
-            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>engage</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>{profileStats.testimony || 0}</span>
-            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>testimony</span>
-          </div>
+          
+          {!isEditingProfile && (
+            <button 
+              onClick={() => setIsEditingProfile(true)} 
+              style={{ background: 'var(--subtle-bg)', border: '1px solid var(--subtle-border)', color: 'var(--foreground)', padding: '6px 16px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, width: '100%', cursor: 'pointer' }}
+            >
+              Edit Profile
+            </button>
+          )}
         </div>
       </div>
 
       {/* Bio / Vision Line */}
       <div style={{ marginBottom: '24px' }}>
-        {isEditingMinistry ? (
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-            <select
-              value={ministryText}
-              onChange={(e) => setMinistryText(e.target.value)}
-              style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--subtle-bg)', color: 'var(--foreground)', outline: 'none' }}
-            >
-              <option value="">Select 5-Fold Ministry</option>
-              <option value="Apostle">Apostle</option>
-              <option value="Prophet">Prophet</option>
-              <option value="Evangelist">Evangelist</option>
-              <option value="Pastor">Pastor</option>
-              <option value="Teacher">Teacher</option>
-            </select>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <button onClick={handleMinistrySave} style={{ padding: '6px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><Check size={16} /></button>
-              <button onClick={() => { setIsEditingMinistry(false); setMinistryText(profileStats.user?.ministry || ""); }} style={{ padding: '6px', background: 'var(--subtle-bg)', color: 'var(--foreground)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><X size={16} /></button>
+        {isEditingProfile ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label style={{ fontSize: '0.8rem', fontWeight: 600, opacity: 0.7 }}>5-Fold Ministry Role</label>
+              <select
+                value={ministryText}
+                onChange={(e) => setMinistryText(e.target.value)}
+                style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--subtle-bg)', color: 'var(--foreground)', outline: 'none' }}
+              >
+                <option value="">Select 5-Fold Ministry</option>
+                <option value="Apostle">Apostle</option>
+                <option value="Prophet">Prophet</option>
+                <option value="Evangelist">Evangelist</option>
+                <option value="Pastor">Pastor</option>
+                <option value="Teacher">Teacher</option>
+              </select>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label style={{ fontSize: '0.8rem', fontWeight: 600, opacity: 0.7 }}>Vision</label>
+              <textarea 
+                value={visionText}
+                onChange={(e) => setVisionText(e.target.value)}
+                placeholder="Add your vision lines..."
+                style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--subtle-bg)', color: 'var(--foreground)', fontFamily: 'inherit', resize: 'none' }}
+                rows={3}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+              <button onClick={handleProfileSave} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Save Profile</button>
+              <button onClick={() => { setIsEditingProfile(false); setMinistryText(profileStats.user?.ministry || ""); setVisionText(profileStats.user?.vision || ""); }} style={{ flex: 1, padding: '10px', background: 'var(--subtle-bg)', color: 'var(--foreground)', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Cancel</button>
             </div>
           </div>
         ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>
               {profileStats.user?.ministry || session.user.name}
             </h2>
-            <button onClick={() => setIsEditingMinistry(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '2px' }}>
-              <Edit3 size={14} />
-            </button>
-          </div>
-        )}
-        {isEditingVision ? (
-          <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-            <textarea 
-              value={visionText}
-              onChange={(e) => setVisionText(e.target.value)}
-              placeholder="Add your vision lines..."
-              style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--subtle-bg)', color: 'var(--foreground)', fontFamily: 'inherit', resize: 'none' }}
-              rows={2}
-            />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <button onClick={handleVisionSave} style={{ padding: '6px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><Check size={16} /></button>
-              <button onClick={() => { setIsEditingVision(false); setVisionText(profileStats.user?.vision || ""); }} style={{ padding: '6px', background: 'var(--subtle-bg)', color: 'var(--foreground)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}><X size={16} /></button>
-            </div>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-            <p style={{ fontSize: '0.9rem', opacity: 0.9, whiteSpace: 'pre-wrap', fontStyle: profileStats.user?.vision ? 'italic' : 'normal', color: profileStats.user?.vision ? 'var(--foreground)' : 'gray' }}>
+            <p style={{ fontSize: '0.9rem', opacity: 0.9, whiteSpace: 'pre-wrap', fontStyle: profileStats.user?.vision ? 'italic' : 'normal', color: profileStats.user?.vision ? 'var(--foreground)' : 'gray', margin: 0, lineHeight: 1.5 }}>
               {profileStats.user?.vision || "Add your vision lines..."}
             </p>
-            <button onClick={() => setIsEditingVision(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '2px' }}>
-              <Edit3 size={14} />
-            </button>
           </div>
         )}
       </div>
