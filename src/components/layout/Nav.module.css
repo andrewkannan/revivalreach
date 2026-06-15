@@ -18,19 +18,21 @@
 
 .bottomNav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: calc(var(--nav-height) + var(--safe-area-bottom));
-  padding-bottom: var(--safe-area-bottom);
-  background: var(--nav-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--nav-border);
+  bottom: 24px;
+  left: 16px;
+  right: 16px;
+  height: var(--nav-height);
+  background: rgba(20, 20, 24, 0.85); /* Slightly darker, distinct background */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 40px; /* Island pill shape */
   z-index: 50;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding: 0 10px;
 }
 
 .logo {
@@ -74,6 +76,29 @@
 
 .topNav .navLink:hover {
   transform: none;
+}
+
+.iconWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background-color: #ef4444; /* Red color like social media */
+  color: white;
+  font-size: 0.65rem;
+  font-weight: bold;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 0 0 2px rgba(20, 20, 24, 0.85); /* Matches bottomNav background to look cut-out */
 }
 
 @media (max-width: 767px) {
