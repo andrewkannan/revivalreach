@@ -176,11 +176,11 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                           )}
                           {event.whatsappGroupLink && (
                             <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ background: 'var(--card-bg)', color: '#25D366', borderColor: '#25D366' }}>
-                              <MessageCircle size={18} /> Open WhatsApp Group
+                              <MessageCircle size={18} /> WhatsApp Group
                             </a>
                           )}
                           {event.whatsappLink && (
-                            <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ gridColumn: '1 / -1', background: '#25D366', color: 'white', borderColor: '#25D366' }}>
+                            <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ flexBasis: '100%', background: '#25D366', color: 'white', borderColor: '#25D366' }}>
                               <MessageCircle size={18} /> Contact Leader via WhatsApp
                             </a>
                           )}
