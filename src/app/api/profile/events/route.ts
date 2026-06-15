@@ -24,6 +24,9 @@ export async function GET() {
       include: {
         _count: {
           select: { participants: true }
+        },
+        participants: {
+          where: { userId: userId }
         }
       },
       orderBy: { date: 'asc' }
@@ -40,6 +43,9 @@ export async function GET() {
         include: {
           _count: {
             select: { participants: true }
+          },
+          participants: {
+            where: { userId: userId }
           }
         },
         orderBy: { date: 'asc' }

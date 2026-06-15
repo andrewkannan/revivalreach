@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import styles from "../Dashboard.module.css";
 import authStyles from "../login/Auth.module.css";
-import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor, Camera, Edit3 } from "lucide-react";
+import { User, Mail, ShieldCheck, LogOut, Calendar as CalendarIcon, MapPin, Users, Heart, Activity, MessageCircle, Target, Check, X, Flame, Globe, Moon, Sun, Type, Monitor, Camera, Edit3, Crown, UserCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePreferences } from "@/contexts/PreferencesContext";
@@ -34,7 +34,20 @@ export default function ProfilePage() {
       fetch("/api/profile/events")
         .then(res => res.json())
         .then(data => {
-          if (Array.isArray(data)) setEvents(data);
+          if (Array.isArray(data)) {
+            const now = new Date().getTime();
+            const sorted = data.sort((a, b) => {
+               const aTime = new Date(a.date).getTime();
+               const bTime = new Date(b.date).getTime();
+               const aPast = aTime < now;
+               const bPast = bTime < now;
+
+               if (!aPast && !bPast) return aTime - bTime; // Upcoming ascending
+               if (aPast && bPast) return bTime - aTime; // Past descending
+               return aPast ? 1 : -1; // Upcoming before past
+            });
+            setEvents(sorted);
+          }
           setLoadingEvents(false);
         })
         .catch(() => setLoadingEvents(false));
@@ -138,7 +151,7 @@ export default function ProfilePage() {
     <div className={styles.dashboard}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ShieldCheck size={18} /> {session.user.name}
+          {session.user.role === 'ADMIN' || session.user.role === 'LEADER' ? <Crown size={18} color="#f59e0b" /> : <UserCheck size={18} color="var(--primary)" />} {session.user.name}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--subtle-bg)', padding: '6px 12px', borderRadius: '20px', border: '1px solid var(--subtle-border)' }}>
           <Globe size={16} opacity={0.7} />
@@ -147,9 +160,9 @@ export default function ProfilePage() {
             onChange={(e) => setLanguage(e.target.value as "en" | "ta" | "ms")}
             style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
           >
-            <option value="en" style={{ color: 'black' }}>EN</option>
-            <option value="ta" style={{ color: 'black' }}>TA</option>
-            <option value="ms" style={{ color: 'black' }}>MS</option>
+            <option value="en" style={{ color: 'black' }}>English</option>
+            <option value="ta" style={{ color: 'black' }}>தமிழ் (Tamil)</option>
+            <option value="ms" style={{ color: 'black' }}>Melayu (Malay)</option>
           </select>
         </div>
       </div>
@@ -219,11 +232,6 @@ export default function ProfilePage() {
             </button>
           </div>
         )}
-      </div>
-
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '30px' }}>
-        <button style={{ flex: 1, padding: '8px', background: 'var(--subtle-bg)', border: '1px solid var(--subtle-border)', borderRadius: '8px', color: 'var(--foreground)', fontWeight: 600, cursor: 'pointer' }}>Edit Profile</button>
-        <button style={{ flex: 1, padding: '8px', background: 'var(--subtle-bg)', border: '1px solid var(--subtle-border)', borderRadius: '8px', color: 'var(--foreground)', fontWeight: 600, cursor: 'pointer' }}>Share Profile</button>
       </div>
 
       <h2 className={styles.sectionTitle} style={{ marginTop: '30px' }}>{t('profile_evangelism_goal')}</h2>
@@ -296,8 +304,31 @@ export default function ProfilePage() {
         <div className={styles.eventsList}>
           {events.map(event => {
             const date = new Date(event.date);
+            const isPast = date < new Date();
+            const participantData = event.participants?.find((p: any) => p.userId === session.user.id);
+            const isPresent = participantData?.isPresent;
+            
+            // Color coding borders based on status
+            let borderStyle = 'none';
+            if (!isPast) {
+              borderStyle = '4px solid #3b82f6'; // Blue for upcoming
+            } else if (isPresent) {
+              borderStyle = '4px solid #10b981'; // Green for attended
+            } else {
+              borderStyle = '4px solid #6b7280'; // Grey for absent
+            }
+
             return (
-              <div key={event.id} className={`glass-panel ${styles.eventCard}`} onClick={() => router.push(`/events/${event.id}`)}>
+              <div 
+                key={event.id} 
+                className={`glass-panel ${styles.eventCard}`} 
+                style={{ 
+                  borderLeft: borderStyle,
+                  filter: (isPast && !isPresent) ? 'grayscale(100%)' : 'none',
+                  opacity: (isPast && !isPresent) ? 0.6 : 1
+                }}
+                onClick={() => router.push(`/events/${event.id}`)}
+              >
                 <div className={styles.eventHeader}>
                   <div>
                     <h3 className={styles.eventTitle}>{event.title}</h3>
@@ -307,8 +338,12 @@ export default function ProfilePage() {
                     </span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-                    {event.status === 'PENDING' && (
-                      <span className={`${styles.badge} ${styles['badge-warning']}`} style={{ fontSize: '0.65rem' }}>PENDING</span>
+                    {!isPast ? (
+                      <span className={`${styles.badge}`} style={{ fontSize: '0.65rem', background: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' }}>UPCOMING</span>
+                    ) : isPresent ? (
+                      <span className={`${styles.badge}`} style={{ fontSize: '0.65rem', background: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>COMPLETED</span>
+                    ) : (
+                      <span className={`${styles.badge}`} style={{ fontSize: '0.65rem', background: 'rgba(107, 114, 128, 0.2)', color: '#9ca3af' }}>ABSENT</span>
                     )}
                   </div>
                 </div>
@@ -388,7 +423,7 @@ export default function ProfilePage() {
           className="btn-secondary" 
           style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.3)' }}
         >
-          <MessageCircle size={18} /> {t('profile_msg_support')}
+          <MessageCircle size={18} /> Contact Outreach Team
         </button>
 
         {(session.user.role === "ADMIN" || session.user.role === "LEADER") && (

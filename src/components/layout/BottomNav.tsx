@@ -12,6 +12,8 @@ export default function BottomNav() {
   const { data: session } = useSession();
   const { t } = useLanguage();
   const [badges, setBadges] = useState({ pendingEngage: 0, newRevivals: 0 });
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     fetch('/api/notifications/badges')
@@ -24,8 +26,25 @@ export default function BottomNav() {
       .catch(err => console.error("Failed to load badges", err));
   }, [pathname]); // Refresh on route change
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsVisible(false); // Scrolling down, hide
+      } else {
+        setIsVisible(true);  // Scrolling up, show
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <nav className={styles.bottomNav}>
+    <nav className={`${styles.bottomNav} ${!isVisible ? styles.bottomNavHidden : ''}`}>
       <Link href="/" className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}>
         <div className={styles.iconWrapper}>
           <Flame size={24} />
