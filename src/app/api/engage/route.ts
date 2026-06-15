@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, phone, prayed, healed, requestedPrayer, prayerNeeds, prayerNeedsAudioUrl, remarks, remarksAudioUrl, eventId, isPriority } = body;
+    const { name, phone, prayed, hasTestimony, requestedPrayer, prayerNeeds, prayerNeedsAudioUrl, testimonyText, testimonyAudioUrl, remarks, remarksAudioUrl, eventId, isPriority } = body;
 
     if (!name || !phone) {
       return NextResponse.json({ message: "Name and phone are required" }, { status: 400 });
@@ -52,10 +52,12 @@ export async function POST(req: Request) {
         name,
         phone,
         prayed: Boolean(prayed),
-        healed: Boolean(healed),
+        hasTestimony: Boolean(hasTestimony),
         requestedPrayer: Boolean(requestedPrayer),
         prayerNeeds: prayerNeeds || null,
         prayerNeedsAudioUrl: prayerNeedsAudioUrl || null,
+        testimonyText: testimonyText || null,
+        testimonyAudioUrl: testimonyAudioUrl || null,
         remarks: remarks || null,
         remarksAudioUrl: remarksAudioUrl || null,
         eventId: eventId || null,

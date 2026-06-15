@@ -44,9 +44,9 @@ export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
                           <Heart size={10} /> Prayed
                         </span>
                       )}
-                      {soul.healed && (
+                      {soul.hasTestimony && (
                         <span style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(16, 185, 129, 0.2)', color: 'var(--success)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                          <Activity size={10} /> Healed
+                          <Activity size={10} /> Testimony
                         </span>
                       )}
                       {soul.requestedPrayer && (
@@ -65,6 +65,11 @@ export default function EngageTable({ initialSouls }: { initialSouls: any[] }) {
                     {soul.prayerNeeds && (
                       <div style={{ fontSize: '0.85rem', marginBottom: '4px', color: '#f59e0b' }}>
                         <strong>Prayer Needs:</strong> {soul.prayerNeeds}
+                      </div>
+                    )}
+                    {soul.testimonyText && (
+                      <div style={{ fontSize: '0.85rem', marginBottom: '4px', color: 'var(--success)' }}>
+                        <strong>Testimony:</strong> {soul.testimonyText}
                       </div>
                     )}
                     {soul.remarks && (

@@ -98,7 +98,9 @@ model Soul {
   name      String
   phone     String
   prayed    Boolean  @default(false)
-  healed    Boolean  @default(false)
+  hasTestimony Boolean @default(false)
+  testimonyText   String?
+  testimonyAudioUrl String?
   requestedPrayer Boolean @default(false)
   prayerEmailSent Boolean @default(false)
   prayerNeeds     String?

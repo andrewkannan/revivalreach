@@ -10,10 +10,12 @@ type Soul = {
   name: string;
   phone: string;
   prayed: boolean;
-  healed: boolean;
+  hasTestimony: boolean;
   requestedPrayer: boolean;
   prayerNeeds: string | null;
   prayerNeedsAudioUrl: string | null;
+  testimonyText: string | null;
+  testimonyAudioUrl: string | null;
   remarks: string | null;
   remarksAudioUrl: string | null;
   eventId: string | null;
@@ -38,10 +40,12 @@ export default function EngagePage() {
     name: "",
     phone: "+60",
     prayed: false,
-    healed: false,
+    hasTestimony: false,
     requestedPrayer: false,
     prayerNeeds: "",
     prayerNeedsAudioUrl: null as string | null,
+    testimonyText: "",
+    testimonyAudioUrl: null as string | null,
     remarks: "",
     remarksAudioUrl: null as string | null,
     eventId: null as string | null,
@@ -164,8 +168,8 @@ export default function EngagePage() {
     const defaultEventId = joined.length === 1 ? joined[0].id : null;
     
     setFormData({ 
-      name: "", phone: "+60", prayed: false, healed: false, requestedPrayer: false, 
-      prayerNeeds: "", prayerNeedsAudioUrl: null, remarks: "", remarksAudioUrl: null, 
+      name: "", phone: "+60", prayed: false, hasTestimony: false, requestedPrayer: false, 
+      prayerNeeds: "", prayerNeedsAudioUrl: null, testimonyText: "", testimonyAudioUrl: null, remarks: "", remarksAudioUrl: null, 
       eventId: defaultEventId, isPriority: false 
     });
     setEditingId(null);
@@ -182,10 +186,12 @@ export default function EngagePage() {
       name: soul.name,
       phone: soul.phone,
       prayed: soul.prayed,
-      healed: soul.healed,
+      hasTestimony: soul.hasTestimony,
       requestedPrayer: soul.requestedPrayer || false,
       prayerNeeds: soul.prayerNeeds || "",
       prayerNeedsAudioUrl: soul.prayerNeedsAudioUrl || null,
+      testimonyText: soul.testimonyText || "",
+      testimonyAudioUrl: soul.testimonyAudioUrl || null,
       remarks: soul.remarks || "",
       remarksAudioUrl: soul.remarksAudioUrl || null,
       eventId: soul.eventId || null,
@@ -393,7 +399,7 @@ export default function EngagePage() {
 
               <button 
                 type="button" 
-                onClick={() => setFormData(prev => ({ ...prev, healed: !prev.healed }))}
+                onClick={() => setFormData(prev => ({ ...prev, hasTestimony: !prev.hasTestimony }))}
                 style={{ 
                   flex: 1, 
                   display: 'flex', 
@@ -402,15 +408,15 @@ export default function EngagePage() {
                   gap: '8px', 
                   padding: '12px', 
                   borderRadius: '12px', 
-                  border: formData.healed ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)', 
-                  background: formData.healed ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)', 
-                  color: formData.healed ? 'var(--success)' : 'rgba(255,255,255,0.6)', 
+                  border: formData.hasTestimony ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.1)', 
+                  background: formData.hasTestimony ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)', 
+                  color: formData.hasTestimony ? 'var(--success)' : 'rgba(255,255,255,0.6)', 
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   fontWeight: 600
                 }}
               >
-                <Activity size={18} color={formData.healed ? "var(--success)" : "rgba(255,255,255,0.6)"} /> {t('engage_healed')}
+                <Mic size={18} color={formData.hasTestimony ? "var(--success)" : "rgba(255,255,255,0.6)"} /> Testimony
               </button>
 
               <button 
@@ -447,6 +453,22 @@ export default function EngagePage() {
                     compact
                     initialAudioUrl={formData.prayerNeedsAudioUrl}
                     onAudioReady={(url) => setFormData(prev => ({ ...prev, prayerNeedsAudioUrl: url }))} 
+                  />
+                </div>
+              </div>
+            )}
+
+            {formData.hasTestimony && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'fadeIn 0.3s ease-out' }}>
+                <label style={{ color: 'var(--success)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Testimony Details</span>
+                </label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                  <textarea name="testimonyText" className="input-glass" value={formData.testimonyText} onChange={handleInputChange} rows={3} style={{ borderColor: 'rgba(16, 185, 129, 0.3)', flex: 1 }} required={formData.hasTestimony && !formData.testimonyAudioUrl} />
+                  <AudioRecorder 
+                    compact
+                    initialAudioUrl={formData.testimonyAudioUrl}
+                    onAudioReady={(url) => setFormData(prev => ({ ...prev, testimonyAudioUrl: url }))} 
                   />
                 </div>
               </div>
@@ -526,9 +548,9 @@ export default function EngagePage() {
                       <Heart size={12} /> {t('engage_prayed')}
                     </span>
                   )}
-                  {soul.healed && (
+                  {soul.hasTestimony && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(16, 185, 129, 0.2)', color: 'var(--success)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
-                      <CheckCircle size={12} /> {t('engage_healed')}
+                      <CheckCircle size={12} /> Testimony
                     </span>
                   )}
                   {soul.requestedPrayer && (
@@ -545,6 +567,16 @@ export default function EngagePage() {
                       <audio controls src={soul.prayerNeedsAudioUrl} style={{ width: '100%', height: '36px', marginBottom: soul.prayerNeeds ? '8px' : '0' }} />
                     )}
                     {soul.prayerNeeds}
+                  </div>
+                )}
+
+                {(soul.testimonyText || soul.testimonyAudioUrl) && (
+                  <div style={{ background: 'rgba(16, 185, 129, 0.1)', borderLeft: '3px solid var(--success)', padding: '12px', borderRadius: '4px', fontSize: '0.9rem', marginTop: '4px' }}>
+                    <strong style={{ display: 'block', marginBottom: '8px', color: 'var(--success)' }}>Testimony:</strong>
+                    {soul.testimonyAudioUrl && (
+                      <audio controls src={soul.testimonyAudioUrl} style={{ width: '100%', height: '36px', marginBottom: soul.testimonyText ? '8px' : '0' }} />
+                    )}
+                    {soul.testimonyText}
                   </div>
                 )}
 

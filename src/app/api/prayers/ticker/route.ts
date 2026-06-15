@@ -13,7 +13,7 @@ export async function GET() {
     const prayerRequests = await prisma.soul.findMany({
       where: { 
         requestedPrayer: true,
-        healed: false,
+        hasTestimony: false,
         prayerNeeds: { not: null }
       },
       select: {
