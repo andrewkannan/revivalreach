@@ -109,7 +109,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               <UserIcon size={18} color="var(--primary)" style={{ marginTop: '2px' }} />
               <div>
                 <strong style={{ display: 'block', opacity: 0.7, fontSize: '0.85rem', textTransform: 'uppercase' }}>Revival Leaders</strong>
-                <span style={{ fontSize: '1.1rem' }}>{event.leaderName}</span>
+                <span style={{ fontSize: '1.1rem' }}>
+                  {event.whatsappLink ? (
+                    <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ color: 'var(--foreground)', textDecoration: 'underline', textDecorationColor: 'var(--primary)', textUnderlineOffset: '4px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      {event.leaderName}
+                    </a>
+                  ) : (
+                    event.leaderName
+                  )}
+                </span>
               </div>
             </div>
           )}
