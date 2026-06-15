@@ -33,6 +33,13 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
     if (action === "trigger-reset") {
       if (!confirm("Send a password reset email to this user?")) return;
     }
+    if (action === "force-reset-password") {
+      if (!value || value.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+      if (!confirm(`Are you sure you want to manually set this user's password?`)) return;
+    }
 
     try {
       const res = await fetch(`/api/admin/users`, {
@@ -46,6 +53,8 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
           setUsers(users.filter(u => u.id !== userId));
         } else if (action === "trigger-reset") {
           alert("Password reset email sent.");
+        } else if (action === "force-reset-password") {
+          alert("Password has been manually updated.");
         } else {
           const updatedUser = await res.json();
           setUsers(users.map(u => u.id === userId ? { ...u, ...updatedUser } : u));
@@ -201,7 +210,20 @@ export default function UsersTable({ initialUsers }: { initialUsers: any[] }) {
                       className={styles.actionButton}
                       style={{ color: 'var(--primary)', borderColor: 'var(--primary)' }}
                     >
-                      Reset PW
+                      Reset Email
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        const newPw = prompt("Enter a new password for this user (min 6 chars):");
+                        if (newPw) {
+                          handleUpdateUser(user.id, "force-reset-password", newPw);
+                        }
+                      }}
+                      className={styles.actionButton}
+                      style={{ color: '#8b5cf6', borderColor: '#8b5cf6' }}
+                    >
+                      Set PW
                     </button>
 
                     <button

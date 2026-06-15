@@ -125,6 +125,17 @@ export async function PATCH(req: Request) {
         subject,
         html
       });
+    } else if (action === "force-reset-password") {
+      if (!value || value.length < 6) {
+        return NextResponse.json({ message: "Password must be at least 6 characters" }, { status: 400 });
+      }
+      const bcrypt = require("bcryptjs");
+      const hashedPassword = await bcrypt.hash(value, 10);
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { passwordHash: hashedPassword }
+      });
+      return NextResponse.json({ message: "Password updated successfully" });
     } else if (action === "delete") {
       await prisma.user.delete({
         where: { id: userId }
