@@ -18,6 +18,7 @@ export default function TestimonyPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   
   const [content, setContent] = useState("");
+  const [isPrivate, setIsPrivate] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
@@ -149,6 +150,7 @@ export default function TestimonyPage() {
   const handleEdit = (testimony: any) => {
     setEditingId(testimony.id);
     setContent(testimony.content || "");
+    setIsPrivate(testimony.isPrivate || false);
     setAudioBlob(null);
     setAudioUrl(testimony.audioUrl || null);
     setIsFormOpen(true);
@@ -210,7 +212,8 @@ export default function TestimonyPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           content: content.trim() || null, 
-          audioUrl: finalAudioUrl 
+          audioUrl: finalAudioUrl,
+          isPrivate
         })
       });
       
@@ -242,6 +245,7 @@ export default function TestimonyPage() {
     }
     setEditingId(null);
     setContent("");
+    setIsPrivate(false);
     deleteRecording();
     setIsFormOpen(true);
     setSubmitSuccess(false);
@@ -342,6 +346,17 @@ export default function TestimonyPage() {
               />
             </div>
 
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: isPrivate ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255,255,255,0.05)', padding: '12px 16px', borderRadius: '12px', border: isPrivate ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s ease' }}>
+              <input type="checkbox" checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} style={{ display: 'none' }} />
+              <div style={{ width: '40px', height: '24px', background: isPrivate ? 'var(--primary)' : 'rgba(255,255,255,0.2)', borderRadius: '12px', position: 'relative', transition: 'all 0.2s ease', flexShrink: 0 }}>
+                <div style={{ width: '20px', height: '20px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: isPrivate ? '18px' : '2px', transition: 'all 0.2s ease' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Private Testimony</span>
+                <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>This testimony will only be visible to you and won't be shared publicly.</span>
+              </div>
+            </label>
+
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
               <button type="submit" className="btn-primary" disabled={isSubmitting || (!content.trim() && !audioBlob && !audioUrl)} style={{ flex: 1 }}>
                 {isSubmitting ? (
@@ -365,10 +380,11 @@ export default function TestimonyPage() {
             {myTestimonies.map(testimony => (
               <div key={testimony.id} className="glass-panel" style={{ padding: '20px', borderLeft: testimony.status === 'APPROVED' ? '4px solid var(--success)' : testimony.status === 'REJECTED' ? '4px solid var(--danger)' : '4px solid #f59e0b' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div style={{ fontWeight: 600, opacity: 0.8 }}>
+                  <div style={{ fontWeight: 600, opacity: 0.8, display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {new Date(testimony.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {testimony.isPrivate && <span style={{ background: 'rgba(99, 102, 241, 0.2)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem' }}>Private</span>}
                   </div>
-                  {testimony.status === 'PENDING' && (
+                  {testimony.status === 'PENDING' && !testimony.isPrivate && (
                     <button onClick={() => handleEdit(testimony)} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', color: 'var(--foreground)', borderRadius: '6px', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Edit2 size={14} /> Edit
                     </button>

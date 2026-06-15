@@ -129,6 +129,7 @@ model Testimony {
   name      String
   content   String?
   audioUrl  String?
+  isPrivate Boolean  @default(false)
   status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

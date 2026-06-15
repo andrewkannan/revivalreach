@@ -72,7 +72,12 @@ export default function TestimoniesTable({ initialTestimonies }: { initialTestim
                       )}
                     </div>
                   </td>
-                  <td style={{ textAlign: 'center' }}>
+                  <td style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+                    {testimony.isPrivate && (
+                      <span className={`${styles.badge}`} style={{ background: 'var(--primary)', color: 'white' }}>
+                        PRIVATE
+                      </span>
+                    )}
                     <span className={`${styles.badge} ${
                       testimony.status === 'APPROVED' ? styles['badge-success'] : 
                       testimony.status === 'REJECTED' ? styles['badge-danger'] : 

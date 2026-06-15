@@ -12,7 +12,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { content, audioUrl } = await req.json();
+    const { content, audioUrl, isPrivate } = await req.json();
 
     if (!content && !audioUrl) {
       return NextResponse.json({ error: "Content or Audio is required" }, { status: 400 });
@@ -30,8 +30,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    if (existingTestimony.status !== "PENDING") {
-      return NextResponse.json({ error: "Only pending testimonies can be edited" }, { status: 400 });
+    if (existingTestimony.status !== "PENDING" && existingTestimony.status !== "APPROVED") {
+      return NextResponse.json({ error: "Cannot edit this testimony" }, { status: 400 });
     }
 
     const updatedTestimony = await prisma.testimony.update({
@@ -39,7 +39,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       data: {
         content,
         audioUrl,
-        status: "PENDING" // Ensure it remains pending for admin review
+        isPrivate: Boolean(isPrivate),
+        status: isPrivate ? "APPROVED" : "PENDING"
       }
     });
 

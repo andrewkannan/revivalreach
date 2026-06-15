@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/authOptions";
 export async function GET() {
   try {
     const testimonies = await prisma.testimony.findMany({
-      where: { status: "APPROVED" },
+      where: { status: "APPROVED", isPrivate: false },
       orderBy: { createdAt: "desc" },
       include: {
         user: {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { content, audioUrl } = await req.json();
+    const { content, audioUrl, isPrivate } = await req.json();
 
     if (!content && !audioUrl) {
       return NextResponse.json({ error: "Content or Audio is required" }, { status: 400 });
@@ -40,7 +40,8 @@ export async function POST(req: Request) {
         name: session.user.name || "Anonymous",
         content,
         audioUrl,
-        status: "PENDING"
+        isPrivate: Boolean(isPrivate),
+        status: isPrivate ? "APPROVED" : "PENDING"
       }
     });
 
