@@ -134,12 +134,14 @@
 }
 
 .linksGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
 .linkButton {
+  flex: 1;
+  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
