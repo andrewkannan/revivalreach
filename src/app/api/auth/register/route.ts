@@ -38,6 +38,7 @@ export async function POST(req: Request) {
         phone,
         role: isFirstUser ? "ADMIN" : "MEMBER",
         isApproved: isFirstUser ? true : false,
+        ministry: "Evangelist",
       },
     });
 
