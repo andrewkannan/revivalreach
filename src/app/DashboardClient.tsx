@@ -4,6 +4,7 @@ import styles from "./Dashboard.module.css";
 import { Search, MapPin, Navigation, MessageCircle, Info, Calendar as CalendarIcon, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { GoogleMapsIcon, WazeIcon, WhatsAppIcon } from "@/components/BrandIcons";
 
 export default function DashboardClient({ initialEvents, user, settings, hideBanner = false }: { initialEvents: any[], user: any, settings: any, hideBanner?: boolean }) {
   const [events, setEvents] = useState(initialEvents);
@@ -166,22 +167,22 @@ export default function DashboardClient({ initialEvents, user, settings, hideBan
                         <div className={styles.linksGrid}>
                           {event.googleMapsLink && (
                             <a href={event.googleMapsLink} target="_blank" rel="noreferrer" className={styles.linkButton}>
-                              <MapPin size={16} /> Google Maps
+                              <GoogleMapsIcon size={18} /> Maps
                             </a>
                           )}
                           {event.wazeLink && (
                             <a href={event.wazeLink} target="_blank" rel="noreferrer" className={styles.linkButton}>
-                              <Navigation size={16} /> Waze
+                              <WazeIcon size={18} /> Waze
                             </a>
                           )}
                           {event.whatsappGroupLink && (
                             <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ background: 'var(--card-bg)', color: '#25D366', borderColor: '#25D366' }}>
-                              <MessageCircle size={18} /> WhatsApp Group
+                              <WhatsAppIcon size={18} /> WhatsApp
                             </a>
                           )}
                           {event.whatsappLink && (
                             <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" className={styles.linkButton} style={{ flexBasis: '100%', background: '#25D366', color: 'white', borderColor: '#25D366' }}>
-                              <MessageCircle size={18} /> Contact Leader via WhatsApp
+                              <WhatsAppIcon size={18} /> Contact Leader
                             </a>
                           )}
                         </div>

@@ -7,6 +7,7 @@ import Link from "next/link";
 import JoinButton from "./JoinButton";
 import AttendanceControls from "./AttendanceControls";
 import EventShareButtons from "./EventShareButtons";
+import { GoogleMapsIcon, WazeIcon, WhatsAppIcon } from "@/components/BrandIcons";
 
 export const dynamic = 'force-dynamic';
 
@@ -138,24 +139,24 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         )}
 
         {canViewSensitiveInfo ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginTop: '10px' }}>
-            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center' }}>
-              <MapPin size={18} /> Google Maps
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+            <a href={mapsLink} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '100px', padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center', whiteSpace: 'nowrap' }}>
+              <GoogleMapsIcon size={18} /> Maps
             </a>
             
-            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--card-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center' }}>
-              <Navigation size={18} /> Waze
+            <a href={wazeUrl} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '100px', padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, border: '1px solid var(--card-border)', textAlign: 'center', whiteSpace: 'nowrap' }}>
+              <WazeIcon size={18} /> Waze
             </a>
             
             {event.whatsappGroupLink && (
-              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ padding: '12px', background: 'var(--subtle-border)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', fontWeight: 500, textAlign: 'center' }}>
-                <MessageCircle size={18} /> WhatsApp Group
+              <a href={event.whatsappGroupLink} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '100px', padding: '8px 12px', background: 'var(--card-bg)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: '#25D366', borderColor: '#25D366', fontWeight: 500, border: '1px solid #25D366', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                <WhatsAppIcon size={18} /> WhatsApp
               </a>
             )}
             
             {event.whatsappLink && (
-              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ padding: '12px', background: '#25D366', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, textAlign: 'center' }}>
-                <MessageCircle size={18} /> Contact
+              <a href={`${event.whatsappLink}?text=${encodeURIComponent(defaultWhatsappMsg)}`} target="_blank" rel="noreferrer" style={{ flexBasis: '100%', padding: '8px 12px', background: '#25D366', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none', color: 'white', fontWeight: 500, textAlign: 'center', whiteSpace: 'nowrap', border: '1px solid #25D366' }}>
+                <WhatsAppIcon size={18} /> Contact
               </a>
             )}
           </div>
@@ -165,8 +166,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               Join this revival to view the meeting point, map links, and WhatsApp group.
             </div>
             {event.whatsappGroupLink && (
-              <div style={{ padding: '12px', background: 'var(--subtle-bg)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--foreground)', opacity: 0.5, fontWeight: 500, cursor: 'not-allowed' }}>
-                <MessageCircle size={18} /> Join WhatsApp Group
+              <div style={{ padding: '8px 12px', background: 'var(--subtle-bg)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--foreground)', opacity: 0.5, fontWeight: 500, cursor: 'not-allowed' }}>
+                <WhatsAppIcon size={18} /> WhatsApp
               </div>
             )}
           </div>
