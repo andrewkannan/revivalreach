@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Users, QrCode, CheckCircle, Circle } from "lucide-react";
+import { Users, QrCode, CheckCircle, Circle, MessageCircle } from "lucide-react";
 import EventQRModal from "@/components/EventQRModal";
 
 interface AttendanceControlsProps {
@@ -71,10 +71,12 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
                     p.user.name ? p.user.name.charAt(0).toUpperCase() : '?'
                   )}
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ fontWeight: 600 }}>{p.user.name || "Anonymous User"}</div>
                   {canViewSensitiveInfo && p.user.phone && (
-                    <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{p.user.phone}</div>
+                    <a href={`https://wa.me/${p.user.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', padding: '4px', borderRadius: '50%', background: '#25D366', color: 'white', textDecoration: 'none', marginLeft: '6px' }} title="WhatsApp">
+                      <MessageCircle size={14} />
+                    </a>
                   )}
                 </div>
               </div>
