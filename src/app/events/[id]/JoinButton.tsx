@@ -2,12 +2,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function JoinButton({ event, initialHasJoined = false }: { event: any, initialHasJoined?: boolean }) {
+export default function JoinButton({ event, initialHasJoined = false, isLoggedIn = true }: { event: any, initialHasJoined?: boolean, isLoggedIn?: boolean }) {
   const [loading, setLoading] = useState(false);
   const [hasJoined, setHasJoined] = useState(initialHasJoined);
   const router = useRouter();
 
   const handleJoinToggle = async () => {
+    if (!isLoggedIn) {
+      window.location.href = `/login?callbackUrl=/events/${event.slug || event.id}`;
+      return;
+    }
+    
     setLoading(true);
     try {
       const method = hasJoined ? "DELETE" : "POST";

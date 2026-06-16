@@ -15,9 +15,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const { id } = await params;
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    redirect("/login");
-  }
+  // Allow unauthenticated users to view the page
 
   const event = await prisma.event.findFirst({
     where: {
@@ -58,8 +56,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   // We serialize the event to pass to the client component
   const serializedEvent = JSON.parse(JSON.stringify(event));
-  const hasJoined = event.participants.some((p: any) => p.userId === session.user.id);
-  const canViewSensitiveInfo = hasJoined || session.user.role === "ADMIN" || session.user.role === "LEADER";
+  const hasJoined = session ? event.participants.some((p: any) => p.userId === session.user.id) : false;
+  const canViewSensitiveInfo = session ? (hasJoined || session.user.role === "ADMIN" || session.user.role === "LEADER") : false;
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%', color: 'var(--foreground)' }}>
@@ -174,7 +172,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         )}
 
         <div style={{ marginTop: '20px' }}>
-          <JoinButton event={serializedEvent} initialHasJoined={hasJoined} />
+          <JoinButton event={serializedEvent} initialHasJoined={hasJoined} isLoggedIn={!!session} />
         </div>
 
         {event.status === 'APPROVED' && (
@@ -186,7 +184,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           eventId={event.id}
           eventTitle={event.title}
           initialParticipants={event.participants}
-          canManage={session.user.role === 'ADMIN' || session.user.role === 'LEADER'}
+          canManage={session ? (session.user.role === 'ADMIN' || session.user.role === 'LEADER') : false}
           canViewSensitiveInfo={canViewSensitiveInfo}
         />
 
