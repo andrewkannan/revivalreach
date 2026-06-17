@@ -175,7 +175,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <JoinButton event={serializedEvent} initialHasJoined={hasJoined} isLoggedIn={!!session} />
         </div>
 
-        {event.status === 'APPROVED' && (
+        {event.status === 'APPROVED' && hasJoined && (
           <EventShareButtons event={serializedEvent} />
         )}
 
