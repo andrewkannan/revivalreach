@@ -84,8 +84,8 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
             </button>
             <form onSubmit={handleAddMember} style={{ display: 'flex', gap: '6px' }}>
               <input 
-                type="email" 
-                placeholder="User Email" 
+                type="text" 
+                placeholder="User Name or Email" 
                 value={newMemberEmail}
                 onChange={e => setNewMemberEmail(e.target.value)}
                 required

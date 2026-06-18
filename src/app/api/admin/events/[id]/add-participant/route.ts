@@ -18,13 +18,28 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
-    const userToAdd = await prisma.user.findUnique({
-      where: { email }
-    });
+    const query = email; // keeping the payload property 'email' for backwards compatibility but treating it as a query
+    let users = [];
 
-    if (!userToAdd) {
-      return NextResponse.json({ message: "User with this email not found in the system. They must register first." }, { status: 404 });
+    if (query.includes("@")) {
+      users = await prisma.user.findMany({
+        where: { email: query }
+      });
+    } else {
+      users = await prisma.user.findMany({
+        where: { name: { contains: query, mode: "insensitive" } }
+      });
     }
+
+    if (users.length === 0) {
+      return NextResponse.json({ message: "User not found in the system. They must register first." }, { status: 404 });
+    }
+
+    if (users.length > 1) {
+      return NextResponse.json({ message: "Multiple users found with that name. Please use their exact email address." }, { status: 400 });
+    }
+
+    const userToAdd = users[0];
 
     const existingParticipant = await prisma.eventParticipant.findUnique({
       where: {
