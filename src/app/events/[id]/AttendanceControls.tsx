@@ -16,6 +16,8 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
   const [participants, setParticipants] = useState(initialParticipants);
   const [showQR, setShowQR] = useState(false);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [newMemberEmail, setNewMemberEmail] = useState("");
+  const [addingMember, setAddingMember] = useState(false);
 
   const toggleAttendance = async (userId: string, currentStatus: boolean) => {
     if (!canManage) return;
@@ -40,24 +42,66 @@ export default function AttendanceControls({ eventId, eventTitle, initialPartici
     setLoadingId(null);
   };
 
+  const handleAddMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMemberEmail || !canManage) return;
+    
+    setAddingMember(true);
+    try {
+      const res = await fetch(`/api/admin/events/${eventId}/add-participant`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newMemberEmail })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        setParticipants(prev => [...prev, data.participant]);
+        setNewMemberEmail("");
+        alert("Member added successfully!");
+      } else {
+        alert(data.message || "Failed to add member");
+      }
+    } catch (err) {
+      alert("An error occurred while adding the member.");
+    } finally {
+      setAddingMember(false);
+    }
+  };
+
   return (
     <div style={{ marginTop: '30px', borderTop: '1px solid var(--subtle-border)', paddingTop: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '15px' }}>
         <h3 style={{ fontSize: '1.2rem', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Users size={20} color="var(--primary)" /> 
-          Attendance List ({participants.length})
+          Revival Team ({participants.length})
         </h3>
         
         {canManage && (
-          <button onClick={() => setShowQR(true)} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.9rem', flex: '1 1 auto', maxWidth: '200px' }}>
-            <QrCode size={16} /> Show QR Check-in
-          </button>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button onClick={() => setShowQR(true)} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.9rem', flex: '1 1 auto' }}>
+              <QrCode size={16} /> QR Check-in
+            </button>
+            <form onSubmit={handleAddMember} style={{ display: 'flex', gap: '6px' }}>
+              <input 
+                type="email" 
+                placeholder="User Email" 
+                value={newMemberEmail}
+                onChange={e => setNewMemberEmail(e.target.value)}
+                required
+                style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--subtle-border)', background: 'var(--card-bg)', color: 'var(--foreground)', fontSize: '0.9rem', width: '180px' }}
+              />
+              <button type="submit" disabled={addingMember} className="btn-primary" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>
+                {addingMember ? "..." : "Add"}
+              </button>
+            </form>
+          </div>
         )}
       </div>
       
       {participants.length === 0 ? (
         <div style={{ background: 'var(--subtle-bg)', padding: '15px', borderRadius: '8px', color: 'var(--foreground)', opacity: 0.5, textAlign: 'center' }}>
-          No one has joined yet. Be the first!
+          No one is on the team yet.
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>
