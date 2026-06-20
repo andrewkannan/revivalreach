@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Admin.module.css";
-import { Users, Settings, CalendarRange, Heart, ShieldCheck, HeartHandshake, MessageSquare, Mail } from "lucide-react";
+import { Users, Settings, CalendarRange, Heart, ShieldCheck, HeartHandshake, MessageSquare, Mail, QrCode } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { useEffect, useState } from "react";
@@ -88,6 +88,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Settings size={20} /> Settings
             </Link>
           )}
+          <Link href="/admin/registration-qr" className={`${styles.sidebarLink} ${pathname === '/admin/registration-qr' ? styles.active : ''}`}>
+            <QrCode size={20} /> Registration QR
+          </Link>
         </div>
       </div>
       <div className={styles.adminContent}>
